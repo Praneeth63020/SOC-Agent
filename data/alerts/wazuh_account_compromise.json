@@ -1,0 +1,33 @@
+{
+  "_comment": "SYNTHETIC LAB DATA - fabricated for the Cehpoint assessment. Wazuh-style alert (rule 40112: multiple authentication failures followed by a success). IPs are from documentation ranges (RFC 5737).",
+  "timestamp": "2026-11-18T09:42:17.512+0000",
+  "id": "1763458937.4471",
+  "rule": {
+    "level": 12,
+    "description": "Multiple authentication failures followed by a success.",
+    "id": "40112",
+    "mitre": {
+      "id": ["T1110", "T1078"],
+      "tactic": ["Credential Access", "Initial Access"],
+      "technique": ["Brute Force", "Valid Accounts"]
+    },
+    "frequency": 50,
+    "groups": ["authentication_success", "authentication_failures"]
+  },
+  "agent": {
+    "id": "007",
+    "name": "fin-app-01",
+    "ip": "10.20.5.17"
+  },
+  "manager": {"name": "wazuh-manager"},
+  "decoder": {"name": "sshd"},
+  "data": {
+    "srcip": "203.0.113.77",
+    "srcport": "51522",
+    "dstuser": "j.mehta",
+    "dstport": "22"
+  },
+  "location": "/var/log/auth.log",
+  "full_log": "Nov 18 09:42:17 fin-app-01 sshd[23110]: Accepted password for j.mehta from 203.0.113.77 port 51522 ssh2",
+  "previous_output": "50 x 'Failed password for j.mehta from 203.0.113.77' between 09:31:02 and 09:41:55"
+}

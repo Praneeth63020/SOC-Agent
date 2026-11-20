@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/alert.schema.json",
+  "title": "Normalized security alert",
+  "description": "Every alert source (Wazuh, tshark-derived detections, manual JSON) is converted to this shape before the agent sees it.",
+  "type": "object",
+  "required": [
+    "alert_id",
+    "timestamp",
+    "source",
+    "category",
+    "title",
+    "severity_hint",
+    "entities",
+    "synthetic"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "alert_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{3,64}$",
+      "description": "3-64 characters: letters, digits and . _ : -"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(Z|\\+00:00)$",
+      "description": "When the detection fired: ISO 8601 in UTC (ending in Z or +00:00)."
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "wazuh",
+            "tshark",
+            "manual"
+          ]
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "rule_description": {
+          "type": "string"
+        },
+        "rule_level": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15
+        },
+        "mitre_hint": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$",
+            "description": "MITRE ATT&CK technique id such as T1110 or T1110.001"
+          },
+          "description": "Technique IDs suggested by the detection rule (a hint, not a conclusion)."
+        }
+      }
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "authentication",
+        "network",
+        "malware",
+        "vulnerability",
+        "other"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "severity_hint": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical",
+        "unknown"
+      ],
+      "description": "Severity claimed by the source. The agent assesses its own severity later."
+    },
+    "entities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "src_ip": {
+          "type": "string",
+          "format": "ipv4"
+        },
+        "dst_ip": {
+          "type": "string",
+          "format": "ipv4"
+        },
+        "dst_port": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "service": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        }
+      }
+    },
+    "observations": {
+      "type": "object",
+      "description": "Facts the detection rule measured (counts, windows). Free-form but flat.",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "integer",
+          "boolean"
+        ]
+      }
+    },
+    "synthetic": {
+      "type": "boolean",
+      "description": "True for lab/synthetic data. Must be shown in every report."
+    },
+    "raw": {
+      "type": "object",
+      "description": "Original alert as received (e.g. the Wazuh JSON), kept for traceability. Never sent to the LLM."
+    }
+  }
+}
