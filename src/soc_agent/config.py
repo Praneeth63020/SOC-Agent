@@ -25,7 +25,7 @@ class Settings:
     base_url: str                # empty for mock: filled in when the in-process server starts
     api_key: str | None
     model: str
-    max_tokens: int = 2048
+    max_tokens: int = 4096       # a full plan is one tool call; ~1.5k tokens for the mock's 7 steps
     max_iterations: int = 6      # Hermes tool-calling iterations per task (step limit)
     hermes_home: Path = PROJECT_ROOT / ".hermes"   # isolated Hermes state, git-ignored
     runs_dir: Path = PROJECT_ROOT / "runs"         # run records (JSON), git-ignored
@@ -68,7 +68,7 @@ def load_settings(provider: str | None = None) -> Settings:
     env = os.environ
     provider = (provider or env.get("SOC_LLM_PROVIDER") or "nvidia").strip().lower()
     common = dict(
-        max_tokens=_int("SOC_MAX_TOKENS", 2048, 256, 16384),
+        max_tokens=_int("SOC_MAX_TOKENS", 4096, 256, 16384),
         max_iterations=_int("SOC_MAX_ITERATIONS", 6, 2, 30),
         hermes_home=_path("SOC_HERMES_HOME", PROJECT_ROOT / ".hermes"),
         runs_dir=_path("SOC_RUNS_DIR", PROJECT_ROOT / "runs"),
@@ -81,6 +81,6 @@ def load_settings(provider: str | None = None) -> Settings:
             raise ConfigError("NVIDIA_API_KEY is not set. Put it in .env (copy .env.example), "
                               "or run with --provider mock for the offline demo (not an AI model).")
         return Settings("nvidia",
-                        base_url=(env.get("NVIDIA_BASE_URL") or NVIDIA_DEFAULT_BASE_URL).strip().rstrip("/"),
-                        api_key=key, model=(env.get("NVIDIA_MODEL") or NVIDIA_DEFAULT_MODEL).strip(), **common)
+                        base_url=(env.get("NVIDIA_BASE_URL", "").strip() or NVIDIA_DEFAULT_BASE_URL).rstrip("/"),
+                        api_key=key, model=env.get("NVIDIA_MODEL", "").strip() or NVIDIA_DEFAULT_MODEL, **common)
     raise ConfigError(f"Unknown SOC_LLM_PROVIDER {provider!r}. Use one of: {', '.join(PROVIDERS)}.")

@@ -50,7 +50,7 @@ If your system Python is not 3.11–3.13 (e.g. 3.14), install one first, e.g. `u
 | `NVIDIA_BASE_URL` | `https://integrate.api.nvidia.com/v1` | OpenAI-compatible endpoint |
 | `NVIDIA_MODEL` | `meta/llama-3.3-70b-instruct` | must support tool calling |
 | `SOC_MAX_ITERATIONS` | `6` | step limit: Hermes tool-calling rounds per task |
-| `SOC_MAX_TOKENS` | `2048` | max output tokens per LLM call |
+| `SOC_MAX_TOKENS` | `4096` | max output tokens per LLM call |
 | `SOC_RUNS_DIR` | `runs` | where run records are written (git-ignored) |
 | `SOC_HERMES_HOME` | `.hermes` | Hermes's state folder; project-local so `~/.hermes` is never touched (git-ignored) |
 
@@ -147,7 +147,7 @@ Details, diagrams and the security model with the test that proves each control:
 │   ├── planner.py            alert -> plan workflow, run record
 │   ├── mock_llm.py           offline OpenAI-compatible mock (scripted, labelled MOCK)
 │   ├── cli.py, api.py        entry points (python -m soc_agent …, FastAPI)
-├── tests/                    103 offline tests, incl. end to end through real Hermes
+├── tests/                    112 offline tests, incl. end to end through real Hermes
 ├── docs/                     architecture.md, day1-demo.md
 ├── scripts/check_secrets.py  secret scan (+ .env tracked / ignored checks)
 └── .github/workflows/ci.yml  Python 3.11, mock provider: secret scan -> pytest -> mock demo
@@ -161,5 +161,5 @@ Details, diagrams and the security model with the test that proves each control:
 - **Plan quality is not scored.** The schema checks structure, not whether the six questions are answered well; that's a reviewer's job for now.
 - **Run records are JSON files.** The SQLite audit trail and the human approval workflow for disruptive actions come on Day 4. Today the permission check only *denies* disruptive tools.
 - Hermes adds its own general identity prompt (~8 KB) before ours; it cannot be removed through the public API.
-- Each LLM call has a 2048-token output cap (`SOC_MAX_TOKENS`); a very long plan from the real model could be cut off and rejected.
+- Each LLM call has a 4096-token output cap (`SOC_MAX_TOKENS`); a very long plan from the real model could be cut off and rejected.
 - Linux / macOS / WSL2 only, Python 3.11–3.13.

@@ -58,7 +58,9 @@ def scan(root: Path) -> list[tuple[str, int, str]]:
 
 def git_problems(root: Path) -> list[str]:
     problems = []
-    if ".env" not in (root / ".gitignore").read_text(encoding="utf-8").splitlines():
+    gitignore = root / ".gitignore"
+    lines = gitignore.read_text(encoding="utf-8").splitlines() if gitignore.is_file() else []
+    if ".env" not in [ln.strip() for ln in lines]:
         problems.append(".env is not listed in .gitignore")
     try:
         tracked = subprocess.run(["git", "ls-files", "--", ".env", "*/.env"], cwd=root,

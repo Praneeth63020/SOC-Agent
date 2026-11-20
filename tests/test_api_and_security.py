@@ -71,6 +71,10 @@ def test_nvidia_settings_from_env(monkeypatch):
     s = load_settings("nvidia")
     assert s.base_url == "https://integrate.api.nvidia.com/v1" and s.model == "meta/llama-3.3-70b-instruct"
     assert not s.is_mock and s.api_key == "test-key-not-real"
+    monkeypatch.setenv("NVIDIA_BASE_URL", "  ")                 # blank values fall back to the defaults
+    monkeypatch.setenv("NVIDIA_MODEL", "")
+    s = load_settings("nvidia")
+    assert s.base_url == "https://integrate.api.nvidia.com/v1" and s.model == "meta/llama-3.3-70b-instruct"
 
 
 @pytest.mark.parametrize("var, value", [("SOC_MAX_ITERATIONS", "lots"), ("SOC_MAX_ITERATIONS", "500"),
@@ -118,6 +122,10 @@ def test_secret_scanner_is_clean_on_the_repo():
 def test_secret_scanner_detects_keys(tmp_path, line):
     (tmp_path / "x.py").write_text(line + "\n")
     assert _scanner().scan(tmp_path)
+
+
+def test_secret_scanner_reports_missing_gitignore(tmp_path):
+    assert ".env is not listed in .gitignore" in _scanner().git_problems(tmp_path)
 
 
 def test_secret_scanner_ignores_empty_and_placeholder_values(tmp_path):
