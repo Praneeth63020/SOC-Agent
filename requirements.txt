@@ -1,0 +1,12 @@
+# Exact versions verified for Day 1 (Python 3.11, macOS + Linux). Ranges live in pyproject.toml.
+# Agent runtime: Nous Research Hermes Agent - pinned, its tool-registry API is used directly
+hermes-agent==0.19.0
+jsonschema==4.26.0
+fastapi==0.165.0
+uvicorn==0.54.0
+httpx==0.28.1
+python-dotenv==1.2.2
+pyyaml==6.0.3
+# tests
+pytest==9.2.0
+pytest-cov==7.1.0

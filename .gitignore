@@ -1,0 +1,25 @@
+# Python / tooling caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+reports/
+.DS_Store
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Runtime state (never commit)
+.hermes/
+runs/
