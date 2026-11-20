@@ -17,6 +17,8 @@ MAX_PLAN_ATTEMPTS = 3
 # parameter keys whose values must be an account / host named in the alert
 ACCOUNT_KEYS = {"account", "user", "username", "user_name", "dstuser", "srcuser", "target_user"}
 HOST_KEYS = {"host", "hostname", "asset", "agent", "agent_name", "dst_host", "src_host", "computer"}
+# software versions such as "8.9.1.2" look like IPv4 addresses but are not indicators
+VERSION_KEYS = {"version", "product_version", "software_version", "cpe"}
 _IPV4 = re.compile(r"(?<![\d.])(?:\d{1,3}\.){3}\d{1,3}(?![\d.])")
 
 
@@ -68,7 +70,7 @@ def unsupported_values(plan: dict, alert: dict) -> list[str]:
             continue
         n = step.get("step", "?")
         for key, text in _walk(step.get("parameters") or {}):
-            for ip in _IPV4.findall(text):
+            for ip in ([] if key in VERSION_KEYS else _IPV4.findall(text)):
                 try:
                     ipaddress.ip_address(ip)
                 except ValueError:
@@ -78,7 +80,7 @@ def unsupported_values(plan: dict, alert: dict) -> list[str]:
                     issues.append(f"step {n}: IP {ip} does not appear in the alert")
             if key in ACCOUNT_KEYS and text.lower() not in accounts:
                 issues.append(f"step {n}: {key}={text!r} is not an account in the alert")
-            if key in HOST_KEYS and text.lower() not in hosts:
+            if key in HOST_KEYS and text.lower() not in hosts and text not in ips:   # a host may be named by IP
                 issues.append(f"step {n}: {key}={text!r} is not a host in the alert")
     return issues
 

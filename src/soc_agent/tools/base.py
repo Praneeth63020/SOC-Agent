@@ -71,6 +71,9 @@ class RunContext:
     allowed_permissions: tuple[str, ...] = RUN_PERMISSIONS
     tool_calls: list[dict] = field(default_factory=list)     # the audit trail
     plan: dict | None = None
+    # one tool call at a time per investigation, so "check attempts / accept one plan / audit"
+    # is atomic even if a runtime ever dispatches tool calls in parallel
+    lock: threading.Lock = field(default_factory=threading.Lock, repr=False, compare=False)
 
 
 _RUNS: dict[str, RunContext] = {}
@@ -91,6 +94,28 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="milliseconds")
 
 
+def _execute(spec: ToolSpec, args: Any, ctx: RunContext) -> tuple[str, Any]:
+    """Validate, permission-check and run one call. Returns (status, result)."""
+    status, result = "ok", None
+    if not isinstance(args, dict):
+        status, result = "rejected", {"error": "Arguments must be a JSON object."}
+    elif errs := problems(args, spec.parameters):
+        status, result = "rejected", {"error": f"Invalid arguments for {spec.name}.", "problems": errs,
+                                      "hint": "Call the tool again with arguments matching its schema."}
+    elif spec.permission not in ctx.allowed_permissions:
+        status, result = "denied", {"error": f"Tool {spec.name} needs permission '{spec.permission}', "
+                                             "which this investigation does not have. Recommend the "
+                                             "action for analyst_review instead."}
+    else:
+        try:
+            result = spec.handler(args, ctx)
+        except ToolRejection as e:
+            status, result = "rejected", e.payload
+        except Exception as e:      # a tool must never crash the agent
+            status, result = "error", {"error": f"{spec.name} failed: {type(e).__name__}: {e}"}
+    return status, result
+
+
 def wrap(spec: ToolSpec) -> Callable[..., str]:
     """The single wrapper every tool runs through (Hermes calls handler(args, task_id=..., ...))."""
 
@@ -101,25 +126,8 @@ def wrap(spec: ToolSpec) -> Callable[..., str]:
         if ctx is None:
             return json.dumps({"error": "No active investigation for this tool call."})
 
-        status, result = "ok", None
-        if not isinstance(args, dict):
-            status, result = "rejected", {"error": "Arguments must be a JSON object."}
-        elif errs := problems(args, spec.parameters):
-            status, result = "rejected", {"error": f"Invalid arguments for {spec.name}.", "problems": errs,
-                                          "hint": "Call the tool again with arguments matching its schema."}
-        elif spec.permission not in ctx.allowed_permissions:
-            status, result = "denied", {"error": f"Tool {spec.name} needs permission '{spec.permission}', "
-                                                 "which this investigation does not have. Recommend the "
-                                                 "action for analyst_review instead."}
-        else:
-            try:
-                result = spec.handler(args, ctx)
-            except ToolRejection as e:
-                status, result = "rejected", e.payload
-            except Exception as e:      # a tool must never crash the agent
-                status, result = "error", {"error": f"{spec.name} failed: {type(e).__name__}: {e}"}
-
-        with _LOCK:
+        with ctx.lock:
+            status, result = _execute(spec, args, ctx)
             ctx.tool_calls.append({
                 "seq": len(ctx.tool_calls) + 1, "tool": spec.name, "permission": spec.permission,
                 "arguments": args, "status": status, "result": result,

@@ -64,6 +64,15 @@ def test_alert_indicators_are_accepted_case_insensitively(alert):
     assert unsupported_values(plan, alert) == []
 
 
+def test_host_may_be_named_by_alert_ip_and_versions_are_not_ips(alert):
+    plan = build_mock_plan(alert)
+    plan["steps"][3]["parameters"] = {"host": "10.20.5.17"}                     # dst_ip of the alert
+    plan["steps"][5]["parameters"] = {"product": "openssh", "version": "8.9.1.2"}
+    assert unsupported_values(plan, alert) == []
+    plan["steps"][3]["parameters"] = {"host": "10.20.5.99"}                     # still invented
+    assert "10.20.5.99" in " ".join(unsupported_values(plan, alert))
+
+
 # ------------------------------------------------------------------ wrapper
 def _call(spec, args, ctx):
     open_run(ctx)
@@ -173,3 +182,18 @@ def test_full_schema_still_applies_behind_the_simplified_model_schema(alert):
     out = _call(SUBMIT_PLAN, {"plan": plan}, ctx)
     assert out["error"] == "Plan rejected." and ctx.plan is None
     assert any("hypotheses" in p for p in out["problems"])
+
+
+def test_concurrent_submissions_accept_exactly_one_plan(alert):
+    from concurrent.futures import ThreadPoolExecutor
+    ctx = RunContext("INV-TEST-10", alert)
+    open_run(ctx)
+    try:
+        h = wrap(SUBMIT_PLAN)
+        with ThreadPoolExecutor(8) as ex:
+            outs = [json.loads(o) for o in ex.map(
+                lambda _: h({"plan": build_mock_plan(alert)}, task_id=ctx.investigation_id), range(8))]
+    finally:
+        close_run(ctx.investigation_id)
+    assert sum(o.get("accepted") is True for o in outs) == 1
+    assert [c["seq"] for c in ctx.tool_calls] == list(range(1, 9))

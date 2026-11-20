@@ -107,3 +107,27 @@ def test_bad_files(tmp_path):
         load_alert(binary)
     with pytest.raises(AlertError, match="JSON object"):
         normalize([1, 2])
+    with pytest.raises(AlertError, match="directory"):
+        load_alert(tmp_path)
+
+
+@pytest.mark.parametrize("mutate", [
+    lambda r: r["rule"].update(groups=None),
+    lambda r: r["rule"].update(groups=[1, None]),
+    lambda r: r.update(decoder="sshd"),
+    lambda r: r["rule"].update(mitre=["T1110"]),
+    lambda r: r.update(data="not an object"),
+], ids=["groups-null", "groups-not-strings", "decoder-string", "mitre-list", "data-string"])
+def test_odd_wazuh_field_types_never_crash(wazuh_raw, mutate):
+    raw = copy.deepcopy(wazuh_raw)
+    mutate(raw)
+    try:
+        assert normalize(raw)["source"]["type"] == "wazuh"
+    except AlertError:
+        pass                                   # a readable rejection is fine; a crash is not
+
+
+def test_wazuh_single_mitre_id_becomes_a_list(wazuh_raw):
+    raw = copy.deepcopy(wazuh_raw)
+    raw["rule"]["mitre"]["id"] = "T1110"
+    assert normalize(raw)["source"]["mitre_hint"] == ["T1110"]

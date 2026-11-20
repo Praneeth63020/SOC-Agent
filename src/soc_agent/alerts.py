@@ -48,14 +48,21 @@ def is_wazuh(raw: dict) -> bool:
     return isinstance(raw.get("rule"), dict) and isinstance(raw.get("agent"), dict) and "timestamp" in raw
 
 
+def _obj(value) -> dict:
+    """Wazuh fields that should be objects; anything else is treated as missing."""
+    return value if isinstance(value, dict) else {}
+
+
 def normalize_wazuh(raw: dict) -> dict:
-    rule, agent, data = raw["rule"], raw["agent"], raw.get("data") or {}
+    rule, agent, data = raw["rule"], raw["agent"], _obj(raw.get("data"))
     level = rule.get("level")
     level = int(level) if isinstance(level, (int, str)) and str(level).isdigit() else None
-    decoder = (raw.get("decoder") or {}).get("name")
-    groups = " ".join(rule.get("groups", []))
+    decoder = _obj(raw.get("decoder")).get("name")
+    groups = rule.get("groups")
+    groups = " ".join(g for g in groups if isinstance(g, str)) if isinstance(groups, list) else ""
     category = "authentication" if ("authentication" in groups or decoder == "sshd") else "other"
     dstport = str(data.get("dstport", ""))
+    mitre = _obj(rule.get("mitre")).get("id")
     entities = {
         "account": data.get("dstuser") or data.get("srcuser"),
         "host": agent.get("name"),
@@ -74,7 +81,7 @@ def normalize_wazuh(raw: dict) -> dict:
         "rule_id": str(rule["id"]) if rule.get("id") is not None else None,
         "rule_description": rule.get("description"),
         "rule_level": level,
-        "mitre_hint": (rule.get("mitre") or {}).get("id"),     # kept as hints, not conclusions
+        "mitre_hint": [mitre] if isinstance(mitre, str) else mitre,   # kept as hints, not conclusions
     }
     return {
         "alert_id": f"WAZUH-{raw.get('id', 'unknown')}".replace(" ", ""),
@@ -96,7 +103,12 @@ def normalize(raw: dict) -> dict:
     """Return a schema-valid normalized alert or raise AlertError with readable problems."""
     if not isinstance(raw, dict):
         raise AlertError("Alert must be a JSON object")
-    alert = normalize_wazuh(raw) if is_wazuh(raw) else raw
+    try:
+        alert = normalize_wazuh(raw) if is_wazuh(raw) else raw
+    except (TypeError, AttributeError, ValueError) as e:   # unexpected field types in a raw alert
+        if isinstance(e, AlertError):
+            raise
+        raise AlertError(f"Wazuh alert has an unexpected shape: {type(e).__name__}: {e}") from e
     try:
         validate(alert, "alert", "Alert")
     except SchemaError as e:
@@ -114,6 +126,10 @@ def load_alert(path: str | Path) -> dict:
         raw = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as e:
         raise AlertError(f"Alert file not found: {path}") from e
+    except IsADirectoryError as e:
+        raise AlertError(f"{path} is a directory, not an alert file") from e
+    except OSError as e:
+        raise AlertError(f"Cannot read {path}: {e.strerror or e}") from e
     except UnicodeDecodeError as e:
         raise AlertError(f"{path.name} is not UTF-8 text") from e
     except json.JSONDecodeError as e:
