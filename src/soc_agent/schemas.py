@@ -9,6 +9,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from soc_agent.config import PROJECT_ROOT
 
 SCHEMA_DIR = PROJECT_ROOT / "schemas"
+MAX_SHOWN = 120         # longest value quoted back in a problem message
 
 
 class SchemaError(ValueError):
@@ -30,6 +31,9 @@ def problems(instance, schema: dict, limit: int = 8) -> list[str]:
     out = []
     for e in errs[:limit]:
         msg = e.message
+        shown = repr(e.instance)
+        if len(shown) > MAX_SHOWN:          # never echo a huge value (e.g. a whole plan) back
+            msg = msg.replace(shown, f"{shown[:MAX_SHOWN]}... ({len(shown)} characters)")
         if e.validator == "pattern" and isinstance(e.schema, dict) and e.schema.get("description"):
             msg = f"{e.instance!r} is not valid ({e.schema['description']})"   # readable, not a regex
         out.append(f"{'/'.join(map(str, e.path)) or '(root)'}: {msg}")

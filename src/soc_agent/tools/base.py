@@ -94,12 +94,36 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="milliseconds")
 
 
+def json_string_problems(args: dict, schema: dict) -> list[str]:
+    """Explain an object/array argument that arrived as a string. (Hermes already decodes
+    strings that are valid JSON, so what reaches us is usually malformed JSON; point the
+    model at the exact place instead of echoing the whole string back.)"""
+    out = []
+    for name, value in args.items():
+        want = ((schema.get("properties") or {}).get(name) or {}).get("type")
+        if not isinstance(value, str) or want not in ("object", "array"):
+            continue
+        msg = f"{name}: must be a JSON {want}, not a string"
+        try:
+            json.loads(value)
+            out.append(msg + " containing JSON.")
+        except ValueError as e:
+            pos = getattr(e, "pos", 0) or 0
+            near = value[max(0, pos - 80):pos + 20].replace("\n", " ")
+            out.append(f"{msg}. The string is also not valid JSON ({getattr(e, 'msg', e)} at character "
+                       f"{pos}, near: ...{near}...).")
+    return out
+
+
 def _execute(spec: ToolSpec, args: Any, ctx: RunContext) -> tuple[str, Any]:
     """Validate, permission-check and run one call. Returns (status, result)."""
     status, result = "ok", None
     if not isinstance(args, dict):
         status, result = "rejected", {"error": "Arguments must be a JSON object."}
     elif errs := problems(args, spec.parameters):
+        explained = json_string_problems(args, spec.parameters)
+        covered = {p.split(":", 1)[0] for p in explained}       # drop the generic type error for those
+        errs = explained + [e for e in errs if not (e.split(":", 1)[0] in covered and "is not of type" in e)]
         status, result = "rejected", {"error": f"Invalid arguments for {spec.name}.", "problems": errs,
                                       "hint": "Call the tool again with arguments matching its schema."}
     elif spec.permission not in ctx.allowed_permissions:

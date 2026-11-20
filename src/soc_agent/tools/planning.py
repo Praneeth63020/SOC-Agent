@@ -6,6 +6,7 @@ Day 2; on Day 1 the agent only *plans* which of them it will use.
 from __future__ import annotations
 
 import ipaddress
+import json
 import re
 from typing import Any, Iterator
 
@@ -99,6 +100,23 @@ def plan_problems(plan: Any, alert: dict) -> list[str]:
     return issues + unsupported_values(plan, alert)
 
 
+def plan_quality_notes(plan: dict) -> list[str]:
+    """Non-blocking observations about an ACCEPTED plan (shown as warnings, never a rejection)."""
+    steps = [s for s in plan.get("steps") or [] if isinstance(s, dict)]
+    notes = []
+    reviews = [s.get("step") for s in steps if s.get("tool") == "analyst_review"]
+    if len(reviews) > 1:
+        notes.append(f"Plan has {len(reviews)} analyst_review steps {reviews}; one combined review step "
+                     "is expected.")
+    seen: dict[str, int] = {}
+    for s in steps:
+        key = json.dumps([s.get("tool"), s.get("parameters")], sort_keys=True)
+        if key in seen and s.get("tool") != "analyst_review":
+            notes.append(f"Step {s.get('step')} repeats step {seen[key]} (same tool and parameters).")
+        seen.setdefault(key, s.get("step"))
+    return notes
+
+
 # -------------------------------------------------------- submit_investigation_plan
 def _submit_plan(args: dict, ctx: RunContext) -> dict:
     if ctx.plan is not None:
@@ -129,13 +147,15 @@ def _for_model(schema: dict) -> dict:
 
 
 def _plan_argument_schema() -> dict:
-    return {"type": "object", "properties": {"plan": _for_model(load_schema("investigation_plan"))},
-            "required": ["plan"], "additionalProperties": False}
+    plan = _for_model(load_schema("investigation_plan"))
+    plan["description"] = "The complete plan as a JSON object (not a string containing JSON)."
+    return {"type": "object", "properties": {"plan": plan}, "required": ["plan"], "additionalProperties": False}
 
 
 SUBMIT_PLAN = ToolSpec(
     name="submit_investigation_plan",
-    description=("Submit the structured investigation plan for the current alert (exactly once). It is "
+    description=("Submit the structured investigation plan for the current alert (exactly once), passing "
+                 "`plan` as a JSON object. Every step needs all six fields, including expected_evidence. It is "
                  "validated against the investigation-plan schema and checked for indicators that are not "
                  "in the alert; if problems are returned, fix them and resubmit."),
     # The wrapper rejects structural errors before the handler runs (audited; they count

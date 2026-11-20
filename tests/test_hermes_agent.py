@@ -86,6 +86,14 @@ def test_malformed_tool_arguments_are_rejected_then_recovered(alert, mock_settin
     assert res.status == "planned"
 
 
+def test_malformed_json_string_plan_is_explained_then_fixed(alert, mock_settings):
+    res, rec = run(alert, mock_settings, "string_plan")         # what a live NVIDIA model did
+    assert tools_and_status(rec) == [("get_alert", "ok"), ("submit_investigation_plan", "rejected"),
+                                     ("submit_investigation_plan", "ok")]
+    assert "not valid JSON" in rec["tool_calls"][1]["result"]["problems"][0]
+    assert res.status == "planned"
+
+
 def test_no_submitted_plan_means_failed_not_invented(alert, mock_settings):
     res, rec = run(alert, mock_settings, "no_submit")
     assert res.status == "failed" and res.plan is None and "did not produce a valid plan" in res.error

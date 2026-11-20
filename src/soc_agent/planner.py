@@ -24,7 +24,7 @@ from soc_agent.hermes_runtime import build_agent, exposed_tool_names
 from soc_agent.mock_llm import MockLLMServer
 from soc_agent.prompts import PLANNER_SYSTEM, planner_task
 from soc_agent.tools.base import RunContext, close_run, open_run
-from soc_agent.tools.planning import DAY1_TOOLS
+from soc_agent.tools.planning import DAY1_TOOLS, plan_quality_notes
 
 HERMES_STATS = ("completed", "failed", "api_calls", "turn_exit_reason", "input_tokens", "output_tokens",
                 "final_response", "error")
@@ -109,6 +109,7 @@ def plan_investigation(alert: dict, settings: Settings, mock_scenario: str = "no
         if ctx.plan is None:
             reason = out.get("error") or out.get("final_response") or "no plan was submitted"
             raise RuntimeError(f"Agent did not produce a valid plan: {str(reason)[:300]}")
+        warnings.extend(plan_quality_notes(ctx.plan))
         if out.get("failed"):
             warnings.append(f"Hermes reported a failure after the plan was accepted: {out.get('error')}")
         plan = {

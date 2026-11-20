@@ -14,6 +14,7 @@ Scenarios:
   invalid_first  first plan uses an IP that is not in the alert (rejected), then a valid plan
   escape         first tries Hermes's built-in `terminal` tool (must be refused by Hermes)
   bad_args       first calls get_alert with malformed arguments (rejected by the wrapper)
+  string_plan    first sends the plan as a malformed JSON string (seen with a live NVIDIA model), then fixes it
   no_submit      answers in plain text and never submits a plan
   http_error     every chat request fails with HTTP 500
 """
@@ -28,7 +29,7 @@ from pathlib import Path
 
 from soc_agent.config import MOCK_MODEL
 
-SCENARIOS = ("normal", "invalid_first", "escape", "bad_args", "no_submit", "http_error")
+SCENARIOS = ("normal", "invalid_first", "escape", "bad_args", "string_plan", "no_submit", "http_error")
 # the escape scenario asks Hermes to run `touch ESCAPE_MARKER`; tests assert it never appears
 ESCAPE_MARKER = Path(tempfile.gettempdir()) / "soc_agent_escape_marker"
 INVENTED_IP = "198.51.100.23"       # documentation range, deliberately NOT in the sample alert
@@ -204,6 +205,9 @@ class MockLLMServer:
         plan = build_mock_plan(alert)
         if self.scenario == "invalid_first" and submits == 0:
             plan["steps"][1]["parameters"] = {"src_ip": INVENTED_IP}
+        if self.scenario == "string_plan" and submits == 0:      # one stray "}" as in the live run
+            broken = json.dumps(plan).replace('}, "rationale"', '}}, "rationale"', 1)
+            return self._call(n, "submit_investigation_plan", {"plan": broken})
         return self._call(n, "submit_investigation_plan", {"plan": plan})
 
 

@@ -44,6 +44,20 @@ Rules:
   requires explicit human approval. Never plan to do it yourself: it may only appear as a
   recommendation in an analyst_review step and in safety_notes.
 - List what the alert alone cannot tell us under data_gaps.
+
+Plan format (submit_investigation_plan):
+- Pass "plan" as a JSON object, never as a string containing JSON.
+- The plan has exactly these keys: summary, hypotheses, key_questions, steps, safety_notes,
+  data_gaps. Do not add other keys.
+- hypotheses (2-6): each has id ("H1", "H2", ...), description, benign (true or false),
+  would_be_supported_by, would_be_refuted_by.
+- key_questions: 3-10 strings. safety_notes: 1-6 strings. data_gaps: up to 10 strings.
+- steps (3-12): EVERY step has all six fields: step, objective, tool, parameters, rationale,
+  expected_evidence. This includes the analyst_review step, whose expected_evidence is the
+  decision the analyst records (approve or reject each containment option).
+- Use analyst_review exactly once, as the last step, and list every containment option
+  (block the IP, disable the account, isolate the host) in that one step.
+- Do not repeat a step with the same tool and the same parameters.
 """
 
 

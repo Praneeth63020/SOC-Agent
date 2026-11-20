@@ -68,7 +68,7 @@ python -m soc_agent plan data/alerts/account_compromise.json --json --out plan.j
 # Same pipeline offline: real Hermes, scripted mock LLM (output labelled MOCK)
 python -m soc_agent plan data/alerts/account_compromise.json --provider mock
 python -m soc_agent plan data/alerts/account_compromise.json --provider mock --scenario escape
-#   scenarios: normal | invalid_first | escape | bad_args | no_submit | http_error
+#   scenarios: normal | invalid_first | escape | bad_args | string_plan | no_submit | http_error
 
 # HTTP API -> http://127.0.0.1:8000/docs
 python -m soc_agent serve
@@ -147,7 +147,7 @@ Details, diagrams and the security model with the test that proves each control:
 │   ├── planner.py            alert -> plan workflow, run record
 │   ├── mock_llm.py           offline OpenAI-compatible mock (scripted, labelled MOCK)
 │   ├── cli.py, api.py        entry points (python -m soc_agent …, FastAPI)
-├── tests/                    112 offline tests, incl. end to end through real Hermes
+├── tests/                    116 offline tests, incl. end to end through real Hermes
 ├── docs/                     architecture.md, day1-demo.md
 ├── scripts/check_secrets.py  secret scan (+ .env tracked / ignored checks)
 └── .github/workflows/ci.yml  Python 3.11, mock provider: secret scan -> pytest -> mock demo
@@ -156,9 +156,9 @@ Details, diagrams and the security model with the test that proves each control:
 ## Known limitations (Day 1)
 
 - **No evidence yet.** The plan only *names* `search_logs`, `lookup_ip`, `search_cve` and `get_asset_context`; they are implemented on Day 2. Nothing is investigated, concluded or contained today.
-- **The mock is not AI.** It proves the pipeline (Hermes loop, tool dispatch, validation, audit, refusals), not reasoning quality. Real plans need `NVIDIA_API_KEY`. Real-model output varies between runs and may need the retry path; the CLI shows rejected attempts as warnings.
+- **The mock is not AI.** It proves the pipeline (Hermes loop, tool dispatch, validation, audit, refusals), not reasoning quality. Real plans need `NVIDIA_API_KEY`. Real-model output varies between runs and may need the retry path; the CLI shows rejected attempts as warnings. In the first live runs the model once sent the plan as a malformed JSON string and once left out `expected_evidence` on review steps; both were rejected with precise problems and fixed by the model. The prompt and schema now spell out the plan format.
 - **The indicator check is narrow.** It covers IPv4 addresses anywhere in step parameters and values under account/host-like keys. Domains, IPv6 and indicators in free text (e.g. a hypothesis) are not checked yet.
-- **Plan quality is not scored.** The schema checks structure, not whether the six questions are answered well; that's a reviewer's job for now.
+- **Plan quality is not scored.** The schema checks structure, not whether the six questions are answered well; that's a reviewer's job for now. Repeated steps and more than one `analyst_review` step are reported as warnings, not rejected.
 - **Run records are JSON files.** The SQLite audit trail and the human approval workflow for disruptive actions come on Day 4. Today the permission check only *denies* disruptive tools.
 - Hermes adds its own general identity prompt (~8 KB) before ours; it cannot be removed through the public API.
 - Each LLM call has a 4096-token output cap (`SOC_MAX_TOKENS`); a very long plan from the real model could be cut off and rejected.

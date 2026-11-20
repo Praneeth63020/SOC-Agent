@@ -108,7 +108,8 @@
           "objective": {
             "type": "string",
             "minLength": 5,
-            "maxLength": 300
+            "maxLength": 300,
+            "description": "What this step finds out."
           },
           "tool": {
             "type": "string",
@@ -123,20 +124,23 @@
           },
           "parameters": {
             "type": "object",
-            "description": "Planned arguments for the tool. Use keys such as account, host, src_ip, ip, service, start, end. Accounts, hosts and IP addresses must appear in the alert."
+            "description": "Planned arguments for the tool. Use keys such as account, host, src_ip, ip, service, start, end. Accounts, hosts and IP addresses must appear in the alert. analyst_review may use {} or the indicators under review."
           },
           "rationale": {
             "type": "string",
             "minLength": 5,
-            "maxLength": 400
+            "maxLength": 400,
+            "description": "Why this step matters for the hypotheses or key questions."
           },
           "expected_evidence": {
             "type": "string",
             "minLength": 5,
-            "maxLength": 300
+            "maxLength": 300,
+            "description": "Required in every step, including analyst_review (there: the decision the analyst records, e.g. approve or reject containment)."
           }
         }
-      }
+      },
+      "description": "3-12 steps. EVERY step has all six fields: step, objective, tool, parameters, rationale, expected_evidence. Use analyst_review exactly once, as the last step."
     },
     "safety_notes": {
       "type": "array",

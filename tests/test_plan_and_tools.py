@@ -6,7 +6,8 @@ import pytest
 from soc_agent.mock_llm import build_mock_plan
 from soc_agent.schemas import load_schema, problems
 from soc_agent.tools.base import RunContext, ToolSpec, close_run, open_run, wrap
-from soc_agent.tools.planning import GET_ALERT, MAX_PLAN_ATTEMPTS, SUBMIT_PLAN, plan_problems, unsupported_values
+from soc_agent.tools.planning import (GET_ALERT, MAX_PLAN_ATTEMPTS, SUBMIT_PLAN, plan_problems,
+                                      plan_quality_notes, unsupported_values)
 
 PLAN_SCHEMA = load_schema("investigation_plan")
 
@@ -197,3 +198,29 @@ def test_concurrent_submissions_accept_exactly_one_plan(alert):
         close_run(ctx.investigation_id)
     assert sum(o.get("accepted") is True for o in outs) == 1
     assert [c["seq"] for c in ctx.tool_calls] == list(range(1, 9))
+
+
+def test_plan_sent_as_malformed_json_string_gets_a_precise_short_problem(alert):
+    ctx = RunContext("INV-TEST-11", alert)
+    broken = json.dumps(build_mock_plan(alert)).replace('}, "rationale"', '}}, "rationale"', 1)
+    out = _call(SUBMIT_PLAN, {"plan": broken}, ctx)
+    assert out["error"].startswith("Invalid arguments") and ctx.plan is None
+    first = out["problems"][0]
+    assert first.startswith("plan: must be a JSON object, not a string") and "Expecting ',' delimiter" in first
+    assert len(out["problems"]) == 1                           # no duplicate generic type error
+    assert len(json.dumps(out)) < 1500 < len(broken)           # the plan is not echoed back in full
+
+
+def test_plan_sent_as_valid_json_string_is_explained(alert):
+    ctx = RunContext("INV-TEST-12", alert)                    # Hermes decodes these; direct callers get told
+    out = _call(SUBMIT_PLAN, {"plan": json.dumps(build_mock_plan(alert))}, ctx)
+    assert out["problems"][0] == "plan: must be a JSON object, not a string containing JSON."
+
+
+def test_quality_notes_flag_duplicate_review_and_repeated_steps(alert):
+    plan = build_mock_plan(alert)
+    assert plan_quality_notes(plan) == []
+    plan["steps"].append(dict(plan["steps"][-1], step=8))                    # second analyst_review
+    plan["steps"].append(dict(plan["steps"][2], step=9))                     # same lookup_ip again
+    notes = " ".join(plan_quality_notes(plan))
+    assert "2 analyst_review steps" in notes and "Step 9 repeats step 3" in notes
