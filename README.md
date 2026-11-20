@@ -1,6 +1,6 @@
 # cehpoint-soc-agent: a Hermes-powered AI SOC analyst (prototype)
 
-A junior-SOC-analyst agent for the Cehpoint AI Engineering Intern assessment. It receives a security alert and plans an investigation using **approved tools only**. Later days add evidence gathering, a report and response actions that a human must approve. Orchestration runs on the **Hermes agent runtime** (Nous Research `hermes-agent` 0.19.0) with an **NVIDIA-hosted LLM** (OpenAI-compatible NIM API, `meta/llama-3.3-70b-instruct`).
+A junior-SOC-analyst agent for the Cehpoint AI Engineering Intern assessment. It receives a security alert and plans an investigation using **approved tools only**. Later days add evidence gathering, a report and response actions that a human must approve. Orchestration runs on the **Hermes agent runtime** (Nous Research `hermes-agent` 0.19.0) with an **NVIDIA-hosted LLM** (OpenAI-compatible NIM API, `nvidia/nemotron-3.5-lightning-30b-a3b`).
 
 Hermes is the orchestration layer only: it decides which approved tool to call. It is **not** the SIEM, log collector or detection engine. Wazuh and tshark-based detections produce the alerts.
 
@@ -48,7 +48,7 @@ If your system Python is not 3.11–3.13 (e.g. 3.14), install one first, e.g. `u
 | `SOC_LLM_PROVIDER` | `nvidia` | `nvidia` = NVIDIA NIM (real model). `mock` = offline deterministic script, **not an AI model** (tests, CI, demo without a key) |
 | `NVIDIA_API_KEY` | (empty) | `nvapi-…`; only in `.env` (git-ignored). Missing → clear error suggesting `--provider mock` |
 | `NVIDIA_BASE_URL` | `https://integrate.api.nvidia.com/v1` | OpenAI-compatible endpoint |
-| `NVIDIA_MODEL` | `meta/llama-3.3-70b-instruct` | must support tool calling |
+| `NVIDIA_MODEL` | `nvidia/nemotron-3.5-lightning-30b-a3b` | must support tool calling. The brief named `meta/llama-3.3-70b-instruct`, but NVIDIA no longer lists it (checked 2026-11-20); this model was verified live |
 | `SOC_MAX_ITERATIONS` | `6` | step limit: Hermes tool-calling rounds per task |
 | `SOC_MAX_TOKENS` | `4096` | max output tokens per LLM call |
 | `SOC_RUNS_DIR` | `runs` | where run records are written (git-ignored) |
@@ -97,7 +97,7 @@ API: `GET /health`, `POST /alerts/validate` (422 with the problems if invalid), 
   "investigation_id": "INV-20261120-2B0F3CB2",
   "alert_id": "ALERT-2026-0001",
   "created_at": "2026-11-20T11:52:03.120+00:00",
-  "generated_by": {"runtime": "hermes-agent", "provider": "nvidia", "model": "meta/llama-3.3-70b-instruct", "mock": false},
+  "generated_by": {"runtime": "hermes-agent", "provider": "nvidia", "model": "nvidia/nemotron-3.5-lightning-30b-a3b", "mock": false},
   "synthetic_data": true,
   "summary": "…",
   "hypotheses": [

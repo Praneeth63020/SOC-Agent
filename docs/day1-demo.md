@@ -21,7 +21,7 @@ Open [`docs/architecture.md`](architecture.md) (renders on GitHub).
 python -m soc_agent check
 ```
 
-Shows `hermes-agent 0.19.0`, Python, provider `nvidia`, model `meta/llama-3.3-70b-instruct`, key `set (not shown)`, and **"hermes agent built OK; tools exposed to the model: get_alert, submit_investigation_plan"**. The locked-down agent is built offline as a smoke test.
+Shows `hermes-agent 0.19.0`, Python, provider `nvidia`, model `nvidia/nemotron-3.5-lightning-30b-a3b`, key `set (not shown)`, and **"hermes agent built OK; tools exposed to the model: get_alert, submit_investigation_plan"**. The locked-down agent is built offline as a smoke test.
 
 ### 3. Alert schema and intake (1 min)
 
@@ -37,7 +37,7 @@ python -m soc_agent validate-alert data/alerts/invalid/bad_alert.json
 
 The alert is **rejected** (exit code 2) and every problem is listed: unknown key `priority`, invalid IP `203.0.113.777`, timestamp not in UTC.
 
-### 4. Alert → investigation plan with NVIDIA (1.5 min)
+### 4. Alert → investigation plan with NVIDIA (1.5 min; the call itself takes about 20-70 s)
 
 ```bash
 python -m soc_agent plan data/alerts/account_compromise.json

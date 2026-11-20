@@ -10,7 +10,8 @@ from dotenv import load_dotenv
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 NVIDIA_DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
-NVIDIA_DEFAULT_MODEL = "meta/llama-3.3-70b-instruct"     # supports tool calling on NVIDIA NIM
+# meta/llama-3.3-70b-instruct (named in the brief) is no longer listed on NVIDIA's API (checked 2026-11-20);
+NVIDIA_DEFAULT_MODEL = "nvidia/nemotron-3.5-lightning-30b-a3b"   # verified live with tool calling
 MOCK_MODEL = "mock-soc-planner"
 PROVIDERS = ("nvidia", "mock")
 

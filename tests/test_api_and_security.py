@@ -69,12 +69,12 @@ def test_missing_nvidia_key_is_a_clear_error():
 def test_nvidia_settings_from_env(monkeypatch):
     monkeypatch.setenv("NVIDIA_API_KEY", "test-key-not-real")
     s = load_settings("nvidia")
-    assert s.base_url == "https://integrate.api.nvidia.com/v1" and s.model == "meta/llama-3.3-70b-instruct"
+    assert s.base_url == "https://integrate.api.nvidia.com/v1" and s.model == "nvidia/nemotron-3.5-lightning-30b-a3b"
     assert not s.is_mock and s.api_key == "test-key-not-real"
     monkeypatch.setenv("NVIDIA_BASE_URL", "  ")                 # blank values fall back to the defaults
     monkeypatch.setenv("NVIDIA_MODEL", "")
     s = load_settings("nvidia")
-    assert s.base_url == "https://integrate.api.nvidia.com/v1" and s.model == "meta/llama-3.3-70b-instruct"
+    assert s.base_url == "https://integrate.api.nvidia.com/v1" and s.model == "nvidia/nemotron-3.5-lightning-30b-a3b"
 
 
 @pytest.mark.parametrize("var, value", [("SOC_MAX_ITERATIONS", "lots"), ("SOC_MAX_ITERATIONS", "500"),

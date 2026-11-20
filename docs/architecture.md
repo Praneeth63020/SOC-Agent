@@ -22,7 +22,7 @@ flowchart LR
         H["AIAgent loop<br/>toolset = soc only"]
     end
 
-    LLM[("LLM<br/>NVIDIA NIM: llama-3.3-70b-instruct<br/>or offline MOCK script")]
+    LLM[("LLM<br/>NVIDIA NIM: nemotron-3.5-lightning-30b-a3b<br/>or offline MOCK script")]
 
     subgraph TOOLS["Tool layer: retrieves / records"]
         WR{{"One wrapper for every tool:<br/>1 find run by task_id<br/>2 validate args (JSON schema)<br/>3 check permission<br/>4 run, catch errors<br/>5 audit entry"}}
