@@ -41,8 +41,12 @@ def test_normal_alert_to_plan(alert, mock_settings):
     assert "raw" not in rec["alert"]
 
 
-def test_hermes_home_is_project_local_not_user_home(alert, mock_settings):
+def test_hermes_home_is_project_local_not_user_home(alert, mock_settings, tmp_path, monkeypatch):
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
     run(alert, mock_settings)
+    assert list(home.iterdir()) == []                  # ~/.hermes is never created or touched
     assert os.environ["HERMES_HOME"] == str(mock_settings.hermes_home)
     assert mock_settings.hermes_home.is_dir()
     assert "127.0.0.1" in os.environ["NO_PROXY"]
