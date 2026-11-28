@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/search_logs.output.json",
+  "title": "search_logs result",
+  "type": "object",
+  "required": ["query", "events", "total_matched", "returned", "truncated", "malformed_lines_skipped", "counts",
+               "first_time", "last_time", "notes", "data_label"],
+  "additionalProperties": false,
+  "properties": {
+    "query": {"type": "object", "description": "the effective query, defaults filled in"},
+    "events": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "required": ["time", "source", "event_type", "account", "host", "src_ip", "dst_ip", "dst_port", "summary",
+                     "evidence_ref"],
+        "additionalProperties": false,
+        "properties": {
+          "time": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$"},
+          "source": {"enum": ["wazuh", "tshark"]},
+          "event_type": {"enum": ["auth_failure", "auth_success", "privilege", "account_change", "network_session", "other"]},
+          "account": {"type": ["string", "null"]},
+          "host": {"type": ["string", "null"]},
+          "src_ip": {"type": ["string", "null"], "format": "ipv4"},
+          "dst_ip": {"type": ["string", "null"], "format": "ipv4"},
+          "dst_port": {"type": ["integer", "null"], "minimum": 0, "maximum": 65535},
+          "summary": {"type": "string", "maxLength": 300},
+          "evidence_ref": {"type": "string", "pattern": "^(wazuh_alerts\\.jsonl#L[1-9][0-9]*|tshark_sessions\\.csv#row[1-9][0-9]*)$"}
+        }
+      }
+    },
+    "total_matched": {"type": "integer", "minimum": 0},
+    "returned": {"type": "integer", "minimum": 0, "maximum": 200},
+    "truncated": {"type": "boolean"},
+    "malformed_lines_skipped": {"type": "integer", "minimum": 0},
+    "counts": {
+      "type": "object",
+      "required": ["by_event_type", "by_source"],
+      "additionalProperties": false,
+      "properties": {
+        "by_event_type": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+        "by_source": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}}
+      },
+      "description": "over ALL matched events, not only the returned ones"
+    },
+    "first_time": {"type": ["string", "null"]},
+    "last_time": {"type": ["string", "null"]},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "data_label": {"const": "SYNTHETIC"}
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/lookup_ip.output.json",
+  "title": "lookup_ip result",
+  "type": "object",
+  "required": ["ip", "found", "classification", "source", "live", "data_label"],
+  "additionalProperties": false,
+  "properties": {
+    "ip": {"type": "string", "format": "ipv4"},
+    "found": {"type": "boolean", "description": "true only if the intel feed has a record for this IP"},
+    "classification": {"enum": ["malicious", "suspicious", "benign", "internal", "unknown"]},
+    "reputation_score": {"type": "integer", "minimum": 0, "maximum": 100, "description": "0 = clean, 100 = certainly malicious"},
+    "categories": {"type": "array", "items": {"type": "string"}},
+    "report_count": {"type": "integer", "minimum": 0},
+    "first_seen": {"type": "string"},
+    "last_seen": {"type": "string"},
+    "asn": {"type": "integer"},
+    "as_org": {"type": "string"},
+    "country": {"type": "string"},
+    "evidence_ref": {"type": "string", "pattern": "^ip_reputation\\.json#[0-9.]+$"},
+    "note": {"type": "string"},
+    "source": {"const": "MOCK intel feed"},
+    "live": {"const": false},
+    "data_label": {"const": "MOCK"}
+  },
+  "if": {"properties": {"found": {"const": true}}},
+  "then": {"required": ["evidence_ref", "reputation_score"]},
+  "else": {"not": {"required": ["evidence_ref"]}}
+}

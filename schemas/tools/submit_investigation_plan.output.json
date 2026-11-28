@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/submit_investigation_plan.output.json",
+  "title": "submit_investigation_plan result",
+  "type": "object",
+  "required": ["accepted", "message"],
+  "additionalProperties": false,
+  "properties": {"accepted": {"const": true}, "message": {"type": "string"}}
+}

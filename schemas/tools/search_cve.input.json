@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/search_cve.input.json",
+  "title": "search_cve arguments",
+  "type": "object",
+  "required": ["product"],
+  "additionalProperties": false,
+  "properties": {
+    "product": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]{1,63}$",
+      "description": "a product name such as openssh (sshd and openssh-server are accepted aliases)"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9][0-9A-Za-z.:+~-]{0,39}$",
+      "description": "a version such as 8.9p1 (a distribution package version such as 1:8.9p1-3ubuntu0.6 is reduced to 8.9p1)"
+    }
+  }
+}

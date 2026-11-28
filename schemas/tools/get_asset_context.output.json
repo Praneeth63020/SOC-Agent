@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/get_asset_context.output.json",
+  "title": "get_asset_context result",
+  "type": "object",
+  "required": ["kind", "query", "found", "data_label"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {"enum": ["host", "account"]},
+    "query": {"type": "string"},
+    "found": {"type": "boolean"},
+    "record": {"type": "object"},
+    "evidence_ref": {"type": "string", "pattern": "^inventory\\.json#(hosts|accounts)/[A-Za-z0-9._@-]+$"},
+    "note": {"type": "string"},
+    "data_label": {"const": "SYNTHETIC"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"found": {"const": true}}},
+      "then": {"required": ["record", "evidence_ref"]},
+      "else": {"not": {"anyOf": [{"required": ["record"]}, {"required": ["evidence_ref"]}]}}
+    },
+    {
+      "if": {"required": ["record"], "properties": {"kind": {"const": "host"}}},
+      "then": {"properties": {"record": {
+        "type": "object",
+        "required": ["name", "ip", "role", "criticality", "owner", "os", "internet_exposed", "services"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string"},
+          "ip": {"type": "string", "format": "ipv4"},
+          "role": {"type": "string"},
+          "criticality": {"enum": ["low", "medium", "high", "critical"]},
+          "owner": {"type": "string"},
+          "os": {"type": "string"},
+          "internet_exposed": {"type": "boolean"},
+          "services": {
+            "type": "array",
+            "items": {"type": "object", "required": ["name", "product", "version", "port"], "additionalProperties": false,
+                      "properties": {"name": {"type": "string"}, "product": {"type": "string"},
+                                     "version": {"type": "string"}, "port": {"type": "integer"},
+                                     "package": {"type": "string"}}}
+          },
+          "notes": {"type": "string"}
+        }
+      }}}
+    },
+    {
+      "if": {"required": ["record"], "properties": {"kind": {"const": "account"}}},
+      "then": {"properties": {"record": {
+        "type": "object",
+        "required": ["name", "role", "department", "privileged", "usual_locations", "usual_source_ips"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string"},
+          "display_name": {"type": "string"},
+          "role": {"type": "string"},
+          "department": {"type": "string"},
+          "privileged": {"type": "boolean"},
+          "usual_locations": {"type": "array", "items": {"type": "string"}},
+          "usual_source_ips": {"type": "array", "items": {"type": "string", "format": "ipv4"}},
+          "usual_login_method": {"type": "string"},
+          "hosts": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "string"}
+        }
+      }}}
+    }
+  ]
+}

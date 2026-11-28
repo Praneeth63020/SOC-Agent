@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/get_asset_context.input.json",
+  "title": "get_asset_context arguments",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "host": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9.-]{1,64}$",
+      "description": "host name such as fin-app-01, or its IPv4 address"
+    },
+    "account": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._@-]{1,64}$",
+      "description": "account name such as j.mehta"
+    }
+  },
+  "oneOf": [{"required": ["host"]}, {"required": ["account"]}],
+  "errorMessage": "give exactly one of host or account (call the tool twice for both)"
+}

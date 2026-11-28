@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/get_alert.output.json",
+  "title": "get_alert result",
+  "type": "object",
+  "required": ["alert", "data_label"],
+  "additionalProperties": false,
+  "properties": {
+    "alert": {"type": "object", "required": ["alert_id", "entities"], "not": {"required": ["raw"]}},
+    "data_label": {"enum": ["SYNTHETIC LAB DATA", "NOT MARKED SYNTHETIC"]}
+  }
+}

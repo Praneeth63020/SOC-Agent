@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/lookup_ip.input.json",
+  "title": "lookup_ip arguments",
+  "type": "object",
+  "required": ["ip"],
+  "additionalProperties": false,
+  "properties": {
+    "ip": {
+      "type": "string",
+      "pattern": "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$",
+      "description": "an IPv4 address such as 203.0.113.77 (IPv6 is not supported)"
+    }
+  }
+}

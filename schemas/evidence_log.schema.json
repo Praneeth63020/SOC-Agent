@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/evidence_log.schema.json",
+  "title": "Evidence log (content produced by the agent in the investigation phase)",
+  "description": "What Hermes must submit via submit_evidence_log: which plan steps were executed with which tool, why, what came back (found / none / failed) and the evidence refs the tools returned. No severity, verdict or recommendation (those come on Day 3).",
+  "type": "object",
+  "required": [
+    "executed_steps",
+    "skipped_steps"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "executed_steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "description": "One entry per plan step that was run with an evidence tool (search_logs, lookup_ip, search_cve, get_asset_context). analyst_review steps never go here.",
+      "items": {
+        "type": "object",
+        "required": [
+          "step",
+          "tool",
+          "reason",
+          "outcome",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "step": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The plan step number."
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "search_logs",
+              "lookup_ip",
+              "search_cve",
+              "get_asset_context"
+            ],
+            "description": "The evidence tool used (must be the tool the plan step names)."
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 400,
+            "description": "Why this call was made."
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "found",
+              "none",
+              "failed"
+            ],
+            "description": "found = the tool returned evidence (cite its refs); none = the tool worked but returned nothing relevant (no refs); failed = the tool errored or timed out (no refs, never a guess)."
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it, e.g. wazuh_alerts.jsonl#L57"
+            },
+            "description": "Up to 20 exact evidence_ref strings returned by this step's tool in this run (pick the most relevant). Must be [] unless outcome is found."
+          }
+        }
+      }
+    },
+    "skipped_steps": {
+      "type": "array",
+      "maxItems": 12,
+      "description": "Plan steps that were not run, e.g. analyst_review (human-only). Each entry has exactly step, tool and reason (no outcome, no evidence_refs).",
+      "items": {
+        "type": "object",
+        "required": [
+          "step",
+          "tool",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "step": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "search_logs",
+              "lookup_ip",
+              "search_cve",
+              "get_asset_context",
+              "analyst_review"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 400
+          }
+        }
+      }
+    }
+  }
+}

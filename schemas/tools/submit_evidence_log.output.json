@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/submit_evidence_log.output.json",
+  "title": "submit_evidence_log result",
+  "type": "object",
+  "required": ["accepted", "message"],
+  "additionalProperties": false,
+  "properties": {"accepted": {"const": true}, "message": {"type": "string"}}
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/search_cve.output.json",
+  "title": "search_cve result",
+  "type": "object",
+  "required": ["product", "product_matched", "version", "version_compared", "version_checked", "matches", "total",
+               "notes", "source", "live", "data_label"],
+  "additionalProperties": false,
+  "properties": {
+    "product": {"type": "string"},
+    "product_matched": {"type": ["string", "null"], "description": "the database product the name resolved to, or null"},
+    "version": {"type": ["string", "null"]},
+    "version_compared": {"type": ["string", "null"], "description": "upstream version actually compared"},
+    "version_checked": {"type": "boolean", "description": "false = no version given: all CVEs of the product are listed"},
+    "matches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cve_id", "cvss", "severity", "summary", "affected", "evidence_ref"],
+        "additionalProperties": false,
+        "properties": {
+          "cve_id": {"type": "string", "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"},
+          "cvss": {"type": "number", "minimum": 0, "maximum": 10},
+          "severity": {"enum": ["low", "medium", "high", "critical"]},
+          "summary": {"type": "string"},
+          "affected": {
+            "type": "array",
+            "items": {"type": "object", "required": ["introduced", "fixed"], "additionalProperties": false,
+                      "properties": {"introduced": {"type": "string"}, "fixed": {"type": "string"}}}
+          },
+          "evidence_ref": {"type": "string", "pattern": "^cve_db\\.json#CVE-[0-9]{4}-[0-9]{4,}$"}
+        }
+      }
+    },
+    "total": {"type": "integer", "minimum": 0},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "source": {"const": "MOCK CVE database"},
+    "live": {"const": false},
+    "data_label": {"const": "MOCK"}
+  }
+}
