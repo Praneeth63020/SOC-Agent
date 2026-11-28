@@ -1,0 +1,2357 @@
+{
+  "provider": "nvidia",
+  "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+  "mock": false,
+  "started_at": "2026-11-21T09:27:46+00:00",
+  "finished_at": "2026-11-21T11:15:45+00:00",
+  "repeat": 3,
+  "git": {
+    "commit": "ef822d8",
+    "dirty": true
+  },
+  "python": "3.11.18",
+  "platform": "macOS-26.0-arm64-arm-64bit",
+  "database": "scenarios-nvidia.db",
+  "audit_ok": true,
+  "rows": [
+    {
+      "scenario": "normal",
+      "category": "normal",
+      "title": "Routine login (no attack)",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-F67BC349",
+      "seconds": 321.6,
+      "phases": {
+        "plan": {
+          "ms": 32387.8,
+          "input_tokens": 3928,
+          "output_tokens": 4710,
+          "api_calls": 4,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 228977.0,
+          "input_tokens": 30722,
+          "output_tokens": 21225,
+          "api_calls": 15,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 60227.4,
+          "input_tokens": 7817,
+          "output_tokens": 7065,
+          "api_calls": 2,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "submit_report_content": [
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "(root): Additional properties are not allowed ('severity_rationale\"' was unexpected)",
+            "(root): 'severity_rationale' is a required property"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre T1021.004: the cited login(s) came from 10.20.1.45, which is in the account's baseline (usual IPs / earlier logins): that is not evidence of adversary use. Drop the technique, or cite a login from outside the baseline",
+            "mitre T1078.003: the cited login(s) came from 10.20.1.45, which is in the account's baseline (usual IPs / earlier logins): that is not evidence of adversary use. Drop the technique, or cite a login from outside the baseline"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "low",
+      "confidence": "medium",
+      "rubric_severity": "low",
+      "rubric_confidence": "low",
+      "agrees": true,
+      "gaps": [
+        "tshark_wazuh_not_comparable",
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [],
+      "actions": [],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-F67BC349.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-F67BC349.v1.json"
+      },
+      "run": 1,
+      "expected": {
+        "description": "One mistyped password (low-level Wazuh alert), then j.mehta's usual publickey login from the office IP.",
+        "severity": [
+          "low"
+        ],
+        "rubric_severity": "low",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "supported"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L6",
+          "inventory.json#accounts/j.mehta"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [
+          "T1110",
+          "T1110.001",
+          "T1110.003",
+          "T1078",
+          "T1078.003",
+          "T1021.004",
+          "T1548.003",
+          "T1136.001"
+        ],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "none"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "normal",
+      "category": "normal",
+      "title": "Routine login (no attack)",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-D404ACBC",
+      "seconds": 311.7,
+      "phases": {
+        "plan": {
+          "ms": 37873.3,
+          "input_tokens": 7072,
+          "output_tokens": 5082,
+          "api_calls": 4,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 193965.4,
+          "input_tokens": 41642,
+          "output_tokens": 25694,
+          "api_calls": 15,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 79839.6,
+          "input_tokens": 7940,
+          "output_tokens": 6727,
+          "api_calls": 2,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "rejected",
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "submit_report_content": [
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_investigation_plan",
+          "phase": "plan",
+          "problems": [
+            "safety_notes/0: '[\"Containment actions (block IP, disable account, isolate host) require explicit human analyst approval - no automated ... (398 characters) is too long (maximum 300 characters; shorten it)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "mitre T1078.003: the cited login(s) came from 10.20.1.45, which is in the account's baseline (usual IPs / earlier logins): that is not evidence of adversary use. Drop the technique, or cite a login from outside the baseline"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "(root): Additional properties are not allowed ('mitre_rationale' was unexpected)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence/0/evidence_refs/0: 'correlate_evidence#source_ip_type' is not valid (an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64)",
+            "source_ip_intelligence/0/evidence_refs/1: 'correlate_evidence#source_ip_baseline' is not valid (an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: evidence_ref 'ip_reputation.json#10.20.1.45' was not returned by any tool in this run (lookup_ip found no intel record for 10.20.1.45, so there is no ip_reputation ref to cite; for the source IP cite the refs of the facts source_ip_type / source_ip_baseline: wazuh_alerts.jsonl#L6, inventory.json#accounts/j.mehta)"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "low",
+      "confidence": "medium",
+      "rubric_severity": "low",
+      "rubric_confidence": "high",
+      "agrees": true,
+      "gaps": [],
+      "conflicts": [],
+      "mitre": [],
+      "actions": [],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-D404ACBC.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-D404ACBC.v1.json"
+      },
+      "run": 2,
+      "expected": {
+        "description": "One mistyped password (low-level Wazuh alert), then j.mehta's usual publickey login from the office IP.",
+        "severity": [
+          "low"
+        ],
+        "rubric_severity": "low",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "supported"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L6",
+          "inventory.json#accounts/j.mehta"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [
+          "T1110",
+          "T1110.001",
+          "T1110.003",
+          "T1078",
+          "T1078.003",
+          "T1021.004",
+          "T1548.003",
+          "T1136.001"
+        ],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "none"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "normal",
+      "category": "normal",
+      "title": "Routine login (no attack)",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-D194ACC8",
+      "seconds": 285.8,
+      "phases": {
+        "plan": {
+          "ms": 16448.7,
+          "input_tokens": 3918,
+          "output_tokens": 2865,
+          "api_calls": 3,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 235474.7,
+          "input_tokens": 23559,
+          "output_tokens": 14115,
+          "api_calls": 12,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 33833.0,
+          "input_tokens": 9656,
+          "output_tokens": 5556,
+          "api_calls": 3,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "ok"
+        ],
+        "submit_report_content": [
+          "rejected",
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre T1078: the cited login(s) came from 10.20.1.45, which is in the account's baseline (usual IPs / earlier logins): that is not evidence of adversary use. Drop the technique, or cite a login from outside the baseline"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "executive_summary: states an intelligence verdict without citing a lookup_ip ref: add the matching ref (none was returned) to summary_evidence_refs and say MOCK intel, or remove the verdict"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "low",
+      "confidence": "medium",
+      "rubric_severity": "low",
+      "rubric_confidence": "medium",
+      "agrees": true,
+      "gaps": [
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [],
+      "actions": [],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-D194ACC8.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-D194ACC8.v1.json"
+      },
+      "note": "retried once after HTTP 429; first run INV-20261121-BF67544F",
+      "run": 3,
+      "expected": {
+        "description": "One mistyped password (low-level Wazuh alert), then j.mehta's usual publickey login from the office IP.",
+        "severity": [
+          "low"
+        ],
+        "rubric_severity": "low",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "supported"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L6",
+          "inventory.json#accounts/j.mehta"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [
+          "T1110",
+          "T1110.001",
+          "T1110.003",
+          "T1078",
+          "T1078.003",
+          "T1021.004",
+          "T1548.003",
+          "T1136.001"
+        ],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "none"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "compromise",
+      "category": "suspicious",
+      "title": "Account compromise (main case)",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-32371F6B",
+      "seconds": 441.7,
+      "phases": {
+        "plan": {
+          "ms": 37607.1,
+          "input_tokens": 10590,
+          "output_tokens": 4800,
+          "api_calls": 4,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 404085.8,
+          "input_tokens": 102471,
+          "output_tokens": 45275,
+          "api_calls": 22,
+          "status": "failed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "rejected",
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_investigation_plan",
+          "phase": "plan",
+          "problems": [
+            "steps/0: 'expected_evidence' is a required property",
+            "steps/1: 'expected_evidence' is a required property",
+            "steps/2: 'expected_evidence' is a required property",
+            "steps/3: 'expected_evidence' is a required property"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "severity_justification claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "containment claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "severity_rationale: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from severity_evidence_refs if it does not rest on intelligence",
+            "hypothesis H3 reasoning: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from the evidence_refs of hypothesis H3 if it does not rest on intelligence"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "hypothesis H2 reasoning: talks about the reputation of 203.0.113.77 but does not cite ip_reputation.json#203.0.113.77: add \"ip_reputation.json#203.0.113.77\" to the evidence_refs of hypothesis H2 (writing it in the text is not citing), or remove the reputation statement",
+            "recommended_next_steps 3: 'Disable' is a containment action; set type containment and requires_approval: true (for analyst consideration; nothing is executed)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre/5: 'technique_id' is a required property"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre T1078.003: name should be 'Valid Accounts: Local Accounts', not 'Valid Accounts'",
+            "recommended_next_steps 3: 'Disable' is a containment action; set type containment and requires_approval: true (for analyst consideration; nothing is executed)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre T1078.003: name should be 'Valid Accounts: Local Accounts', not 'Valid Accounts'",
+            "recommended_next_steps 3: 'Disable' is a containment action; set type containment and requires_approval: true (for analyst consideration; nothing is executed)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre T1078.003: name should be 'Valid Accounts: Local Accounts', not 'Valid Accounts'"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "failed",
+        "report": "not run"
+      },
+      "error": "RuntimeError: Agent did not produce accepted findings: Investigation of alert ALERT-2026-0001 is complete. The `submit_findings` call exhausted its 5-attempt limit due to format violations (MOCK intel citations and MITRE technique name mismatches), but all required evidence was gathered across 7 tool calls.\n\n**Key evidence established:**\n\n- **50 SSH aut",
+      "severity": null,
+      "confidence": null,
+      "rubric_severity": "critical",
+      "rubric_confidence": "low",
+      "agrees": null,
+      "gaps": [
+        "tshark_wazuh_not_comparable",
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [],
+      "actions": [],
+      "report": null,
+      "run": 1,
+      "expected": {
+        "description": "Brute force, success, sudo, new local user, outbound to a suspicious host (the main case).",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "critical",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "refuted"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L64",
+          "wazuh_alerts.jsonl#L65",
+          "wazuh_alerts.jsonl#L66"
+        ],
+        "mitre_required": [
+          "T1078"
+        ],
+        "mitre_forbidden": [],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "requested"
+      },
+      "problems": [
+        "no accepted findings (status failed)",
+        "report phase not run: RuntimeError: Agent did not produce accepted findings: Investigation of alert ALERT-2026-0001 is complete. The `submit_findings` call exhausted its 5-attempt limit due to format violations (MOCK intel citations and MITRE technique name mismatches), but all required evidence was gathered across 7 tool calls.\n\n**Key evidence established:**\n\n- **50 SSH aut"
+      ]
+    },
+    {
+      "scenario": "compromise",
+      "category": "suspicious",
+      "title": "Account compromise (main case)",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-6F291CC4",
+      "seconds": 375.6,
+      "phases": {
+        "plan": {
+          "ms": 15736.3,
+          "input_tokens": 4264,
+          "output_tokens": 3277,
+          "api_calls": 3,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 325331.6,
+          "input_tokens": 59629,
+          "output_tokens": 25161,
+          "api_calls": 13,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 34512.6,
+          "input_tokens": 11631,
+          "output_tokens": 3583,
+          "api_calls": 4,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "ok"
+        ],
+        "request_action": [
+          "ok"
+        ],
+        "submit_report_content": [
+          "rejected",
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre T1021.004: Remote Services: SSH is lateral movement between internal hosts, but the cited login came from the external address 203.0.113.77. A login with valid credentials from outside is T1078 Valid Accounts (T1133 External Remote Services for an internet-facing service); use that instead"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "executive_summary: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from summary_evidence_refs if it does not rest on intelligence"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "high",
+      "confidence": "medium",
+      "rubric_severity": "high",
+      "rubric_confidence": "low",
+      "agrees": true,
+      "gaps": [
+        "network_sessions_not_queried",
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [
+        "T1110.001",
+        "T1078",
+        "T1133"
+      ],
+      "actions": [
+        {
+          "id": "ACT-9EBCFC1E2F",
+          "action_type": "block_ip",
+          "target": "203.0.113.77",
+          "status": "pending"
+        }
+      ],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-6F291CC4.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-6F291CC4.v1.json"
+      },
+      "run": 2,
+      "expected": {
+        "description": "Brute force, success, sudo, new local user, outbound to a suspicious host (the main case).",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "critical",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "refuted"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L64",
+          "wazuh_alerts.jsonl#L65",
+          "wazuh_alerts.jsonl#L66"
+        ],
+        "mitre_required": [
+          "T1078"
+        ],
+        "mitre_forbidden": [],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "requested"
+      },
+      "problems": [
+        "wazuh_alerts.jsonl#L65 is not cited",
+        "wazuh_alerts.jsonl#L66 is not cited"
+      ]
+    },
+    {
+      "scenario": "compromise",
+      "category": "suspicious",
+      "title": "Account compromise (main case)",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-8606E569",
+      "seconds": 242.8,
+      "phases": {
+        "plan": {
+          "ms": 91178.1,
+          "input_tokens": 6300,
+          "output_tokens": 5737,
+          "api_calls": 5,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 124354.8,
+          "input_tokens": 60994,
+          "output_tokens": 12745,
+          "api_calls": 9,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 27261.4,
+          "input_tokens": 15333,
+          "output_tokens": 4954,
+          "api_calls": 4,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "request_action": [
+          "ok",
+          "ok"
+        ],
+        "submit_report_content": [
+          "rejected",
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "severity_justification claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "containment claim 2: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "hypothesis H2 reasoning: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from the evidence_refs of hypothesis H2 if it does not rest on intelligence",
+            "hypothesis H3 reasoning: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from the evidence_refs of hypothesis H3 if it does not rest on intelligence"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "confidence: cannot be high while evidence is missing, failed, timed out or conflicting: No successful Wazuh search covered every login attempt from 203.0.113.77 in the window (e.g. the search was limited to one account); counts were not compared.; Activity on fin-app-01 in the 30 minutes after the login (2026-11-18T09:42:17.512Z) was not fully searched in tshark (outbound sessions): post-login actions may be missing.",
+            "recommended_next_steps 2: 'rotate' is a containment action; set type containment and requires_approval: true (for analyst consideration; nothing is executed)"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "executive_summary: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from summary_evidence_refs if it does not rest on intelligence",
+            "recommendations 2: talks about the reputation of 203.0.113.77 but does not say it is MOCK intel"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "critical",
+      "confidence": "medium",
+      "rubric_severity": "critical",
+      "rubric_confidence": "low",
+      "agrees": true,
+      "gaps": [
+        "tshark_wazuh_not_comparable",
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [
+        "T1110",
+        "T1110.001",
+        "T1078.003",
+        "T1548.003",
+        "T1136.001"
+      ],
+      "actions": [
+        {
+          "id": "ACT-85CF895D27",
+          "action_type": "disable_account",
+          "target": "j.mehta",
+          "status": "pending"
+        },
+        {
+          "id": "ACT-2832838AE4",
+          "action_type": "block_ip",
+          "target": "203.0.113.77",
+          "status": "pending"
+        }
+      ],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-8606E569.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-8606E569.v1.json"
+      },
+      "run": 3,
+      "expected": {
+        "description": "Brute force, success, sudo, new local user, outbound to a suspicious host (the main case).",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "critical",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "refuted"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L64",
+          "wazuh_alerts.jsonl#L65",
+          "wazuh_alerts.jsonl#L66"
+        ],
+        "mitre_required": [
+          "T1078"
+        ],
+        "mitre_forbidden": [],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "requested"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "benign",
+      "category": "benign",
+      "title": "Benign user error",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-F90C1380",
+      "seconds": 342.5,
+      "phases": {
+        "plan": {
+          "ms": 106746.4,
+          "input_tokens": 4269,
+          "output_tokens": 4956,
+          "api_calls": 4,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 174328.8,
+          "input_tokens": 56081,
+          "output_tokens": 14966,
+          "api_calls": 15,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 61431.1,
+          "input_tokens": 12076,
+          "output_tokens": 7998,
+          "api_calls": 4,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "submit_report_content": [
+          "rejected",
+          "rejected",
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "severity_justification/0/evidence_refs: 'failures_by_account' is the id of a correlate_evidence fact, not an evidence_ref; cite that fact's evidence_refs instead: wazuh_alerts.jsonl#L6, wazuh_alerts.jsonl#L9",
+            "severity_justification/0/evidence_refs: 'source_ip_baseline' is the id of a correlate_evidence fact, not an evidence_ref; cite that fact's evidence_refs instead: inventory.json#accounts/j.mehta",
+            "severity_justification/0/evidence_refs: 'other_accounts_targeted' is the id of a correlate_evidence fact, not an evidence_ref; cite that fact's evidence_refs instead: wazuh_alerts.jsonl#L6, wazuh_alerts.jsonl#L9",
+            "severity_justification/0/evidence_refs: 'post_compromise_privileged' is the id of a correlate_evidence fact, not an evidence_ref; cite that fact's evidence_refs instead: wazuh_alerts.jsonl#L10"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "hypotheses/0/evidence_refs: 'failures_by_account' is the id of a correlate_evidence fact, not an evidence_ref; cite that fact's evidence_refs instead: wazuh_alerts.jsonl#L6, wazuh_alerts.jsonl#L9",
+            "hypotheses/0/evidence_refs: 'source_ip_baseline' is the id of a correlate_evidence fact, not an evidence_ref; cite that fact's evidence_refs instead: inventory.json#accounts/j.mehta",
+            "hypotheses/1/evidence_refs: 'failures_by_account' is the id of a correlate_evidence fact, not an evidence_ref; cite that fact's evidence_refs instead: wazuh_alerts.jsonl#L6, wazuh_alerts.jsonl#L9",
+            "hypotheses/1/evidence_refs: 'source_ip_baseline' is the id of a correlate_evidence fact, not an evidence_ref; cite that fact's evidence_refs instead: inventory.json#accounts/j.mehta"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "(root): 'severity_evidence_refs' is a required property"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "hypothesis H3 (benign): refuted contradicts the deterministic facts: source 10.20.1.45 is in the account's baseline, 4 failure(s) (< 10), no other accounts targeted, nothing suspicious after the login. Keep your status only if the evidence justifies it; then the reasoning must address these facts (e.g. mention the baseline) and cite them",
+            "mitre T1078: the cited login(s) came from 10.20.1.45, which is in the account's baseline (usual IPs / earlier logins): that is not evidence of adversary use. Drop the technique, or cite a login from outside the baseline"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre T1078: the cited login(s) came from 10.20.1.45, which is in the account's baseline (usual IPs / earlier logins): that is not evidence of adversary use. Drop the technique, or cite a login from outside the baseline"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "executive_summary: states an intelligence verdict without citing a lookup_ip ref: add the matching ref (none was returned) to summary_evidence_refs and say MOCK intel, or remove the verdict"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "executive_summary: states an intelligence verdict without citing a lookup_ip ref: add the matching ref (none was returned) to summary_evidence_refs and say MOCK intel, or remove the verdict"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "low",
+      "confidence": "medium",
+      "rubric_severity": "low",
+      "rubric_confidence": "medium",
+      "agrees": true,
+      "gaps": [
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [],
+      "actions": [],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-F90C1380.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-F90C1380.v1.json"
+      },
+      "run": 1,
+      "expected": {
+        "description": "j.mehta mistypes the password 4 times from the office IP, then logs in; normal activity after.",
+        "severity": [
+          "low"
+        ],
+        "rubric_severity": "low",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "supported"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L10",
+          "inventory.json#accounts/j.mehta"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [
+          "T1110",
+          "T1110.001",
+          "T1110.003",
+          "T1078",
+          "T1078.003",
+          "T1021.004",
+          "T1548.003",
+          "T1136.001"
+        ],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "none"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "benign",
+      "category": "benign",
+      "title": "Benign user error",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-776268FD",
+      "seconds": 472.7,
+      "phases": {
+        "plan": {
+          "ms": 34517.0,
+          "input_tokens": 10493,
+          "output_tokens": 3535,
+          "api_calls": 3,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 438128.8,
+          "input_tokens": 68548,
+          "output_tokens": 45935,
+          "api_calls": 24,
+          "status": "failed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: states an intelligence verdict without citing a lookup_ip ref: add the matching ref (none was returned) to this claim's evidence_refs and say MOCK intel, or remove the verdict",
+            "mitre T1078: the cited login(s) came from 10.20.1.45, which is in the account's baseline (usual IPs / earlier logins): that is not evidence of adversary use. Drop the technique, or cite a login from outside the baseline",
+            "mitre T1078.003: the cited login(s) came from 10.20.1.45, which is in the account's baseline (usual IPs / earlier logins): that is not evidence of adversary use. Drop the technique, or cite a login from outside the baseline"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence: must be a JSON array, not a string. The string is also not valid JSON (Expecting ',' delimiter at character 206, near: ...MOCK intel classifies it as an internal (RFC 1918) address without threat score\"]}]...)."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "source_ip_intelligence claim 1: states an intelligence verdict without citing a lookup_ip ref: add the matching ref (none was returned) to this claim's evidence_refs and say MOCK intel, or remove the verdict"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence: [] should be non-empty"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: states an intelligence verdict without citing a lookup_ip ref: add the matching ref (none was returned) to this claim's evidence_refs and say MOCK intel, or remove the verdict"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: states an intelligence verdict without citing a lookup_ip ref: add the matching ref (none was returned) to this claim's evidence_refs and say MOCK intel, or remove the verdict"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: evidence_ref 'ip_reputation.json#10.20.1.45' was not returned by any tool in this run (lookup_ip found no intel record for 10.20.1.45, so there is no ip_reputation ref to cite; for the source IP cite the refs of the facts source_ip_type / source_ip_baseline: wazuh_alerts.jsonl#L10, inventory.json#accounts/j.mehta)",
+            "source_ip_intelligence claim 1: states an intelligence verdict without citing a lookup_ip ref: add the matching ref (none was returned) to this claim's evidence_refs and say MOCK intel, or remove the verdict"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "failed",
+        "report": "not run"
+      },
+      "error": "RuntimeError: Agent did not produce accepted findings: The investigation is complete. I've gathered all required evidence across 7 tool calls and 2 correlate_evidence runs, but I've exhausted the 5-attempt submit_findings limit due to evidence_ref format issues with the MOCK intel source_ip_intelligence field.\n\nHere is the complete assessment:\n\n**Invest",
+      "severity": null,
+      "confidence": null,
+      "rubric_severity": "low",
+      "rubric_confidence": "low",
+      "agrees": null,
+      "gaps": [
+        "tshark_wazuh_not_comparable",
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [],
+      "actions": [],
+      "report": null,
+      "run": 2,
+      "expected": {
+        "description": "j.mehta mistypes the password 4 times from the office IP, then logs in; normal activity after.",
+        "severity": [
+          "low"
+        ],
+        "rubric_severity": "low",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "supported"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L10",
+          "inventory.json#accounts/j.mehta"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [
+          "T1110",
+          "T1110.001",
+          "T1110.003",
+          "T1078",
+          "T1078.003",
+          "T1021.004",
+          "T1548.003",
+          "T1136.001"
+        ],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "none"
+      },
+      "problems": [
+        "no accepted findings (status failed)",
+        "report phase not run: RuntimeError: Agent did not produce accepted findings: The investigation is complete. I've gathered all required evidence across 7 tool calls and 2 correlate_evidence runs, but I've exhausted the 5-attempt submit_findings limit due to evidence_ref format issues with the MOCK intel source_ip_intelligence field.\n\nHere is the complete assessment:\n\n**Invest"
+      ]
+    },
+    {
+      "scenario": "benign",
+      "category": "benign",
+      "title": "Benign user error",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-62CEFEA0",
+      "seconds": 417.5,
+      "phases": {
+        "plan": {
+          "ms": 29487.0,
+          "input_tokens": 6319,
+          "output_tokens": 3688,
+          "api_calls": 3,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 189883.1,
+          "input_tokens": 33406,
+          "output_tokens": 11902,
+          "api_calls": 12,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 198074.2,
+          "input_tokens": 11210,
+          "output_tokens": 12400,
+          "api_calls": 4,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "ok"
+        ],
+        "request_action": [
+          "rejected"
+        ],
+        "submit_report_content": [
+          "rejected",
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: evidence_ref 'ip_reputation.json#10.20.1.45' was not returned by any tool in this run (lookup_ip found no intel record for 10.20.1.45, so there is no ip_reputation ref to cite; for the source IP cite the refs of the facts source_ip_type / source_ip_baseline: wazuh_alerts.jsonl#L10, inventory.json#accounts/j.mehta)"
+          ]
+        },
+        {
+          "tool": "request_action",
+          "phase": "report",
+          "problems": [
+            "consistency: your accepted findings do not recommend disable_account for j.mehta (no containment claim or containment next step names it); request only containment the findings recommend. Anything else belongs in an investigative recommendation for the analyst"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "recommendations/1/pending_action_id: '' is not valid (the action_id request_action returned for this recommendation, if any)"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "low",
+      "confidence": "medium",
+      "rubric_severity": "low",
+      "rubric_confidence": "medium",
+      "agrees": true,
+      "gaps": [
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [],
+      "actions": [],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-62CEFEA0.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-62CEFEA0.v1.json"
+      },
+      "run": 3,
+      "expected": {
+        "description": "j.mehta mistypes the password 4 times from the office IP, then logs in; normal activity after.",
+        "severity": [
+          "low"
+        ],
+        "rubric_severity": "low",
+        "confidence_max": "high",
+        "benign_hypothesis": [
+          "supported"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L10",
+          "inventory.json#accounts/j.mehta"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [
+          "T1110",
+          "T1110.001",
+          "T1110.003",
+          "T1078",
+          "T1078.003",
+          "T1021.004",
+          "T1548.003",
+          "T1136.001"
+        ],
+        "required_gaps": [],
+        "required_unknowns": [],
+        "required_conflicts": [],
+        "containment": "none"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "incomplete",
+      "category": "incomplete",
+      "title": "Incomplete evidence",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-CE398999",
+      "seconds": 481.1,
+      "phases": {
+        "plan": {
+          "ms": 59360.8,
+          "input_tokens": 4311,
+          "output_tokens": 3903,
+          "api_calls": 4,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 343257.3,
+          "input_tokens": 87894,
+          "output_tokens": 15929,
+          "api_calls": 23,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 78428.3,
+          "input_tokens": 16394,
+          "output_tokens": 6396,
+          "api_calls": 6,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "request_action": [
+          "ok",
+          "rejected"
+        ],
+        "submit_report_content": [
+          "rejected",
+          "rejected",
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "severity_justification claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "containment claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "severity_rationale: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from severity_evidence_refs if it does not rest on intelligence",
+            "mitre T1021.004: Remote Services: SSH is lateral movement between internal hosts, but the cited login came from the external address 203.0.113.77. A login with valid credentials from outside is T1078 Valid Accounts (T1133 External Remote Services for an internet-facing service); use that instead"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre T1078.003: none of the cited refs is a auth_success event; Valid Accounts: Local Accounts is only justified by such evidence (cite it, or drop the technique)"
+          ]
+        },
+        {
+          "tool": "request_action",
+          "phase": "report",
+          "problems": [
+            "consistency: your accepted findings do not recommend disable_account for j.mehta (no containment claim or containment next step names it); request only containment the findings recommend. Anything else belongs in an investigative recommendation for the analyst"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "recommendations 1: states an intelligence verdict without saying it is MOCK intel"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "recommendations/0/expected_impact: 'Isolating fin-app-02 would prevent further unauthorized access and contain the compromised host, but would disrupt all ... (306 characters) is too long (maximum 300 characters; shorten it)"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "high",
+      "confidence": "medium",
+      "rubric_severity": "high",
+      "rubric_confidence": "low",
+      "agrees": true,
+      "gaps": [
+        "network_sessions_failed",
+        "host_context_missing"
+      ],
+      "conflicts": [],
+      "mitre": [
+        "T1110",
+        "T1110.001",
+        "T1078",
+        "T1078.003",
+        "T1133",
+        "T1548.003"
+      ],
+      "actions": [
+        {
+          "id": "ACT-DB0AE56070",
+          "action_type": "isolate_host",
+          "target": "fin-app-02",
+          "status": "pending"
+        }
+      ],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-CE398999.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-CE398999.v1.json"
+      },
+      "run": 1,
+      "expected": {
+        "description": "Success after 30 failures and sudo on fin-app-02 (not in the inventory); tshark export missing.",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "high",
+        "confidence_max": "medium",
+        "benign_hypothesis": [
+          "refuted",
+          "undetermined"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L36"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [],
+        "required_gaps": [
+          "tshark",
+          "fin-app-02"
+        ],
+        "required_unknowns": [
+          "tshark",
+          "fin-app-02"
+        ],
+        "required_conflicts": [],
+        "containment": "any"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "incomplete",
+      "category": "incomplete",
+      "title": "Incomplete evidence",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-3D95176C",
+      "seconds": 355.6,
+      "phases": {
+        "plan": {
+          "ms": 72684.9,
+          "input_tokens": 9113,
+          "output_tokens": 6332,
+          "api_calls": 5,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 271572.6,
+          "input_tokens": 37581,
+          "output_tokens": 13733,
+          "api_calls": 18,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 11241.6,
+          "input_tokens": 8196,
+          "output_tokens": 2472,
+          "api_calls": 3,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "request_action": [
+          "ok"
+        ],
+        "submit_report_content": [
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_investigation_plan",
+          "phase": "plan",
+          "problems": [
+            "steps: must be a JSON array, not a string. The string is also not valid JSON (Extra data at character 645, near: ...77, followed by accepted password login at 10:25:03 UTC with full timestamps\"}] }, {\"step\": 2, \"obje...).",
+            "safety_notes/0: '[\"Containment actions (block IP, disable account, isolate host) require explicit human analyst approval - never perform... (409 characters) is too long (maximum 300 characters; shorten it)"
+          ]
+        },
+        {
+          "tool": "submit_investigation_plan",
+          "phase": "plan",
+          "problems": [
+            "steps: must be a JSON array, not a string. The string is also not valid JSON (Extra data at character 593, near: ...ed SSH attempts from 203.0.113.77, followed by accepted login at 10:25:03 UTC\"}], {\"step\": 2, \"objec...)."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "severity_justification claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "containment claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "severity_rationale: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from severity_evidence_refs if it does not rest on intelligence",
+            "hypothesis H1 reasoning: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from the evidence_refs of hypothesis H1 if it does not rest on intelligence"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "hypotheses/0: 'status' is a required property",
+            "hypotheses/1: 'status' is a required property",
+            "severity_justification/0: \"Severity is high: 30 failures (>=10 threshold) from external IP 203.0.113.77 not in j.mehta's baseline (usual IP 10.20.... (234 characters) is not of type 'object' (send a JSON object here, e.g. {\"statement\": \"...\", \"evidence_refs\": [\"...\"]}, not a string)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "severity_rationale: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from severity_evidence_refs if it does not rest on intelligence",
+            "mitre T1133: name should be 'External Remote Services', not 'Valid Accounts'"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "high",
+      "confidence": "medium",
+      "rubric_severity": "high",
+      "rubric_confidence": "low",
+      "agrees": true,
+      "gaps": [
+        "network_sessions_failed",
+        "host_context_missing"
+      ],
+      "conflicts": [],
+      "mitre": [
+        "T1110",
+        "T1078",
+        "T1548.003",
+        "T1133"
+      ],
+      "actions": [
+        {
+          "id": "ACT-03B69FEFE9",
+          "action_type": "block_ip",
+          "target": "203.0.113.77",
+          "status": "pending"
+        }
+      ],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-3D95176C.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-3D95176C.v1.json"
+      },
+      "run": 2,
+      "expected": {
+        "description": "Success after 30 failures and sudo on fin-app-02 (not in the inventory); tshark export missing.",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "high",
+        "confidence_max": "medium",
+        "benign_hypothesis": [
+          "refuted",
+          "undetermined"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L36"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [],
+        "required_gaps": [
+          "tshark",
+          "fin-app-02"
+        ],
+        "required_unknowns": [
+          "tshark",
+          "fin-app-02"
+        ],
+        "required_conflicts": [],
+        "containment": "any"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "incomplete",
+      "category": "incomplete",
+      "title": "Incomplete evidence",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-1A411A97",
+      "seconds": 486.1,
+      "phases": {
+        "plan": {
+          "ms": 70118.1,
+          "input_tokens": 4449,
+          "output_tokens": 1956,
+          "api_calls": 4,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 354908.6,
+          "input_tokens": 50401,
+          "output_tokens": 17735,
+          "api_calls": 18,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 60951.4,
+          "input_tokens": 11277,
+          "output_tokens": 8536,
+          "api_calls": 4,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "ok"
+        ],
+        "request_action": [
+          "ok",
+          "rejected"
+        ],
+        "submit_report_content": [
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "severity_justification claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "containment claim 1: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from this claim's evidence_refs if it does not rest on intelligence",
+            "severity_rationale: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from severity_evidence_refs if it does not rest on intelligence",
+            "hypothesis H2 reasoning: cites IP intelligence (ip_reputation.json#203.0.113.77) but does not say it is MOCK intel: add the words 'MOCK intel' to this text, or remove ip_reputation.json#203.0.113.77 from the evidence_refs of hypothesis H2 if it does not rest on intelligence"
+          ]
+        },
+        {
+          "tool": "request_action",
+          "phase": "report",
+          "problems": [
+            "consistency: your accepted findings do not recommend disable_account for j.mehta (no containment claim or containment next step names it); request only containment the findings recommend. Anything else belongs in an investigative recommendation for the analyst"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "high",
+      "confidence": "medium",
+      "rubric_severity": "high",
+      "rubric_confidence": "low",
+      "agrees": true,
+      "gaps": [
+        "network_sessions_failed",
+        "host_context_missing"
+      ],
+      "conflicts": [],
+      "mitre": [
+        "T1110",
+        "T1078",
+        "T1548.003"
+      ],
+      "actions": [
+        {
+          "id": "ACT-A4B6A25FAB",
+          "action_type": "block_ip",
+          "target": "203.0.113.77",
+          "status": "pending"
+        }
+      ],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-1A411A97.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-1A411A97.v1.json"
+      },
+      "run": 3,
+      "expected": {
+        "description": "Success after 30 failures and sudo on fin-app-02 (not in the inventory); tshark export missing.",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "high",
+        "confidence_max": "medium",
+        "benign_hypothesis": [
+          "refuted",
+          "undetermined"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L36"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [],
+        "required_gaps": [
+          "tshark",
+          "fin-app-02"
+        ],
+        "required_unknowns": [
+          "tshark",
+          "fin-app-02"
+        ],
+        "required_conflicts": [],
+        "containment": "any"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "tool_failure",
+      "category": "tool_failure",
+      "title": "Intel lookup times out",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-DF232E43",
+      "seconds": 405.5,
+      "phases": {
+        "plan": {
+          "ms": 13170.4,
+          "input_tokens": 10811,
+          "output_tokens": 2433,
+          "api_calls": 3,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 356214.0,
+          "input_tokens": 87691,
+          "output_tokens": 24364,
+          "api_calls": 24,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 36052.8,
+          "input_tokens": 16964,
+          "output_tokens": 6716,
+          "api_calls": 5,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "request_action": [
+          "ok",
+          "rejected"
+        ],
+        "submit_report_content": [
+          "rejected",
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence/0/evidence_refs/0: 'lookup_ip#203.0.113.77' is not valid (an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "severity_rationale: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "mitre T1021.004: Remote Services: SSH is lateral movement between internal hosts, but the cited login came from the external address 203.0.113.77. A login with valid credentials from outside is T1078 Valid Accounts (T1133 External Remote Services for an internet-facing service); use that instead",
+            "confidence_rationale: states a reputation verdict about 198.51.100.23, but lookup_ip returned no intelligence for 198.51.100.23 in this run; look it up first, or state it as unknown"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "severity_rationale: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "confidence_rationale: states a reputation verdict about 198.51.100.23, but lookup_ip returned no intelligence for 198.51.100.23 in this run; look it up first, or state it as unknown"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "severity_rationale: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "severity_rationale: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim"
+          ]
+        },
+        {
+          "tool": "request_action",
+          "phase": "report",
+          "problems": [
+            "consistency: your accepted findings do not recommend disable_account for j.mehta (no containment claim or containment next step names it); request only containment the findings recommend. Anything else belongs in an investigative recommendation for the analyst"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "recommendations/1/pending_action_id: None is not of type 'string'",
+            "recommendations/2/pending_action_id: None is not of type 'string'",
+            "recommendations/3/pending_action_id: None is not of type 'string'"
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "high",
+      "confidence": "medium",
+      "rubric_severity": "high",
+      "rubric_confidence": "low",
+      "agrees": true,
+      "gaps": [
+        "ip_intel_failed",
+        "search_truncated",
+        "tshark_wazuh_not_comparable",
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [
+        "T1110",
+        "T1078",
+        "T1133"
+      ],
+      "actions": [
+        {
+          "id": "ACT-01069326C9",
+          "action_type": "block_ip",
+          "target": "203.0.113.77",
+          "status": "pending"
+        }
+      ],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-DF232E43.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-DF232E43.v1.json"
+      },
+      "run": 1,
+      "expected": {
+        "description": "lookup_ip times out; the reputation must be stated as unknown and confidence must not be high.",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "critical",
+        "confidence_max": "medium",
+        "benign_hypothesis": [
+          "refuted",
+          "undetermined"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L64"
+        ],
+        "must_not_cite_prefix": [
+          "ip_reputation.json#"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [],
+        "required_gaps": [
+          "lookup_ip"
+        ],
+        "required_unknowns": [
+          "reputation"
+        ],
+        "required_conflicts": [],
+        "containment": "any"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "tool_failure",
+      "category": "tool_failure",
+      "title": "Intel lookup times out",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-09792064",
+      "seconds": 450.1,
+      "phases": {
+        "plan": {
+          "ms": 51242.0,
+          "input_tokens": 8071,
+          "output_tokens": 5437,
+          "api_calls": 4,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 351929.3,
+          "input_tokens": 92684,
+          "output_tokens": 23031,
+          "api_calls": 19,
+          "status": "completed"
+        },
+        "report": {
+          "ms": 46865.0,
+          "input_tokens": 14448,
+          "output_tokens": 4715,
+          "api_calls": 4,
+          "status": "completed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "rejected",
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "ok"
+        ],
+        "request_action": [
+          "ok",
+          "ok",
+          "ok"
+        ],
+        "submit_report_content": [
+          "rejected",
+          "ok"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_investigation_plan",
+          "phase": "plan",
+          "problems": [
+            "hypotheses/2: 'id' is a required property",
+            "hypotheses/2: Additional properties are not allowed ('.id' was unexpected)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence/1/evidence_refs/0: 'lookup_ip' is not valid (an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "source_ip_intelligence claim 2: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "confidence: cannot be high while evidence is missing, failed, timed out or conflicting: lookup_ip 203.0.113.77 timeout (lookup_ip timed out after 1 s. No data was returned: record this step as failed and do not guess its result.): its reputation is unknown (no data returned).; search_logs {\"account\": \"j.mehta\", \"end\": \"2026-11-18T10:00:00+00:00\", \"host\": \"fin-app-01\", \"source\": \"wazuh\", \"start\": \"2026-11-18T09:25:00+00:00\"} returned only 50 of 52 matching events; correlation sees only returned events.; search_logs {\"end\": \"2026-11-18T10:00:00+00:00\", \"src_ip\": \"203.0.113.77\", \"start\": \"2026-11-18T09:25:00+00:00\", \"source\": \"wazuh\"} returned only 50 of 54 matching events; correlation sees only returned events."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 2: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "source_ip_intelligence claim 2: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 2: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "source_ip_intelligence claim 2: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim"
+          ]
+        },
+        {
+          "tool": "submit_report_content",
+          "phase": "report",
+          "problems": [
+            "recommendations: action ACT-6088CDDC85 (isolate_host fin-app-01) was requested in this run; add it as a containment recommendation with pending_action_id \"ACT-6088CDDC85\""
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "completed",
+        "report": "completed"
+      },
+      "error": null,
+      "severity": "critical",
+      "confidence": "medium",
+      "rubric_severity": "critical",
+      "rubric_confidence": "low",
+      "agrees": true,
+      "gaps": [
+        "ip_intel_failed",
+        "search_truncated",
+        "search_truncated",
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [
+        "T1110",
+        "T1078.003",
+        "T1548.003",
+        "T1136.001"
+      ],
+      "actions": [
+        {
+          "id": "ACT-CD6FDF14C8",
+          "action_type": "block_ip",
+          "target": "203.0.113.77",
+          "status": "pending"
+        },
+        {
+          "id": "ACT-BD15ED5D4A",
+          "action_type": "disable_account",
+          "target": "j.mehta",
+          "status": "pending"
+        },
+        {
+          "id": "ACT-6088CDDC85",
+          "action_type": "isolate_host",
+          "target": "fin-app-01",
+          "status": "pending"
+        }
+      ],
+      "report": {
+        "md": "reports/scenarios-nvidia/INV-20261121-09792064.v1.md",
+        "json": "reports/scenarios-nvidia/INV-20261121-09792064.v1.json"
+      },
+      "run": 2,
+      "expected": {
+        "description": "lookup_ip times out; the reputation must be stated as unknown and confidence must not be high.",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "critical",
+        "confidence_max": "medium",
+        "benign_hypothesis": [
+          "refuted",
+          "undetermined"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L64"
+        ],
+        "must_not_cite_prefix": [
+          "ip_reputation.json#"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [],
+        "required_gaps": [
+          "lookup_ip"
+        ],
+        "required_unknowns": [
+          "reputation"
+        ],
+        "required_conflicts": [],
+        "containment": "any"
+      },
+      "problems": []
+    },
+    {
+      "scenario": "tool_failure",
+      "category": "tool_failure",
+      "title": "Intel lookup times out",
+      "analyze_script": null,
+      "report_script": null,
+      "investigation_id": "INV-20261121-0C871455",
+      "seconds": 450.7,
+      "phases": {
+        "plan": {
+          "ms": 43815.8,
+          "input_tokens": 6643,
+          "output_tokens": 5142,
+          "api_calls": 4,
+          "status": "planned"
+        },
+        "assess": {
+          "ms": 406833.6,
+          "input_tokens": 112077,
+          "output_tokens": 39733,
+          "api_calls": 22,
+          "status": "failed"
+        }
+      },
+      "submissions": {
+        "submit_investigation_plan": [
+          "ok"
+        ],
+        "submit_findings": [
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected",
+          "rejected"
+        ]
+      },
+      "validation_failures": [
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "mitre: must be a JSON array, not a string. The string is also not valid JSON (Expecting ':' delimiter at character 147, near: ...0 failed SSH logins for j.mehta from 203.0.113.77 between 09:31:02-09:41:55 UTC\", \"evidence_refs\": [...).",
+            "recommended_next_steps: must be a JSON array, not a string. The string is also not valid JSON (Expecting ':' delimiter at character 325, near: ...ount creation indicates active compromise. Containment prevents further damage.\", \"requires_approval...)."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "mitre T1110.003: cite failed logins for at least 2 different accounts (password spraying means one source trying several accounts)",
+            "mitre T1021.004: Remote Services: SSH is lateral movement between internal hosts, but the cited login came from the external address 203.0.113.77. A login with valid credentials from outside is T1078 Valid Accounts (T1133 External Remote Services for an internet-facing service); use that instead"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "mitre T1110.003: cite failed logins for at least 2 different accounts (password spraying means one source trying several accounts)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: claim has no evidence_refs; cite the refs it rests on, or move the statement to unknowns",
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim",
+            "mitre T1110.003: cite failed logins for at least 2 different accounts (password spraying means one source trying several accounts)"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence: [] should be non-empty"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "source_ip_intelligence claim 1: talks about the reputation of 203.0.113.77, but lookup_ip for 203.0.113.77 failed or timed out in this run (no data). State this in unknowns, not as a claim"
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        },
+        {
+          "tool": "submit_findings",
+          "phase": "assess",
+          "problems": [
+            "Too many findings submissions (limits: 5 checked, 5 with format errors). Stop and report failure."
+          ]
+        }
+      ],
+      "status": {
+        "plan": "planned",
+        "assess": "failed",
+        "report": "not run"
+      },
+      "error": "RuntimeError: Agent did not produce accepted findings: I've reached the submission limit (5 attempts with format errors, system blocks further attempts). However, I have completed the full investigation as required. Let me provide the assessment findings.\n\n## Investigation of ALERT-2026-0001 - Complete\n\n**Evidence Gathered (all via approved tools):**\n\n|",
+      "severity": null,
+      "confidence": null,
+      "rubric_severity": "critical",
+      "rubric_confidence": "low",
+      "agrees": null,
+      "gaps": [
+        "network_sessions_not_queried",
+        "ip_intel_failed",
+        "account_context_not_queried",
+        "search_truncated",
+        "search_truncated",
+        "post_login_not_covered"
+      ],
+      "conflicts": [],
+      "mitre": [],
+      "actions": [],
+      "report": null,
+      "run": 3,
+      "expected": {
+        "description": "lookup_ip times out; the reputation must be stated as unknown and confidence must not be high.",
+        "severity": [
+          "high",
+          "critical"
+        ],
+        "rubric_severity": "critical",
+        "confidence_max": "medium",
+        "benign_hypothesis": [
+          "refuted",
+          "undetermined"
+        ],
+        "must_cite": [
+          "wazuh_alerts.jsonl#L64"
+        ],
+        "must_not_cite_prefix": [
+          "ip_reputation.json#"
+        ],
+        "mitre_required": [],
+        "mitre_forbidden": [],
+        "required_gaps": [
+          "lookup_ip"
+        ],
+        "required_unknowns": [
+          "reputation"
+        ],
+        "required_conflicts": [],
+        "containment": "any"
+      },
+      "problems": [
+        "no accepted findings (status failed)",
+        "report phase not run: RuntimeError: Agent did not produce accepted findings: I've reached the submission limit (5 attempts with format errors, system blocks further attempts). However, I have completed the full investigation as required. Let me provide the assessment findings.\n\n## Investigation of ALERT-2026-0001 - Complete\n\n**Evidence Gathered (all via approved tools):**\n\n|"
+      ]
+    }
+  ],
+  "stats": {
+    "plan": {
+      "seconds": {
+        "p50": 37.9,
+        "max": 106.7,
+        "n": 15
+      },
+      "input_tokens": {
+        "p50": 6319,
+        "max": 10811,
+        "n": 15
+      },
+      "output_tokens": {
+        "p50": 4710,
+        "max": 6332,
+        "n": 15
+      }
+    },
+    "assess": {
+      "seconds": {
+        "p50": 325.3,
+        "max": 438.1,
+        "n": 15
+      },
+      "input_tokens": {
+        "p50": 59629,
+        "max": 112077,
+        "n": 15
+      },
+      "output_tokens": {
+        "p50": 21225,
+        "max": 45935,
+        "n": 15
+      }
+    },
+    "report": {
+      "seconds": {
+        "p50": 53.5,
+        "max": 198.1,
+        "n": 12
+      },
+      "input_tokens": {
+        "p50": 11454.0,
+        "max": 16964,
+        "n": 12
+      },
+      "output_tokens": {
+        "p50": 6556.0,
+        "max": 12400,
+        "n": 12
+      }
+    }
+  },
+  "passed": 11,
+  "total": 15
+}

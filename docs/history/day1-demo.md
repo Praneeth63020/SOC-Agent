@@ -8,7 +8,7 @@ Before starting: `source .venv/bin/activate`, and `.env` contains `NVIDIA_API_KE
 
 ### 1. Architecture (1 min)
 
-Open [`docs/architecture.md`](architecture.md) (renders on GitHub).
+Open [`docs/architecture.md`](../architecture.md) (renders on GitHub).
 
 - **Component diagram:** Wazuh / tshark **detect** and raise the alert. Hermes **decides** which approved tool to call. Tools **retrieve or record**, each call validated, permission-checked and audited. The analyst **approves** any disruptive action.
 - One line to say: *"Hermes is the orchestration layer, not the SIEM. It never sees raw logs directly, and it can only call the tools in our `soc` toolset."*
@@ -29,7 +29,7 @@ Shows `hermes-agent 0.19.0`, Python, provider `nvidia`, model `nvidia/nemotron-3
 python -m soc_agent validate-alert data/alerts/wazuh_account_compromise.json
 ```
 
-A raw Wazuh alert (rule 40112, level 12) becomes the normalized shape: level 12 → `severity_hint: high`, `dstuser` → `account: j.mehta`, `srcip` → `src_ip`, MITRE ids kept as hints, `synthetic: true`. Show [`schemas/alert.schema.json`](../schemas/alert.schema.json) briefly.
+A raw Wazuh alert (rule 40112, level 12) becomes the normalized shape: level 12 → `severity_hint: high`, `dstuser` → `account: j.mehta`, `srcip` → `src_ip`, MITRE ids kept as hints, `synthetic: true`. Show [`schemas/alert.schema.json`](../../schemas/alert.schema.json) briefly.
 
 ```bash
 python -m soc_agent validate-alert data/alerts/invalid/bad_alert.json

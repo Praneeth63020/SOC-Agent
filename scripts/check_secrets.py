@@ -28,7 +28,7 @@ PATTERNS = [
         re.IGNORECASE)),
 ]
 SKIP_DIRS = {".git", ".venv", "venv", ".hermes", "runs", "__pycache__", ".pytest_cache", "node_modules",
-             "build", "dist", "reports"}
+             "build", "dist", "reports", "state"}
 TEXT_SUFFIXES = {".py", ".json", ".jsonl", ".yaml", ".yml", ".toml", ".md", ".txt", ".cfg", ".ini", ".log",
                  ".sh", ".csv", ".example", ".env"}
 
@@ -65,7 +65,7 @@ def git_problems(root: Path) -> list[str]:
     try:
         tracked = subprocess.run(["git", "ls-files", "--", ".env", "*/.env"], cwd=root,
                                  capture_output=True, text=True)
-        ignored = subprocess.run(["git", "check-ignore", "-q", ".env"], cwd=root)
+        ignored = subprocess.run(["git", "check-ignore", "-q", ".env"], cwd=root, capture_output=True)
     except FileNotFoundError:
         return problems                      # git not installed: .gitignore check only
     if tracked.returncode == 0 and tracked.stdout.strip():

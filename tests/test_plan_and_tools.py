@@ -97,7 +97,9 @@ def test_wrapper_validates_arguments_before_the_handler_and_audits(alert):
     assert [c["status"] for c in ctx.tool_calls] == ["rejected", "ok"]
     entry = ctx.tool_calls[1]
     assert set(entry) == {"seq", "tool", "permission", "arguments", "status", "result",
-                          "started_at", "finished_at", "duration_ms"}
+                          "started_at", "finished_at", "duration_ms",
+                          # Day 2 additions
+                          "result_summary", "result_truncated", "evidence_refs", "fault_injected", "timeout_s"}
     assert entry["seq"] == 2 and entry["permission"] == "read" and entry["duration_ms"] >= 0
 
 
@@ -151,7 +153,7 @@ def test_invented_indicator_is_rejected_by_the_submit_tool(alert):
     ctx = RunContext("INV-TEST-7", alert)
     plan = build_mock_plan(alert)
     plan["steps"][2]["parameters"] = {"ip": "198.51.100.23"}
-    out = _call(SUBMIT_PLAN, {"plan": plan}, ctx)
+    out = _call(SUBMIT_PLAN, plan, ctx)
     assert out["error"] == "Plan rejected." and "198.51.100.23" in " ".join(out["problems"])
     assert ctx.plan is None and ctx.tool_calls[0]["status"] == "rejected"
 
@@ -159,29 +161,46 @@ def test_invented_indicator_is_rejected_by_the_submit_tool(alert):
 def test_only_one_accepted_plan(alert):
     ctx = RunContext("INV-TEST-5", alert)
     good = build_mock_plan(alert)
-    assert _call(SUBMIT_PLAN, {"plan": good}, ctx)["accepted"] is True
-    assert "already accepted" in _call(SUBMIT_PLAN, {"plan": good}, ctx)["error"]
+    assert _call(SUBMIT_PLAN, good, ctx)["accepted"] is True
+    assert "already accepted" in _call(SUBMIT_PLAN, good, ctx)["error"]
     assert ctx.plan == good and [c["status"] for c in ctx.tool_calls] == ["ok", "rejected"]
 
 
 def test_plan_attempts_are_limited(alert):
+    from soc_agent.tools.planning import MAX_PLAN_FORMAT_REJECTIONS
     ctx = RunContext("INV-TEST-8", alert)
     bad = build_mock_plan(alert)
     bad.pop("hypotheses")                                 # schema error: rejected by the wrapper
-    for _ in range(MAX_PLAN_ATTEMPTS):
-        assert "error" in _call(SUBMIT_PLAN, {"plan": bad}, ctx)
-    out = _call(SUBMIT_PLAN, {"plan": build_mock_plan(alert)}, ctx)   # valid, but too late
+    for _ in range(MAX_PLAN_FORMAT_REJECTIONS):
+        assert "error" in _call(SUBMIT_PLAN, bad, ctx)
+    out = _call(SUBMIT_PLAN, build_mock_plan(alert), ctx)   # valid, but too late
     assert "Too many plan submissions" in out["error"] and ctx.plan is None
+    ctx = RunContext("INV-TEST-8b", alert)                  # content rejections have their own bound
+    invented = build_mock_plan(alert)
+    invented["steps"][1]["parameters"] = {"src_ip": "198.51.100.9"}
+    for _ in range(MAX_PLAN_ATTEMPTS):
+        assert "does not appear in the alert" in json.dumps(_call(SUBMIT_PLAN, invented, ctx))
+    assert "Too many plan submissions" in _call(SUBMIT_PLAN, build_mock_plan(alert), ctx)["error"]
+
+
+def test_format_errors_do_not_use_up_the_plan_attempts(alert):
+    ctx = RunContext("INV-TEST-8c", alert)
+    bad = build_mock_plan(alert)
+    bad.pop("data_gaps")
+    for _ in range(2):
+        assert "error" in _call(SUBMIT_PLAN, bad, ctx)
+    assert _call(SUBMIT_PLAN, build_mock_plan(alert), ctx)["accepted"] is True
 
 
 def test_full_schema_still_applies_behind_the_simplified_model_schema(alert):
-    assert "contains" not in json.dumps(SUBMIT_PLAN.parameters)      # what the model is sent
+    assert "contains" not in json.dumps(SUBMIT_PLAN.hermes_schema())  # what the model is sent
+    assert "contains" in json.dumps(SUBMIT_PLAN.parameters)           # what the wrapper enforces
     ctx = RunContext("INV-TEST-9", alert)
     plan = build_mock_plan(alert)
     for h in plan["hypotheses"]:
         h["benign"] = False                                           # no benign hypothesis
-    out = _call(SUBMIT_PLAN, {"plan": plan}, ctx)
-    assert out["error"] == "Plan rejected." and ctx.plan is None
+    out = _call(SUBMIT_PLAN, plan, ctx)
+    assert out["error"] == "Invalid arguments for submit_investigation_plan." and ctx.plan is None
     assert any("hypotheses" in p for p in out["problems"])
 
 
@@ -193,7 +212,7 @@ def test_concurrent_submissions_accept_exactly_one_plan(alert):
         h = wrap(SUBMIT_PLAN)
         with ThreadPoolExecutor(8) as ex:
             outs = [json.loads(o) for o in ex.map(
-                lambda _: h({"plan": build_mock_plan(alert)}, task_id=ctx.investigation_id), range(8))]
+                lambda _: h(build_mock_plan(alert), task_id=ctx.investigation_id), range(8))]
     finally:
         close_run(ctx.investigation_id)
     assert sum(o.get("accepted") is True for o in outs) == 1
@@ -202,19 +221,21 @@ def test_concurrent_submissions_accept_exactly_one_plan(alert):
 
 def test_plan_sent_as_malformed_json_string_gets_a_precise_short_problem(alert):
     ctx = RunContext("INV-TEST-11", alert)
-    broken = json.dumps(build_mock_plan(alert)).replace('}, "rationale"', '}}, "rationale"', 1)
-    out = _call(SUBMIT_PLAN, {"plan": broken}, ctx)
+    plan = build_mock_plan(alert)
+    broken = json.dumps(plan["steps"]).replace('}, "rationale"', '}}, "rationale"', 1)
+    out = _call(SUBMIT_PLAN, {**plan, "steps": broken}, ctx)
     assert out["error"].startswith("Invalid arguments") and ctx.plan is None
     first = out["problems"][0]
-    assert first.startswith("plan: must be a JSON object, not a string") and "Expecting ',' delimiter" in first
+    assert first.startswith("steps: must be a JSON array, not a string") and "Expecting ',' delimiter" in first
     assert len(out["problems"]) == 1                           # no duplicate generic type error
     assert len(json.dumps(out)) < 1500 < len(broken)           # the plan is not echoed back in full
 
 
 def test_plan_sent_as_valid_json_string_is_explained(alert):
     ctx = RunContext("INV-TEST-12", alert)                    # Hermes decodes these; direct callers get told
-    out = _call(SUBMIT_PLAN, {"plan": json.dumps(build_mock_plan(alert))}, ctx)
-    assert out["problems"][0] == "plan: must be a JSON object, not a string containing JSON."
+    plan = build_mock_plan(alert)
+    out = _call(SUBMIT_PLAN, {**plan, "hypotheses": json.dumps(plan["hypotheses"])}, ctx)
+    assert out["problems"][0] == "hypotheses: must be a JSON array, not a string containing JSON."
 
 
 def test_quality_notes_flag_duplicate_review_and_repeated_steps(alert):
@@ -224,3 +245,22 @@ def test_quality_notes_flag_duplicate_review_and_repeated_steps(alert):
     plan["steps"].append(dict(plan["steps"][2], step=9))                     # same lookup_ip again
     notes = " ".join(plan_quality_notes(plan))
     assert "2 analyst_review steps" in notes and "Step 9 repeats step 3" in notes
+
+
+def test_malformed_string_wrapped_in_a_list_by_hermes_is_explained(alert):
+    ctx = RunContext("INV-TEST-13", alert)          # Hermes coerces a bad string for an array arg to [string]
+    plan = build_mock_plan(alert)
+    broken = json.dumps(plan["steps"]).replace('}, "rationale"', '}}, "rationale"', 1)
+    out = _call(SUBMIT_PLAN, {**plan, "steps": [broken]}, ctx)
+    assert out["problems"] == [out["problems"][0]] and "not valid JSON" in out["problems"][0]
+    assert out["problems"][0].startswith("steps: must be a JSON array, not a string")
+
+
+def test_an_invented_ip_at_the_end_of_a_sentence_is_still_caught(alert):
+    from soc_agent.mock_llm import build_mock_plan
+    from soc_agent.tools.planning import plan_problems
+    plan = build_mock_plan(alert)
+    plan["steps"][1]["parameters"] = {"note": "check 198.51.100.9."}
+    assert "step 2: IP 198.51.100.9 does not appear in the alert" in plan_problems(plan, alert)
+    plan["steps"][1]["parameters"] = {"version": "8.9.1.2"}                # versions are still not IPs
+    assert not any("8.9.1.2" in p for p in plan_problems(plan, alert))

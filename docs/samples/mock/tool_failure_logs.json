@@ -1,0 +1,682 @@
+{
+  "incident_id": "INV-20261121-1BBB95B6",
+  "alert_id": "ALERT-2026-0001",
+  "version": 1,
+  "title": "Multiple authentication failures followed by a success. - j.mehta on fin-app-01",
+  "status": "Under Investigation",
+  "resolution": null,
+  "severity": "medium",
+  "severity_rationale": "[MOCK] Rubric rule M2: login outcome unknown - authentication logs unavailable or truncated (key evidence missing). Factors: Source 203.0.113.77 is external and not in the account's baseline (raises); Host criticality high (raises); Source classified malicious (score 92) by MOCK intel (corroborates (MOCK intel, not decisive))",
+  "severity_evidence_refs": [
+    "inventory.json#accounts/j.mehta",
+    "inventory.json#hosts/fin-app-01",
+    "ip_reputation.json#203.0.113.77"
+  ],
+  "confidence": "low",
+  "confidence_rationale": "[MOCK] Key source problem: authentication logs (Wazuh): authentication logs (Wazuh) unavailable: search_logs error (Data source wazuh_alerts.jsonl is corrupt (not UTF-8 text).); login outcomes unknown. Gap: No Wazuh login attempts from 203.0.113.77 to compare with tshark sessions.",
+  "executive_summary": {
+    "text": "[MOCK] Alert ALERT-2026-0001 (account j.mehta on host fin-app-01): the evidence supports severity medium with low confidence. No containment was requested. Open questions: 2 unknown(s) are listed in the report. All data is SYNTHETIC; IP intelligence is a MOCK feed.",
+    "evidence_refs": [
+      "inventory.json#accounts/j.mehta",
+      "inventory.json#hosts/fin-app-01",
+      "ip_reputation.json#203.0.113.77"
+    ],
+    "source": "agent"
+  },
+  "affected_entities": {
+    "accounts": [
+      {
+        "name": "j.mehta",
+        "roles": [
+          "named in the alert"
+        ],
+        "inventory_role": "name=j.mehta; display_name=J. Mehta (fictitious); role=Finance analyst; department=Finance; privileged=False; usual_login_method=publickey; notes=Not expected to use sudo on fin-app-01.",
+        "evidence_refs": [
+          "inventory.json#accounts/j.mehta"
+        ]
+      }
+    ],
+    "hosts": [
+      {
+        "name": "fin-app-01",
+        "ip": "10.20.5.17",
+        "criticality": "high",
+        "roles": [
+          "named in the alert",
+          "network session (baseline)"
+        ],
+        "evidence_refs": [
+          "tshark_sessions.csv#row8",
+          "tshark_sessions.csv#row9",
+          "tshark_sessions.csv#row10",
+          "tshark_sessions.csv#row11",
+          "tshark_sessions.csv#row12",
+          "tshark_sessions.csv#row13",
+          "tshark_sessions.csv#row14",
+          "tshark_sessions.csv#row15",
+          "tshark_sessions.csv#row16",
+          "tshark_sessions.csv#row17",
+          "tshark_sessions.csv#row18",
+          "tshark_sessions.csv#row19",
+          "tshark_sessions.csv#row20",
+          "tshark_sessions.csv#row21",
+          "tshark_sessions.csv#row22",
+          "tshark_sessions.csv#row23",
+          "tshark_sessions.csv#row24",
+          "tshark_sessions.csv#row25",
+          "tshark_sessions.csv#row26",
+          "tshark_sessions.csv#row27",
+          "tshark_sessions.csv#row28",
+          "tshark_sessions.csv#row29",
+          "tshark_sessions.csv#row30",
+          "tshark_sessions.csv#row31",
+          "tshark_sessions.csv#row32",
+          "tshark_sessions.csv#row33",
+          "tshark_sessions.csv#row34",
+          "tshark_sessions.csv#row35",
+          "tshark_sessions.csv#row36",
+          "tshark_sessions.csv#row37",
+          "tshark_sessions.csv#row38",
+          "tshark_sessions.csv#row39",
+          "tshark_sessions.csv#row40",
+          "tshark_sessions.csv#row41",
+          "tshark_sessions.csv#row42",
+          "tshark_sessions.csv#row43",
+          "tshark_sessions.csv#row44",
+          "tshark_sessions.csv#row45",
+          "tshark_sessions.csv#row46",
+          "tshark_sessions.csv#row47",
+          "tshark_sessions.csv#row48",
+          "tshark_sessions.csv#row49",
+          "tshark_sessions.csv#row50",
+          "tshark_sessions.csv#row51",
+          "tshark_sessions.csv#row52",
+          "tshark_sessions.csv#row53",
+          "tshark_sessions.csv#row54",
+          "tshark_sessions.csv#row55",
+          "tshark_sessions.csv#row56",
+          "tshark_sessions.csv#row57",
+          "tshark_sessions.csv#row58",
+          "tshark_sessions.csv#row59",
+          "tshark_sessions.csv#row60",
+          "tshark_sessions.csv#row61",
+          "tshark_sessions.csv#row62",
+          "inventory.json#hosts/fin-app-01"
+        ]
+      },
+      {
+        "name": "db-fin-01",
+        "ip": null,
+        "criticality": null,
+        "roles": [
+          "network session (baseline)"
+        ],
+        "evidence_refs": [
+          "tshark_sessions.csv#row63"
+        ]
+      }
+    ],
+    "ips": [
+      {
+        "ip": "203.0.113.77",
+        "roles": [
+          "source in the alert"
+        ],
+        "internal": false,
+        "reputation": "MOCK intel: 203.0.113.77 is classified malicious (score 92; ssh-bruteforce, password-spraying, scanner).",
+        "evidence_refs": [
+          "ip_reputation.json#203.0.113.77"
+        ]
+      },
+      {
+        "ip": "10.20.5.17",
+        "roles": [
+          "alert host fin-app-01"
+        ],
+        "internal": true,
+        "reputation": null,
+        "evidence_refs": []
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "time": "2026-11-18T09:29:39.610Z",
+      "last_time": "2026-11-18T09:42:15.902Z",
+      "count": 54,
+      "phase": "baseline",
+      "event": "network_session 203.0.113.77 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row8",
+        "tshark_sessions.csv#row61"
+      ]
+    },
+    {
+      "time": "2026-11-18T09:47:32.417Z",
+      "last_time": "2026-11-18T09:47:32.417Z",
+      "count": 1,
+      "phase": "baseline",
+      "event": "network_session 10.20.5.17 -> 198.51.100.23 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row62"
+      ]
+    },
+    {
+      "time": "2026-11-18T10:05:00.031Z",
+      "last_time": "2026-11-18T10:05:00.031Z",
+      "count": 1,
+      "phase": "baseline",
+      "event": "network_session 10.20.5.17 -> 10.20.5.30 on db-fin-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row63"
+      ]
+    }
+  ],
+  "assessment_summary": {
+    "answers": [
+      {
+        "question": "Which account and asset are involved?",
+        "claims": [
+          {
+            "statement": "[MOCK] fin-app-01 (10.20.5.17): Finance application server (accounts payable and invoicing); criticality high; internet_exposed True.",
+            "evidence_refs": [
+              "inventory.json#hosts/fin-app-01"
+            ]
+          },
+          {
+            "statement": "[MOCK] j.mehta: Finance analyst; privileged False; usual login method publickey; note: Not expected to use sudo on fin-app-01.",
+            "evidence_refs": [
+              "inventory.json#accounts/j.mehta"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What is the timeline, and which events support the alert?",
+        "claims": [
+          {
+            "statement": "[MOCK] See the correlated timeline.",
+            "evidence_refs": [
+              "inventory.json#hosts/fin-app-01"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What does approved intelligence say about the source IP?",
+        "claims": [
+          {
+            "statement": "[MOCK] MOCK intel: 203.0.113.77 is classified malicious (score 92; ssh-bruteforce, password-spraying, scanner).",
+            "evidence_refs": [
+              "ip_reputation.json#203.0.113.77"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "Are there related events before or after the successful login?",
+        "claims": [
+          {
+            "statement": "[MOCK] 203.0.113.77 is NOT in j.mehta's baseline (usual source IPs in the inventory: 10.20.1.45; 0 earlier successful login(s) before the attack window, from none).",
+            "evidence_refs": [
+              "inventory.json#accounts/j.mehta"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What severity is justified by evidence?",
+        "claims": [
+          {
+            "statement": "[MOCK] The evidence supports severity medium (M2: login outcome unknown - authentication logs unavailable or truncated (key evidence missing)).",
+            "evidence_refs": [
+              "inventory.json#accounts/j.mehta",
+              "inventory.json#hosts/fin-app-01",
+              "ip_reputation.json#203.0.113.77"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What containment or remediation should a human analyst consider?",
+        "claims": [
+          {
+            "statement": "[MOCK] No containment can be justified yet: the login outcome is unknown because the authentication logs could not be read in this run (see unknowns).",
+            "evidence_refs": [
+              "inventory.json#hosts/fin-app-01"
+            ]
+          }
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "H1",
+        "description": "[MOCK] An attacker at 203.0.113.77 brute-forced or guessed the password of j.mehta.",
+        "benign": false,
+        "status": "undetermined",
+        "reasoning": "[MOCK] The evidence is not sufficient to decide.",
+        "evidence_refs": []
+      },
+      {
+        "id": "H2",
+        "description": "[MOCK] Credential stuffing or password spraying, of which j.mehta was one target.",
+        "benign": false,
+        "status": "undetermined",
+        "reasoning": "[MOCK] No failures were found to compare accounts.",
+        "evidence_refs": []
+      },
+      {
+        "id": "H3",
+        "description": "[MOCK] The real user j.mehta, or a script with a stale password, failed and then logged in normally.",
+        "benign": true,
+        "status": "undetermined",
+        "reasoning": "[MOCK] The evidence neither confirms nor rules out a benign cause.",
+        "evidence_refs": []
+      }
+    ],
+    "recommended_next_steps": [
+      {
+        "action": "[MOCK] Confirm with j.mehta whether they attempted these logins.",
+        "type": "investigative",
+        "rationale": "[MOCK] Separates user error from account misuse.",
+        "requires_approval": false
+      },
+      {
+        "action": "[MOCK] Re-run or obtain the missing sources: auth_logs_failed; tshark_wazuh_not_comparable",
+        "type": "investigative",
+        "rationale": "[MOCK] Gaps limit confidence.",
+        "requires_approval": false
+      }
+    ]
+  },
+  "alternative_explanations": [],
+  "gaps_unknowns": {
+    "gaps": [
+      {
+        "id": "auth_logs_failed",
+        "statement": "authentication logs (Wazuh) unavailable: search_logs error (Data source wazuh_alerts.jsonl is corrupt (not UTF-8 text).); login outcomes unknown."
+      },
+      {
+        "id": "tshark_wazuh_not_comparable",
+        "statement": "No Wazuh login attempts from 203.0.113.77 to compare with tshark sessions."
+      }
+    ],
+    "conflicts": [],
+    "unknowns": [
+      "[MOCK] authentication logs (Wazuh) unavailable: search_logs error (Data source wazuh_alerts.jsonl is corrupt (not UTF-8 text).); login outcomes unknown.",
+      "[MOCK] No Wazuh login attempts from 203.0.113.77 to compare with tshark sessions."
+    ]
+  },
+  "mitre": [],
+  "recommendations": [
+    {
+      "priority": 1,
+      "action": "[MOCK] Confirm with j.mehta whether they attempted these logins.",
+      "type": "investigative",
+      "rationale": "[MOCK] Separates user error from account misuse.",
+      "expected_impact": "[MOCK] No change to any system.",
+      "evidence_refs": [
+        "inventory.json#accounts/j.mehta",
+        "inventory.json#hosts/fin-app-01",
+        "ip_reputation.json#203.0.113.77"
+      ],
+      "requires_approval": false,
+      "pending_action_id": null,
+      "linked_by": null,
+      "approval_status": "not_required"
+    },
+    {
+      "priority": 2,
+      "action": "[MOCK] Re-run or obtain the missing sources: auth_logs_failed; tshark_wazuh_not_comparable",
+      "type": "investigative",
+      "rationale": "[MOCK] Gaps limit confidence.",
+      "expected_impact": "[MOCK] No change to any system.",
+      "evidence_refs": [
+        "inventory.json#accounts/j.mehta",
+        "inventory.json#hosts/fin-app-01",
+        "ip_reputation.json#203.0.113.77"
+      ],
+      "requires_approval": false,
+      "pending_action_id": null,
+      "linked_by": null,
+      "approval_status": "not_required"
+    }
+  ],
+  "recommendations_source": "agent (submit_report_content, validated)",
+  "pending_actions": [],
+  "rubric_agreement": {
+    "agent_severity": "medium",
+    "rubric_severity": "medium",
+    "agrees": true,
+    "rubric_rule": "M2: login outcome unknown - authentication logs unavailable or truncated (key evidence missing)",
+    "rubric_score": 31,
+    "agent_confidence": "low",
+    "rubric_confidence": "low",
+    "confidence_agrees": true
+  },
+  "provenance": {
+    "runtime": "hermes-agent",
+    "provider": "mock",
+    "model": "mock-soc-planner",
+    "mock": true,
+    "app_version": "1.0.0",
+    "plan_id": "PLAN-INV-20261121-1BBB95B6",
+    "assembled_by": "code (soc_agent/report.py) from the stored assessment, evidence index and approval records",
+    "agent_contributed": [
+      "executive_summary",
+      "recommendations",
+      "findings (assessment phase, validated by submit_findings)"
+    ]
+  },
+  "data_labels": {
+    "synthetic_data": true,
+    "alert_synthetic": true,
+    "intel": "MOCK (live: false)",
+    "mock_llm": true,
+    "fault_injection": {},
+    "labels": [
+      "SYNTHETIC lab data (logs, assets)",
+      "MOCK intelligence feed / MOCK CVE database (live: false)",
+      "MOCK LLM: deterministic script, not an AI model"
+    ]
+  },
+  "evidence_appendix": [
+    {
+      "ref": "inventory.json#accounts/j.mehta",
+      "tool": "get_asset_context",
+      "excerpt": "name=j.mehta; display_name=J. Mehta (fictitious); role=Finance analyst; department=Finance; privileged=False; usual_login_method=publickey; notes=Not expected to use sudo on fin-app-01."
+    },
+    {
+      "ref": "inventory.json#hosts/fin-app-01",
+      "tool": "get_asset_context",
+      "excerpt": "name=fin-app-01; ip=10.20.5.17; role=Finance application server (accounts payable and invoicing); criticality=high; owner=Finance IT (fin-it@cehpoint.example); os=Ubuntu 22.04 LTS; internet_exposed=True; notes=SSH is reachable from the inte"
+    },
+    {
+      "ref": "ip_reputation.json#203.0.113.77",
+      "tool": "lookup_ip",
+      "excerpt": "ip=203.0.113.77; found=True; classification=malicious; reputation_score=92; report_count=148; first_seen=2026-09-02T11:20:00Z; last_seen=2026-11-18T09:45:00Z; asn=64500; as_org=Example Hosting Ltd (MOCK); country=ZZ; source=MOCK intel feed;"
+    },
+    {
+      "ref": "tshark_sessions.csv#row8",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50811 -> 10.20.5.17:22 (tcp.stream 7), duration 3.1 s, 4312 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row9",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50826 -> 10.20.5.17:22 (tcp.stream 8), duration 3.1 s, 4312 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row10",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50840 -> 10.20.5.17:22 (tcp.stream 9), duration 3.1 s, 4312 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row11",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50944 -> 10.20.5.17:22 (tcp.stream 10), duration 2.2 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row12",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50955 -> 10.20.5.17:22 (tcp.stream 11), duration 2.5 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row13",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50966 -> 10.20.5.17:22 (tcp.stream 12), duration 2.8 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row14",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50977 -> 10.20.5.17:22 (tcp.stream 13), duration 3.1 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row15",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50988 -> 10.20.5.17:22 (tcp.stream 14), duration 3.4 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row16",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:50999 -> 10.20.5.17:22 (tcp.stream 15), duration 3.7 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row17",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51010 -> 10.20.5.17:22 (tcp.stream 16), duration 4 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row18",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51021 -> 10.20.5.17:22 (tcp.stream 17), duration 2.2 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row19",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51032 -> 10.20.5.17:22 (tcp.stream 18), duration 2.5 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row20",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51043 -> 10.20.5.17:22 (tcp.stream 19), duration 2.8 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row21",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51054 -> 10.20.5.17:22 (tcp.stream 20), duration 3.1 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row22",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51065 -> 10.20.5.17:22 (tcp.stream 21), duration 3.4 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row23",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51076 -> 10.20.5.17:22 (tcp.stream 22), duration 3.7 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row24",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51087 -> 10.20.5.17:22 (tcp.stream 23), duration 4 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row25",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51098 -> 10.20.5.17:22 (tcp.stream 24), duration 2.2 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row26",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51109 -> 10.20.5.17:22 (tcp.stream 25), duration 2.5 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row27",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51120 -> 10.20.5.17:22 (tcp.stream 26), duration 2.8 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row28",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51131 -> 10.20.5.17:22 (tcp.stream 27), duration 3.1 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row29",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51142 -> 10.20.5.17:22 (tcp.stream 28), duration 3.4 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row30",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51153 -> 10.20.5.17:22 (tcp.stream 29), duration 3.7 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row31",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51164 -> 10.20.5.17:22 (tcp.stream 30), duration 4 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row32",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51175 -> 10.20.5.17:22 (tcp.stream 31), duration 2.2 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row33",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51186 -> 10.20.5.17:22 (tcp.stream 32), duration 2.5 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row34",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51197 -> 10.20.5.17:22 (tcp.stream 33), duration 2.8 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row35",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51208 -> 10.20.5.17:22 (tcp.stream 34), duration 3.1 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row36",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51219 -> 10.20.5.17:22 (tcp.stream 35), duration 3.4 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row37",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51230 -> 10.20.5.17:22 (tcp.stream 36), duration 3.7 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row38",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51241 -> 10.20.5.17:22 (tcp.stream 37), duration 4 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row39",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51252 -> 10.20.5.17:22 (tcp.stream 38), duration 2.2 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row40",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51263 -> 10.20.5.17:22 (tcp.stream 39), duration 2.5 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row41",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51274 -> 10.20.5.17:22 (tcp.stream 40), duration 2.8 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row42",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51285 -> 10.20.5.17:22 (tcp.stream 41), duration 3.1 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row43",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51296 -> 10.20.5.17:22 (tcp.stream 42), duration 3.4 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row44",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51307 -> 10.20.5.17:22 (tcp.stream 43), duration 3.7 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row45",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51318 -> 10.20.5.17:22 (tcp.stream 44), duration 4 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row46",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51329 -> 10.20.5.17:22 (tcp.stream 45), duration 2.2 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row47",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51340 -> 10.20.5.17:22 (tcp.stream 46), duration 2.5 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row48",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51351 -> 10.20.5.17:22 (tcp.stream 47), duration 2.8 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row49",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51362 -> 10.20.5.17:22 (tcp.stream 48), duration 3.1 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row50",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51373 -> 10.20.5.17:22 (tcp.stream 49), duration 3.4 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row51",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51384 -> 10.20.5.17:22 (tcp.stream 50), duration 3.7 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row52",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51395 -> 10.20.5.17:22 (tcp.stream 51), duration 4 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row53",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51406 -> 10.20.5.17:22 (tcp.stream 52), duration 2.2 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row54",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51417 -> 10.20.5.17:22 (tcp.stream 53), duration 2.5 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row55",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51428 -> 10.20.5.17:22 (tcp.stream 54), duration 2.8 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row56",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51439 -> 10.20.5.17:22 (tcp.stream 55), duration 3.1 s, 4100 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row57",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51450 -> 10.20.5.17:22 (tcp.stream 56), duration 3.4 s, 4196 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row58",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51461 -> 10.20.5.17:22 (tcp.stream 57), duration 3.7 s, 4292 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row59",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51472 -> 10.20.5.17:22 (tcp.stream 58), duration 4 s, 4388 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row60",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51483 -> 10.20.5.17:22 (tcp.stream 59), duration 2.2 s, 4484 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row61",
+      "tool": "search_logs",
+      "excerpt": "TCP session 203.0.113.77:51522 -> 10.20.5.17:22 (tcp.stream 60), duration 1588.4 s, 2481920 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row62",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.5.17:44816 -> 198.51.100.23:443 (tcp.stream 61), duration 96.2 s, 48213770 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row63",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.5.17:39388 -> 10.20.5.30:5432 (tcp.stream 62), duration 29.7 s, 79010 bytes"
+    }
+  ],
+  "generated_at": "2026-11-21T11:17:12.429+00:00"
+}

@@ -23,3 +23,5 @@ reports/
 # Runtime state (never commit)
 .hermes/
 runs/
+state/
+data/simulated_actions.log

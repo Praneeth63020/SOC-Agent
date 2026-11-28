@@ -11,6 +11,10 @@ Least privilege, enforced by configuration rather than by prompt:
     is imported), so the user's personal ~/.hermes config, keys and sessions are
     never read or modified.
   - max_iterations caps tool-calling rounds per task (step limit).
+  - Hermes's registry is process-global, so every phase's tools live in toolset
+    "soc". build_agent narrows the agent to the tools of ITS phase (agent.tools is
+    what the model is sent, agent.valid_tool_names what Hermes will dispatch), and
+    the wrapper denies any other tool via RunContext.allowed_tools as well.
 """
 from __future__ import annotations
 
@@ -32,19 +36,20 @@ def prepare_environment(settings: Settings) -> None:
         os.environ[var] = ",".join(parts + [h for h in LOCAL_HOSTS if h not in parts])
 
 
-def build_agent(settings: Settings, tools: list[ToolSpec], session_id: str, base_url: str | None = None) -> Any:
+def build_agent(settings: Settings, tools: list[ToolSpec], session_id: str, base_url: str | None = None,
+                max_iterations: int | None = None) -> Any:
     """Return a Hermes AIAgent that can only call `tools` (registered under toolset 'soc')."""
     prepare_environment(settings)
-    register_tools(tools)
+    names = set(register_tools(tools))
     from run_agent import AIAgent      # imported only after HERMES_HOME is set
 
-    return AIAgent(
+    agent = AIAgent(
         base_url=base_url or settings.base_url,
         api_key=settings.api_key,
         provider="custom",                  # any OpenAI-compatible endpoint (NVIDIA NIM, mock)
         model=settings.model,
         enabled_toolsets=[TOOLSET],
-        max_iterations=settings.max_iterations,
+        max_iterations=max_iterations or settings.max_iterations,
         max_tokens=settings.max_tokens,
         tool_delay=0,
         quiet_mode=True,
@@ -53,6 +58,23 @@ def build_agent(settings: Settings, tools: list[ToolSpec], session_id: str, base
         save_trajectories=False,
         session_id=session_id,
     )
+    # the toolset may also hold another phase's tools: offer and dispatch only this phase's
+    agent.tools = [t for t in agent.tools or [] if (t.get("function") or {}).get("name") in names]
+    agent.valid_tool_names = {n for n in agent.valid_tool_names if n in names}
+    # Hermes's default of 3 retries (about 8 s of backoff) is too short for NVIDIA's free-tier rate limit (HTTP 429)
+    agent._api_max_retries = settings.api_max_retries
+    # Hermes's own console messages (retries, API errors with advice such as "run hermes setup", which does not
+    # apply here) go to a buffer that the run record keeps, not to the user's terminal
+    # (_safe_print, not _print_fn: a custom _print_fn would also switch on Hermes's animated quiet spinner)
+    agent.console_lines = []
+    agent._safe_print = lambda *a, **k: agent.console_lines.append(" ".join(str(x) for x in a)[:2000])
+    return agent
+
+
+def console_text(agent: Any, limit: int = 20_000) -> str | None:
+    """What Hermes printed during the run (kept in the run record under hermes.console)."""
+    lines = getattr(agent, "console_lines", None)
+    return "\n".join(lines)[-limit:] if lines else None
 
 
 def exposed_tool_names(agent: Any) -> list[str]:

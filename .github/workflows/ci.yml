@@ -18,17 +18,26 @@ jobs:
           pip install -e .
       - name: Secret scan
         run: python scripts/check_secrets.py
-      - name: Tests (offline, mock LLM only)
-        run: pytest --cov --cov-report=term --junitxml=reports/junit.xml
-      - name: Day 1 demo (mock LLM through real Hermes)
+      - name: Environment check (builds the locked-down Hermes agents offline)
+        run: python -m soc_agent check
+      - name: Tests (offline, mock LLM only) with coverage and junit
         run: |
-          python -m soc_agent check
-          python -m soc_agent plan data/alerts/account_compromise.json --provider mock
-          python -m soc_agent plan data/alerts/account_compromise.json --provider mock --scenario escape
+          mkdir -p reports
+          pytest --cov --cov-report=term --cov-report=json:reports/coverage.json --junitxml=reports/junit.xml
+      - name: Scenario matrix end to end (mock LLM through real Hermes)
+        run: python scripts/run_scenarios.py
+      - name: Verify the scenario database's audit trail
+        run: SOC_DB_PATH=state/scenarios-mock.db python -m soc_agent verify-audit
+      - name: End-to-end demo (fresh DB, approval gate, simulated execution, close, verify-audit)
+        run: scripts/demo.sh --mock
+      - name: Test report
+        if: always()
+        run: python scripts/make_test_report.py --out reports/test-report.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: reports-and-run-records
+          name: test-report-and-reports
           path: |
             reports/
             runs/
+            state/

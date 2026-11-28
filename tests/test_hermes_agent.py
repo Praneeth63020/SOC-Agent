@@ -123,7 +123,7 @@ def test_wazuh_input_end_to_end(wazuh_raw, mock_settings):
     (["plan", "data/alerts/invalid/bad_alert.json", "--provider", "mock"], 2, "Alert rejected"),
     (["plan", "data/alerts/account_compromise.json", "--provider", "nvidia"], 2, "--provider mock"),
     (["validate-alert", "data/alerts/wazuh_account_compromise.json"], 0, '"account": "j.mehta"'),
-    (["check"], 0, "tools exposed to the model: get_alert, submit_investigation_plan"),
+    (["check"], 0, "  plan            get_alert, submit_investigation_plan"),
 ], ids=["plan-mock", "plan-no-submit", "plan-invalid-alert", "plan-missing-key", "validate-wazuh", "check"])
 def test_cli(argv, code, needle, mock_settings, capsys, monkeypatch):
     from soc_agent.cli import main

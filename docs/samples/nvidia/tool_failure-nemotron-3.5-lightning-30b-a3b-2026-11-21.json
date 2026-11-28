@@ -1,0 +1,958 @@
+{
+  "incident_id": "INV-20261121-DF232E43",
+  "alert_id": "ALERT-2026-0001",
+  "version": 1,
+  "title": "Multiple authentication failures followed by a success. - j.mehta on fin-app-01",
+  "status": "Awaiting Approval",
+  "resolution": null,
+  "severity": "high",
+  "severity_rationale": "High: brute-force success after 50 failures from external IP not in user baseline on a high-criticality, internet-exposed host; no sudo/post-login activity observed but the success conditions for high are met",
+  "severity_evidence_refs": [
+    "wazuh_alerts.jsonl#L64",
+    "wazuh_alerts.jsonl#L12",
+    "inventory.json#accounts/j.mehta",
+    "inventory.json#hosts/fin-app-01"
+  ],
+  "confidence": "medium",
+  "confidence_rationale": "Key evidence complete: 50 auth failures + success logged, asset context, baseline check, post-login session captured. IP reputation lookup timed out (no MOCK intel returned), and outbound destination 198.51.100.23 reputation unknown - these gaps prevent confidence from being high. Confidence would be high if IP intel were available.",
+  "executive_summary": {
+    "text": "On 2026-11-18, a brute-force attack targeted Finance analyst account j.mehta on the critical internet-exposed host fin-app-01. Source IP 203.0.113.77 (external, not in j.mehta's baseline) made 50 failed SSH authentication attempts between 09:31:02 and 09:41:55 UTC, followed by a successful authentication at 09:42:17 UTC. No sudo or account change activity was observed post-login. An outbound TCP session to 198.51.100.23:443 was recorded 48 minutes later. IP reputation and the outbound session's purpose are unknown. Severity is high due to brute-force success on a high-criticality, internet-exposed host; confidence is medium due to unknowns regarding IP reputation and post-login activity.",
+    "evidence_refs": [
+      "wazuh_alerts.jsonl#L64",
+      "wazuh_alerts.jsonl#L12",
+      "wazuh_alerts.jsonl#L9",
+      "inventory.json#accounts/j.mehta",
+      "inventory.json#hosts/fin-app-01"
+    ],
+    "source": "agent"
+  },
+  "affected_entities": {
+    "accounts": [
+      {
+        "name": "j.mehta",
+        "roles": [
+          "named in the alert",
+          "failed logins (attack)",
+          "successful login / session (compromise)"
+        ],
+        "inventory_role": "name=j.mehta; display_name=J. Mehta (fictitious); role=Finance analyst; department=Finance; privileged=False; usual_login_method=publickey; notes=Not expected to use sudo on fin-app-01.",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L12",
+          "wazuh_alerts.jsonl#L13",
+          "wazuh_alerts.jsonl#L14",
+          "wazuh_alerts.jsonl#L15",
+          "wazuh_alerts.jsonl#L16",
+          "wazuh_alerts.jsonl#L17",
+          "wazuh_alerts.jsonl#L18",
+          "wazuh_alerts.jsonl#L19",
+          "wazuh_alerts.jsonl#L20",
+          "wazuh_alerts.jsonl#L21",
+          "wazuh_alerts.jsonl#L22",
+          "wazuh_alerts.jsonl#L24",
+          "wazuh_alerts.jsonl#L25",
+          "wazuh_alerts.jsonl#L26",
+          "wazuh_alerts.jsonl#L27",
+          "wazuh_alerts.jsonl#L28",
+          "wazuh_alerts.jsonl#L29",
+          "wazuh_alerts.jsonl#L30",
+          "wazuh_alerts.jsonl#L31",
+          "wazuh_alerts.jsonl#L32",
+          "wazuh_alerts.jsonl#L33",
+          "wazuh_alerts.jsonl#L34",
+          "wazuh_alerts.jsonl#L35",
+          "wazuh_alerts.jsonl#L36",
+          "wazuh_alerts.jsonl#L37",
+          "wazuh_alerts.jsonl#L38",
+          "wazuh_alerts.jsonl#L39",
+          "wazuh_alerts.jsonl#L40",
+          "wazuh_alerts.jsonl#L41",
+          "wazuh_alerts.jsonl#L42",
+          "wazuh_alerts.jsonl#L43",
+          "wazuh_alerts.jsonl#L44",
+          "wazuh_alerts.jsonl#L45",
+          "wazuh_alerts.jsonl#L46",
+          "wazuh_alerts.jsonl#L47",
+          "wazuh_alerts.jsonl#L48",
+          "wazuh_alerts.jsonl#L50",
+          "wazuh_alerts.jsonl#L51",
+          "wazuh_alerts.jsonl#L52",
+          "wazuh_alerts.jsonl#L53",
+          "wazuh_alerts.jsonl#L54",
+          "wazuh_alerts.jsonl#L55",
+          "wazuh_alerts.jsonl#L56",
+          "wazuh_alerts.jsonl#L57",
+          "wazuh_alerts.jsonl#L58",
+          "wazuh_alerts.jsonl#L59",
+          "wazuh_alerts.jsonl#L60",
+          "wazuh_alerts.jsonl#L61",
+          "wazuh_alerts.jsonl#L62",
+          "wazuh_alerts.jsonl#L63",
+          "wazuh_alerts.jsonl#L64",
+          "inventory.json#accounts/j.mehta"
+        ]
+      },
+      {
+        "name": "a.rao",
+        "roles": [
+          "failed logins (attack)"
+        ],
+        "inventory_role": null,
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L9",
+          "wazuh_alerts.jsonl#L10",
+          "wazuh_alerts.jsonl#L11"
+        ]
+      }
+    ],
+    "hosts": [
+      {
+        "name": "fin-app-01",
+        "ip": "10.20.5.17",
+        "criticality": "high",
+        "roles": [
+          "named in the alert",
+          "failed logins (attack)",
+          "successful login / session (compromise)",
+          "network session (post_compromise)"
+        ],
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L9",
+          "wazuh_alerts.jsonl#L10",
+          "wazuh_alerts.jsonl#L11",
+          "wazuh_alerts.jsonl#L12",
+          "wazuh_alerts.jsonl#L13",
+          "wazuh_alerts.jsonl#L14",
+          "wazuh_alerts.jsonl#L15",
+          "wazuh_alerts.jsonl#L16",
+          "wazuh_alerts.jsonl#L17",
+          "wazuh_alerts.jsonl#L18",
+          "wazuh_alerts.jsonl#L19",
+          "wazuh_alerts.jsonl#L20",
+          "wazuh_alerts.jsonl#L21",
+          "wazuh_alerts.jsonl#L22",
+          "wazuh_alerts.jsonl#L24",
+          "wazuh_alerts.jsonl#L25",
+          "wazuh_alerts.jsonl#L26",
+          "wazuh_alerts.jsonl#L27",
+          "wazuh_alerts.jsonl#L28",
+          "wazuh_alerts.jsonl#L29",
+          "wazuh_alerts.jsonl#L30",
+          "wazuh_alerts.jsonl#L31",
+          "wazuh_alerts.jsonl#L32",
+          "wazuh_alerts.jsonl#L33",
+          "wazuh_alerts.jsonl#L34",
+          "wazuh_alerts.jsonl#L35",
+          "wazuh_alerts.jsonl#L36",
+          "wazuh_alerts.jsonl#L37",
+          "wazuh_alerts.jsonl#L38",
+          "wazuh_alerts.jsonl#L39",
+          "wazuh_alerts.jsonl#L40",
+          "wazuh_alerts.jsonl#L41",
+          "wazuh_alerts.jsonl#L42",
+          "wazuh_alerts.jsonl#L43",
+          "wazuh_alerts.jsonl#L44",
+          "wazuh_alerts.jsonl#L45",
+          "wazuh_alerts.jsonl#L46",
+          "wazuh_alerts.jsonl#L47",
+          "wazuh_alerts.jsonl#L48",
+          "wazuh_alerts.jsonl#L50",
+          "wazuh_alerts.jsonl#L51",
+          "wazuh_alerts.jsonl#L52",
+          "wazuh_alerts.jsonl#L53",
+          "wazuh_alerts.jsonl#L54",
+          "wazuh_alerts.jsonl#L55",
+          "wazuh_alerts.jsonl#L56",
+          "wazuh_alerts.jsonl#L57",
+          "wazuh_alerts.jsonl#L58",
+          "wazuh_alerts.jsonl#L59",
+          "wazuh_alerts.jsonl#L60",
+          "wazuh_alerts.jsonl#L61",
+          "wazuh_alerts.jsonl#L62",
+          "wazuh_alerts.jsonl#L63",
+          "wazuh_alerts.jsonl#L64",
+          "tshark_sessions.csv#row62",
+          "inventory.json#hosts/fin-app-01"
+        ]
+      },
+      {
+        "name": "db-fin-01",
+        "ip": null,
+        "criticality": null,
+        "roles": [
+          "network session (post_compromise)"
+        ],
+        "evidence_refs": [
+          "tshark_sessions.csv#row63"
+        ]
+      }
+    ],
+    "ips": [
+      {
+        "ip": "203.0.113.77",
+        "roles": [
+          "source in the alert",
+          "source of the successful login",
+          "source of failed logins"
+        ],
+        "internal": false,
+        "reputation": null,
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L64",
+          "wazuh_alerts.jsonl#L9",
+          "wazuh_alerts.jsonl#L63"
+        ]
+      },
+      {
+        "ip": "10.20.5.17",
+        "roles": [
+          "alert host fin-app-01"
+        ],
+        "internal": true,
+        "reputation": null,
+        "evidence_refs": []
+      },
+      {
+        "ip": "198.51.100.23",
+        "roles": [
+          "outbound destination after the login"
+        ],
+        "internal": false,
+        "reputation": null,
+        "evidence_refs": [
+          "tshark_sessions.csv#row62"
+        ]
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "time": "2026-11-18T09:29:40.204Z",
+      "last_time": "2026-11-18T09:30:21.390Z",
+      "count": 3,
+      "phase": "attack",
+      "event": "auth_failure a.rao 203.0.113.77 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L9",
+        "wazuh_alerts.jsonl#L11"
+      ]
+    },
+    {
+      "time": "2026-11-18T09:31:02.000Z",
+      "last_time": "2026-11-18T09:41:55.000Z",
+      "count": 50,
+      "phase": "attack",
+      "event": "auth_failure j.mehta 203.0.113.77 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L12",
+        "wazuh_alerts.jsonl#L63"
+      ]
+    },
+    {
+      "time": "2026-11-18T09:42:17.512Z",
+      "last_time": "2026-11-18T09:42:17.512Z",
+      "count": 1,
+      "phase": "compromise",
+      "event": "auth_success j.mehta 203.0.113.77 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L64"
+      ]
+    },
+    {
+      "time": "2026-11-18T09:47:32.417Z",
+      "last_time": "2026-11-18T09:47:32.417Z",
+      "count": 1,
+      "phase": "post_compromise",
+      "event": "network_session 10.20.5.17 -> 198.51.100.23 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row62"
+      ]
+    },
+    {
+      "time": "2026-11-18T10:05:00.031Z",
+      "last_time": "2026-11-18T10:05:00.031Z",
+      "count": 1,
+      "phase": "post_compromise",
+      "event": "network_session 10.20.5.17 -> 10.20.5.30 on db-fin-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row63"
+      ]
+    }
+  ],
+  "assessment_summary": {
+    "answers": [
+      {
+        "question": "Which account and asset are involved?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L64",
+              "inventory.json#accounts/j.mehta",
+              "inventory.json#hosts/fin-app-01"
+            ],
+            "statement": "Account j.mehta (Finance analyst) logged into host fin-app-01 (Finance application server) from external IP 203.0.113.77"
+          },
+          {
+            "evidence_refs": [
+              "inventory.json#accounts/j.mehta"
+            ],
+            "statement": "Account j.mehta is not privileged; usual source IP is 10.20.1.45 (Pune office); usual login method is publickey"
+          },
+          {
+            "evidence_refs": [
+              "inventory.json#hosts/fin-app-01"
+            ],
+            "statement": "Host fin-app-01 is criticality high, internet-exposed, running openssh 8.9p1"
+          },
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L64",
+              "inventory.json#accounts/j.mehta",
+              "inventory.json#hosts/fin-app-01"
+            ],
+            "statement": "Source IP 203.0.113.77 is external (non-RFC 1918) and NOT in j.mehta's baseline of usual source IPs"
+          }
+        ]
+      },
+      {
+        "question": "What is the timeline, and which events support the alert?",
+        "claims": [
+          {
+            "statement": "09:29:40-09:30:21 UTC: 3 auth failures for a.rao from 203.0.113.77 (pre-attack window)",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L9",
+              "wazuh_alerts.jsonl#L11"
+            ]
+          },
+          {
+            "statement": "09:31:02-09:41:55 UTC: 50 auth failures for j.mehta from 203.0.113.77",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L12",
+              "wazuh_alerts.jsonl#L63"
+            ]
+          },
+          {
+            "statement": "09:42:17.512 UTC: Successful auth for j.mehta from 203.0.113.77 (22.5s after last failure)",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L64"
+            ]
+          },
+          {
+            "statement": "09:47:32.417 UTC: Outbound TCP session to 198.51.100.23:443 from fin-app-01 (48MB, 96s duration)",
+            "evidence_refs": [
+              "tshark_sessions.csv#row62"
+            ]
+          },
+          {
+            "statement": "10:05:00.031 UTC: TCP session from fin-app-01 to db-fin-01:5432 (79KB, 29.7s)",
+            "evidence_refs": [
+              "tshark_sessions.csv#row63"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What does approved intelligence say about the source IP?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L64"
+            ],
+            "statement": "IP 203.0.113.77 is external (non-RFC 1918) source address identified in the Wazuh alert (auth_success at 09:42:17 UTC)"
+          }
+        ]
+      },
+      {
+        "question": "Are there related events before or after the successful login?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L9",
+              "wazuh_alerts.jsonl#L11"
+            ],
+            "statement": "3 auth failures for other account a.rao from same IP 203.0.113.77 in pre-attack window (09:29:40-09:30:21 UTC)"
+          },
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L64"
+            ],
+            "statement": "No sudo or account change events for j.mehta after the successful login in returned evidence"
+          },
+          {
+            "evidence_refs": [
+              "tshark_sessions.csv#row62"
+            ],
+            "statement": "Post-login outbound network session to 198.51.100.23:443 observed via tshark"
+          }
+        ]
+      },
+      {
+        "question": "What severity is justified by evidence?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L64",
+              "wazuh_alerts.jsonl#L12",
+              "inventory.json#accounts/j.mehta",
+              "inventory.json#hosts/fin-app-01"
+            ],
+            "statement": "High severity: brute-force success after 50 failures from external IP not in user baseline on a high-criticality, internet-exposed host; no sudo/post-login activity observed but the success conditions for high are met"
+          }
+        ]
+      },
+      {
+        "question": "What containment or remediation should a human analyst consider?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L64",
+              "inventory.json#hosts/fin-app-01"
+            ],
+            "statement": "Consider blocking inbound SSH from 203.0.113.77 at the perimeter; review and restrict legacy NAT rule FIN-EXC-114 on fin-app-01"
+          },
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L12",
+              "inventory.json#accounts/j.mehta"
+            ],
+            "statement": "Monitor for further brute-force attempts from 203.0.113.77 or related IPs; consider account credential rotation for j.mehta"
+          }
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "H1",
+        "description": "Brute force/credential stuffing attack: attacker tried 50 password combinations until finding the correct one, then gained access.",
+        "benign": false,
+        "status": "supported",
+        "reasoning": "Brute force attack: 50 password failures from external IP 203.0.113.77 (not in j.mehta's baseline of 10.20.1.45) followed by successful login; also 3 failures for a.rao from same IP indicates spraying",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L12",
+          "wazuh_alerts.jsonl#L63",
+          "inventory.json#accounts/j.mehta",
+          "wazuh_alerts.jsonl#L9",
+          "wazuh_alerts.jsonl#L11"
+        ]
+      },
+      {
+        "id": "H2",
+        "description": "Legitimate user j.mehta mistyped password 50 times before entering it correctly (e.g., typo, stale cached credential).",
+        "benign": true,
+        "status": "refuted",
+        "reasoning": "Legitimate user mistyping password is implausible: 50 consecutive failures from an external IP not in the user's baseline, followed by success on a high-criticality internet-exposed host",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L12",
+          "wazuh_alerts.jsonl#L63",
+          "inventory.json#accounts/j.mehta"
+        ]
+      },
+      {
+        "id": "H3",
+        "description": "Stale service account or application credential that was recently rotated; a process logged in with old password before lockout took effect.",
+        "benign": false,
+        "status": "undetermined",
+        "reasoning": "Stale service account possibility cannot be fully ruled out without process credential audit, but evidence points to human-directed brute force",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L12",
+          "wazuh_alerts.jsonl#L63"
+        ]
+      }
+    ],
+    "recommended_next_steps": [
+      {
+        "action": "Block inbound SSH from 203.0.113.77 at perimeter firewall; review and restrict legacy NAT rule FIN-EXC-114 on fin-app-01",
+        "rationale": "Prevent further brute-force attempts from external IP on critical internet-exposed host; for analyst consideration",
+        "requires_approval": true,
+        "type": "containment"
+      },
+      {
+        "action": "Force password reset for j.mehta account and rotate any service credentials that may have been compromised",
+        "rationale": "Credential rotation mitigates risk if password was guessed/stolen during brute-force window; for analyst consideration",
+        "requires_approval": true,
+        "type": "containment"
+      },
+      {
+        "action": "Investigate outbound TCP session to 198.51.100.23:443 from fin-app-01 at 09:47:32 UTC for C2 or exfiltration indicators",
+        "rationale": "Session observed; check application logs, firewall logs, and process activity for C2 or exfiltration signs",
+        "requires_approval": false,
+        "type": "investigative"
+      },
+      {
+        "action": "Search Wazuh logs for other accounts targeted from 203.0.113.77 beyond a.rao to assess scope of spraying campaign",
+        "rationale": "3 failures for a.rao indicate possible IP-based spraying; broader scope affects severity and containment urgency",
+        "requires_approval": false,
+        "type": "investigative"
+      }
+    ]
+  },
+  "alternative_explanations": [
+    "Misconfigured application or service using j.mehta credentials from unusual location",
+    "Compromised device at Pune office (usual location) with cached credentials triggering atypical login"
+  ],
+  "gaps_unknowns": {
+    "gaps": [
+      {
+        "id": "ip_intel_failed",
+        "statement": "lookup_ip 203.0.113.77 timeout (lookup_ip timed out after 1 s. No data was returned: record this step as failed and do not guess its result.): its reputation is unknown (no data returned); outbound destination(s) 198.51.100.23 also have unknown reputation."
+      },
+      {
+        "id": "search_truncated",
+        "statement": "search_logs {\"end\": \"2026-11-18T09:45:00+00:00\", \"host\": \"fin-app-01\", \"source\": \"wazuh\", \"start\": \"2026-11-18T09:30:00+00:00\", \"src_ip\": \"203.0.113.77\"} returned only 50 of 52 matching events; correlation sees only returned events."
+      },
+      {
+        "id": "tshark_wazuh_not_comparable",
+        "statement": "No successful tshark search covered all sessions from 203.0.113.77 between 2026-11-18T09:29:40.204Z and 2026-11-18T09:42:17.512Z; session and attempt counts were not compared."
+      },
+      {
+        "id": "post_login_not_covered",
+        "statement": "Activity on fin-app-01 in the 30 minutes after the login (2026-11-18T09:42:17.512Z) was not fully searched in Wazuh (sudo, new accounts) and tshark (outbound sessions): post-login actions may be missing."
+      }
+    ],
+    "conflicts": [],
+    "unknowns": [
+      "IP reputation of 203.0.113.77 and outbound destination 198.51.100.23 (lookup_ip timed out, no MOCK intel available)",
+      "Whether the outbound session to 198.51.100.23:443 indicates exfiltration or C2 activity",
+      "Full post-login activity scope (sudo, new accounts, additional sessions) not fully covered in returned evidence"
+    ]
+  },
+  "mitre": [
+    {
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L12",
+        "wazuh_alerts.jsonl#L63"
+      ],
+      "justification": "50 failed SSH login attempts from 203.0.113.77 for account j.mehta between 09:31:02-09:41:55 UTC, followed by successful login",
+      "name": "Brute Force",
+      "technique_id": "T1110"
+    },
+    {
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L64"
+      ],
+      "justification": "Successful login for j.mehta after brute-force attempts; account exists and was used to authenticate",
+      "name": "Valid Accounts",
+      "technique_id": "T1078"
+    },
+    {
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L12",
+        "wazuh_alerts.jsonl#L64"
+      ],
+      "justification": "All events are SSH authentication attempts and success via port 22; external IP indicates remote services",
+      "name": "External Remote Services",
+      "technique_id": "T1133"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": 1,
+      "action": "Block inbound SSH from 203.0.113.77 at perimeter firewall; review and restrict legacy NAT rule FIN-EXC-114 on fin-app-01",
+      "type": "containment",
+      "rationale": "Prevent further brute-force attempts from external IP on critical internet-exposed host; for analyst consideration",
+      "expected_impact": "Would block inbound SSH access from external IP 203.0.113.77 on fin-app-01, preventing further brute-force attempts. Minimal impact on legitimate users as IP is not in j.mehta's baseline of usual source IPs (10.20.1.45).",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L64",
+        "inventory.json#hosts/fin-app-01"
+      ],
+      "requires_approval": true,
+      "pending_action_id": "ACT-01069326C9",
+      "linked_by": "agent",
+      "approval_status": "pending"
+    },
+    {
+      "priority": 2,
+      "action": "Force password reset for j.mehta account and rotate any service credentials that may have been compromised",
+      "type": "remediation",
+      "rationale": "Credential rotation mitigates risk if password was guessed/stolen during brute-force window; for analyst consideration",
+      "expected_impact": "Would require j.mehta to reset password and rotate any service credentials; temporary loss of access until user resets credentials and is notified",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L12",
+        "inventory.json#accounts/j.mehta"
+      ],
+      "requires_approval": true,
+      "pending_action_id": null,
+      "linked_by": null,
+      "approval_status": "analyst_decision_required"
+    },
+    {
+      "priority": 3,
+      "action": "Investigate outbound TCP session to 198.51.100.23:443 from fin-app-01 at 09:47:32 UTC for C2 or exfiltration indicators",
+      "type": "investigative",
+      "rationale": "Session observed; check application logs, firewall logs, and process activity for C2 or exfiltration signs",
+      "expected_impact": "Would clarify whether outbound session indicates C2 activity or data exfiltration; no immediate system impact",
+      "evidence_refs": [
+        "tshark_sessions.csv#row62"
+      ],
+      "requires_approval": false,
+      "pending_action_id": null,
+      "linked_by": null,
+      "approval_status": "not_required"
+    },
+    {
+      "priority": 4,
+      "action": "Search Wazuh logs for other accounts targeted from 203.0.113.77 beyond a.rao to assess scope of spraying campaign",
+      "type": "investigative",
+      "rationale": "3 failures for a.rao indicate possible IP-based spraying; broader scope affects severity and containment urgency",
+      "expected_impact": "Would determine if other accounts were targeted from same IP; no immediate system impact",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L9",
+        "wazuh_alerts.jsonl#L11"
+      ],
+      "requires_approval": false,
+      "pending_action_id": null,
+      "linked_by": null,
+      "approval_status": "not_required"
+    }
+  ],
+  "recommendations_source": "agent (submit_report_content, validated)",
+  "pending_actions": [
+    {
+      "action_id": "ACT-01069326C9",
+      "action_type": "block_ip",
+      "target": "203.0.113.77",
+      "status": "pending",
+      "requested_by": "agent",
+      "reason": "Brute-force attack from external IP 203.0.113.77 targeting Finance analyst account j.mehta on critical internet-exposed host fin-app-01; 50 authentication failures followed by successful authentication at 09:42:17 UTC",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L64",
+        "inventory.json#hosts/fin-app-01"
+      ],
+      "expected_impact": "Would block inbound SSH access from external IP 203.0.113.77 on the critical internet-exposed Finance application server fin-app-01, preventing further brute-force attempts. Minimal impact on legitimate users as IP is not in j.mehta's baseline of usual source IPs (10.20.1.45).",
+      "created_at": "2026-11-21T10:59:21.079+00:00",
+      "expires_at": "2026-11-22T10:59:21.079+00:00",
+      "decision": null,
+      "simulated_execution": null
+    }
+  ],
+  "rubric_agreement": {
+    "agent_severity": "high",
+    "rubric_severity": "high",
+    "agrees": true,
+    "rubric_rule": "H1: success after many failures from an external IP not in the account's baseline, high-criticality host, no confirmed post-login activity",
+    "rubric_score": 66,
+    "agent_confidence": "medium",
+    "rubric_confidence": "low",
+    "confidence_agrees": false
+  },
+  "provenance": {
+    "runtime": "hermes-agent",
+    "provider": "nvidia",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "mock": false,
+    "app_version": "1.0.0",
+    "plan_id": "PLAN-INV-20261121-DF232E43",
+    "assembled_by": "code (soc_agent/report.py) from the stored assessment, evidence index and approval records",
+    "agent_contributed": [
+      "executive_summary",
+      "recommendations",
+      "findings (assessment phase, validated by submit_findings)"
+    ]
+  },
+  "data_labels": {
+    "synthetic_data": true,
+    "alert_synthetic": true,
+    "intel": "MOCK (live: false)",
+    "mock_llm": false,
+    "fault_injection": {
+      "lookup_ip": "timeout"
+    },
+    "labels": [
+      "SYNTHETIC lab data (logs, assets)",
+      "MOCK intelligence feed / MOCK CVE database (live: false)",
+      "FAULT INJECTION ACTIVE (testing only): lookup_ip: timeout"
+    ]
+  },
+  "evidence_appendix": [
+    {
+      "ref": "wazuh_alerts.jsonl#L64",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5715 (level 3) sshd: authentication success. | Nov 18 09:42:17 fin-app-01 sshd[23110]: Accepted password for j.mehta from 203.0.113.77 port 51522 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L12",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:31:02 fin-app-01 sshd[22901]: Failed password for j.mehta from 203.0.113.77 port 50944 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L9",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:29:40 fin-app-01 sshd[22850]: Failed password for a.rao from 203.0.113.77 port 50811 ssh2"
+    },
+    {
+      "ref": "inventory.json#accounts/j.mehta",
+      "tool": "get_asset_context",
+      "excerpt": "name=j.mehta; display_name=J. Mehta (fictitious); role=Finance analyst; department=Finance; privileged=False; usual_login_method=publickey; notes=Not expected to use sudo on fin-app-01."
+    },
+    {
+      "ref": "inventory.json#hosts/fin-app-01",
+      "tool": "get_asset_context",
+      "excerpt": "name=fin-app-01; ip=10.20.5.17; role=Finance application server (accounts payable and invoicing); criticality=high; owner=Finance IT (fin-it@cehpoint.example); os=Ubuntu 22.04 LTS; internet_exposed=True; notes=SSH is reachable from the inte"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L13",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:31:15 fin-app-01 sshd[22904]: Failed password for j.mehta from 203.0.113.77 port 50955 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L14",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:31:29 fin-app-01 sshd[22907]: Failed password for j.mehta from 203.0.113.77 port 50966 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L15",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:31:42 fin-app-01 sshd[22910]: Failed password for j.mehta from 203.0.113.77 port 50977 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L16",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:31:55 fin-app-01 sshd[22913]: Failed password for j.mehta from 203.0.113.77 port 50988 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L17",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:32:09 fin-app-01 sshd[22916]: Failed password for j.mehta from 203.0.113.77 port 50999 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L18",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:32:22 fin-app-01 sshd[22919]: Failed password for j.mehta from 203.0.113.77 port 51010 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L19",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:32:35 fin-app-01 sshd[22922]: Failed password for j.mehta from 203.0.113.77 port 51021 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L20",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:32:49 fin-app-01 sshd[22925]: Failed password for j.mehta from 203.0.113.77 port 51032 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L21",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:33:02 fin-app-01 sshd[22928]: Failed password for j.mehta from 203.0.113.77 port 51043 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L22",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:33:15 fin-app-01 sshd[22931]: Failed password for j.mehta from 203.0.113.77 port 51054 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L24",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:33:29 fin-app-01 sshd[22934]: Failed password for j.mehta from 203.0.113.77 port 51065 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L25",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:33:42 fin-app-01 sshd[22937]: Failed password for j.mehta from 203.0.113.77 port 51076 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L26",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:33:55 fin-app-01 sshd[22940]: Failed password for j.mehta from 203.0.113.77 port 51087 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L27",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:34:09 fin-app-01 sshd[22943]: Failed password for j.mehta from 203.0.113.77 port 51098 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L28",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:34:22 fin-app-01 sshd[22946]: Failed password for j.mehta from 203.0.113.77 port 51109 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L29",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:34:35 fin-app-01 sshd[22949]: Failed password for j.mehta from 203.0.113.77 port 51120 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L30",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:34:49 fin-app-01 sshd[22952]: Failed password for j.mehta from 203.0.113.77 port 51131 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L31",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:35:02 fin-app-01 sshd[22955]: Failed password for j.mehta from 203.0.113.77 port 51142 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L32",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:35:15 fin-app-01 sshd[22958]: Failed password for j.mehta from 203.0.113.77 port 51153 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L33",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:35:29 fin-app-01 sshd[22961]: Failed password for j.mehta from 203.0.113.77 port 51164 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L34",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:35:42 fin-app-01 sshd[22964]: Failed password for j.mehta from 203.0.113.77 port 51175 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L35",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:35:55 fin-app-01 sshd[22967]: Failed password for j.mehta from 203.0.113.77 port 51186 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L36",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:36:09 fin-app-01 sshd[22970]: Failed password for j.mehta from 203.0.113.77 port 51197 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L37",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:36:22 fin-app-01 sshd[22973]: Failed password for j.mehta from 203.0.113.77 port 51208 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L38",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:36:35 fin-app-01 sshd[22976]: Failed password for j.mehta from 203.0.113.77 port 51219 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L39",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:36:48 fin-app-01 sshd[22979]: Failed password for j.mehta from 203.0.113.77 port 51230 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L40",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:37:02 fin-app-01 sshd[22982]: Failed password for j.mehta from 203.0.113.77 port 51241 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L41",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:37:15 fin-app-01 sshd[22985]: Failed password for j.mehta from 203.0.113.77 port 51252 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L42",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:37:28 fin-app-01 sshd[22988]: Failed password for j.mehta from 203.0.113.77 port 51263 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L43",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:37:42 fin-app-01 sshd[22991]: Failed password for j.mehta from 203.0.113.77 port 51274 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L44",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:37:55 fin-app-01 sshd[22994]: Failed password for j.mehta from 203.0.113.77 port 51285 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L45",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:38:08 fin-app-01 sshd[22997]: Failed password for j.mehta from 203.0.113.77 port 51296 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L46",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:38:22 fin-app-01 sshd[23000]: Failed password for j.mehta from 203.0.113.77 port 51307 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L47",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:38:35 fin-app-01 sshd[23003]: Failed password for j.mehta from 203.0.113.77 port 51318 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L48",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:38:48 fin-app-01 sshd[23006]: Failed password for j.mehta from 203.0.113.77 port 51329 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L50",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:39:02 fin-app-01 sshd[23009]: Failed password for j.mehta from 203.0.113.77 port 51340 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L51",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:39:15 fin-app-01 sshd[23012]: Failed password for j.mehta from 203.0.113.77 port 51351 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L52",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:39:28 fin-app-01 sshd[23015]: Failed password for j.mehta from 203.0.113.77 port 51362 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L53",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:39:42 fin-app-01 sshd[23018]: Failed password for j.mehta from 203.0.113.77 port 51373 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L54",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:39:55 fin-app-01 sshd[23021]: Failed password for j.mehta from 203.0.113.77 port 51384 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L55",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:40:08 fin-app-01 sshd[23024]: Failed password for j.mehta from 203.0.113.77 port 51395 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L56",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:40:22 fin-app-01 sshd[23027]: Failed password for j.mehta from 203.0.113.77 port 51406 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L57",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:40:35 fin-app-01 sshd[23030]: Failed password for j.mehta from 203.0.113.77 port 51417 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L58",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:40:48 fin-app-01 sshd[23033]: Failed password for j.mehta from 203.0.113.77 port 51428 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L59",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:41:02 fin-app-01 sshd[23036]: Failed password for j.mehta from 203.0.113.77 port 51439 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L60",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:41:15 fin-app-01 sshd[23039]: Failed password for j.mehta from 203.0.113.77 port 51450 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L61",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:41:28 fin-app-01 sshd[23042]: Failed password for j.mehta from 203.0.113.77 port 51461 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L62",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:41:42 fin-app-01 sshd[23045]: Failed password for j.mehta from 203.0.113.77 port 51472 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L63",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:41:55 fin-app-01 sshd[23048]: Failed password for j.mehta from 203.0.113.77 port 51483 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L10",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:29:58 fin-app-01 sshd[22857]: Failed password for a.rao from 203.0.113.77 port 50826 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L11",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 09:30:21 fin-app-01 sshd[22866]: Failed password for a.rao from 203.0.113.77 port 50840 ssh2"
+    },
+    {
+      "ref": "tshark_sessions.csv#row62",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.5.17:44816 -> 198.51.100.23:443 (tcp.stream 61), duration 96.2 s, 48213770 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row63",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.5.17:39388 -> 10.20.5.30:5432 (tcp.stream 62), duration 29.7 s, 79010 bytes"
+    }
+  ],
+  "generated_at": "2026-11-21T10:59:44.748+00:00"
+}

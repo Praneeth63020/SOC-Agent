@@ -344,7 +344,7 @@ class Store:
         rows = self.query("SELECT id, alert_id, status, severity, confidence, provider, model, mock, synthetic, "
                           "created_at, updated_at, (SELECT COUNT(*) FROM pending_actions p WHERE "
                           "p.investigation_id = i.id AND p.status = 'pending') AS pending_actions "
-                          "FROM investigations i ORDER BY created_at DESC, id DESC LIMIT ?", (limit,))
+                          "FROM investigations i ORDER BY created_at DESC, i.rowid DESC LIMIT ?", (limit,))
         for r in rows:
             r["mock"], r["synthetic"] = bool(r["mock"]), bool(r["synthetic"])
         return rows
@@ -490,7 +490,8 @@ class Store:
         if status:
             sql += " AND status = ?"
             params.append(status)
-        return [self._action_row(r) for r in self.query(sql + " ORDER BY created_at, id", params)]
+        # rowid breaks created_at ties in insertion order (ids are random hex, so "id" would shuffle them)
+        return [self._action_row(r) for r in self.query(sql + " ORDER BY created_at, rowid", params)]
 
     def action(self, action_id: str) -> dict | None:
         rows = self.query("SELECT * FROM pending_actions WHERE id = ?", (action_id,))

@@ -1,0 +1,523 @@
+{
+  "incident_id": "INV-20261121-C6946B36",
+  "alert_id": "ALERT-2026-0101",
+  "version": 1,
+  "title": "sshd: authentication failed. - j.mehta on fin-app-01",
+  "status": "Under Investigation",
+  "resolution": null,
+  "severity": "low",
+  "severity_rationale": "[MOCK] Rubric rule L2: benign explanation supported - success from the account's usual source after few failures, no other accounts targeted, no suspicious activity after the login. Factors: Successful login after 1 failed login(s) (raises); Source 10.20.1.45 is in the account's baseline (usual IP / earlier logins) (lowers); Host criticality high (raises)",
+  "severity_evidence_refs": [
+    "wazuh_alerts.jsonl#L6",
+    "wazuh_alerts.jsonl#L5",
+    "inventory.json#accounts/j.mehta",
+    "wazuh_alerts.jsonl#L2",
+    "wazuh_alerts.jsonl#L3",
+    "inventory.json#hosts/fin-app-01"
+  ],
+  "confidence": "high",
+  "confidence_rationale": "[MOCK] All key sources (authentication logs (Wazuh), network sessions (tshark), IP intelligence (lookup_ip, MOCK feed), host context (asset inventory), account context (asset inventory)) answered, are consistent and nothing timed out.",
+  "executive_summary": {
+    "text": "[MOCK] Alert ALERT-2026-0101 (account j.mehta on host fin-app-01): the evidence supports severity low with high confidence. No containment was requested. Open questions: 1 unknown(s) are listed in the report. All data is SYNTHETIC; IP intelligence is a MOCK feed.",
+    "evidence_refs": [
+      "wazuh_alerts.jsonl#L6",
+      "wazuh_alerts.jsonl#L5",
+      "inventory.json#accounts/j.mehta",
+      "wazuh_alerts.jsonl#L2"
+    ],
+    "source": "agent"
+  },
+  "affected_entities": {
+    "accounts": [
+      {
+        "name": "j.mehta",
+        "roles": [
+          "named in the alert",
+          "successful login / session (baseline)",
+          "failed logins (attack)",
+          "successful login / session (compromise)"
+        ],
+        "inventory_role": "name=j.mehta; display_name=J. Mehta (fictitious); role=Finance analyst; department=Finance; privileged=False; usual_login_method=publickey; notes=Not expected to use sudo on fin-app-01.",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L2",
+          "wazuh_alerts.jsonl#L3",
+          "wazuh_alerts.jsonl#L5",
+          "wazuh_alerts.jsonl#L6",
+          "inventory.json#accounts/j.mehta"
+        ]
+      }
+    ],
+    "hosts": [
+      {
+        "name": "fin-app-01",
+        "ip": "10.20.5.17",
+        "criticality": "high",
+        "roles": [
+          "named in the alert",
+          "network session (baseline)",
+          "successful login / session (baseline)",
+          "network session (attack)",
+          "failed logins (attack)",
+          "network session (compromise)",
+          "successful login / session (compromise)",
+          "network session (post_compromise)"
+        ],
+        "evidence_refs": [
+          "tshark_sessions.csv#row1",
+          "wazuh_alerts.jsonl#L2",
+          "tshark_sessions.csv#row2",
+          "wazuh_alerts.jsonl#L3",
+          "tshark_sessions.csv#row3",
+          "tshark_sessions.csv#row4",
+          "wazuh_alerts.jsonl#L5",
+          "tshark_sessions.csv#row5",
+          "wazuh_alerts.jsonl#L6",
+          "tshark_sessions.csv#row6",
+          "inventory.json#hosts/fin-app-01"
+        ]
+      },
+      {
+        "name": "db-fin-01",
+        "ip": null,
+        "criticality": null,
+        "roles": [
+          "network session (post_compromise)"
+        ],
+        "evidence_refs": [
+          "tshark_sessions.csv#row7"
+        ]
+      }
+    ],
+    "ips": [
+      {
+        "ip": "10.20.1.45",
+        "roles": [
+          "source in the alert",
+          "source of the successful login",
+          "source of failed logins"
+        ],
+        "internal": true,
+        "reputation": null,
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L6",
+          "wazuh_alerts.jsonl#L5"
+        ]
+      },
+      {
+        "ip": "10.20.5.17",
+        "roles": [
+          "alert host fin-app-01"
+        ],
+        "internal": true,
+        "reputation": null,
+        "evidence_refs": []
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "time": "2026-11-16T08:12:43.774Z",
+      "last_time": "2026-11-17T08:20:11.250Z",
+      "count": 3,
+      "phase": "baseline",
+      "event": "network_session 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row1",
+        "tshark_sessions.csv#row3"
+      ]
+    },
+    {
+      "time": "2026-11-16T08:12:44.201Z",
+      "last_time": "2026-11-17T08:05:10.877Z",
+      "count": 2,
+      "phase": "baseline",
+      "event": "auth_success j.mehta 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L2",
+        "wazuh_alerts.jsonl#L3"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:30:01.322Z",
+      "last_time": "2026-11-18T08:30:01.322Z",
+      "count": 1,
+      "phase": "attack",
+      "event": "network_session 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row4"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:30:05.410Z",
+      "last_time": "2026-11-18T08:30:05.410Z",
+      "count": 1,
+      "phase": "attack",
+      "event": "auth_failure j.mehta 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L5"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:30:14.120Z",
+      "last_time": "2026-11-18T08:30:14.120Z",
+      "count": 1,
+      "phase": "compromise",
+      "event": "network_session 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row5"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:30:14.902Z",
+      "last_time": "2026-11-18T08:30:14.902Z",
+      "count": 1,
+      "phase": "compromise",
+      "event": "auth_success j.mehta 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L6"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:41:02.250Z",
+      "last_time": "2026-11-18T08:41:02.250Z",
+      "count": 1,
+      "phase": "post_compromise",
+      "event": "network_session 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row6"
+      ]
+    },
+    {
+      "time": "2026-11-18T09:00:00.020Z",
+      "last_time": "2026-11-18T09:00:00.020Z",
+      "count": 1,
+      "phase": "post_compromise",
+      "event": "network_session 10.20.5.17 -> 10.20.5.30 on db-fin-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row7"
+      ]
+    }
+  ],
+  "assessment_summary": {
+    "answers": [
+      {
+        "question": "Which account and asset are involved?",
+        "claims": [
+          {
+            "statement": "[MOCK] fin-app-01 (10.20.5.17): Finance application server (accounts payable and invoicing); criticality high; internet_exposed True.",
+            "evidence_refs": [
+              "inventory.json#hosts/fin-app-01"
+            ]
+          },
+          {
+            "statement": "[MOCK] j.mehta: Finance analyst; privileged False; usual login method publickey; note: Not expected to use sudo on fin-app-01.",
+            "evidence_refs": [
+              "inventory.json#accounts/j.mehta"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What is the timeline, and which events support the alert?",
+        "claims": [
+          {
+            "statement": "[MOCK] Failed logins by account: j.mehta 1 (08:30:05 UTC on 2026-11-18, from 10.20.1.45)",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L5"
+            ]
+          },
+          {
+            "statement": "[MOCK] j.mehta logged in successfully at 2026-11-18T08:30:14.902Z from 10.20.1.45 after 1 failed login(s) (08:30:05 UTC); same source IP as the last failure; 9.5 s after the last failure.",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L6",
+              "wazuh_alerts.jsonl#L5"
+            ]
+          },
+          {
+            "statement": "[MOCK] The TCP session that carried the successful login (10.20.1.45:50634 -> 10.20.5.17:22) started 2026-11-18T08:30:14.120Z and lasted 3310.4 s (1022870 bytes).",
+            "evidence_refs": [
+              "tshark_sessions.csv#row5",
+              "wazuh_alerts.jsonl#L6"
+            ]
+          },
+          {
+            "statement": "[MOCK] 2 Wazuh login attempt(s) from 10.20.1.45 vs 2 tshark SSH session(s) in 2026-11-18T08:30:05.410Z - 2026-11-18T08:30:14.902Z: consistent (difference 0; one SSH connection can carry up to 6 password attempts).",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L5",
+              "wazuh_alerts.jsonl#L6",
+              "tshark_sessions.csv#row4",
+              "tshark_sessions.csv#row5"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What does approved intelligence say about the source IP?",
+        "claims": [
+          {
+            "statement": "[MOCK] 10.20.1.45 is an internal (RFC 1918) address.",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L6"
+            ]
+          },
+          {
+            "statement": "[MOCK] Failed logins by source IP: 10.20.1.45 1 (08:30:05 UTC, accounts j.mehta)",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L5"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "Are there related events before or after the successful login?",
+        "claims": [
+          {
+            "statement": "[MOCK] 10.20.1.45 IS in j.mehta's baseline (usual source IPs in the inventory: 10.20.1.45; 2 earlier successful login(s) before the attack window, from 10.20.1.45).",
+            "evidence_refs": [
+              "inventory.json#accounts/j.mehta",
+              "wazuh_alerts.jsonl#L2",
+              "wazuh_alerts.jsonl#L3"
+            ]
+          },
+          {
+            "statement": "[MOCK] No other account was targeted by 10.20.1.45 in the returned evidence.",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L5"
+            ]
+          },
+          {
+            "statement": "[MOCK] No privileged (sudo) action by j.mehta on fin-app-01 after the login in the returned evidence.",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L6"
+            ]
+          },
+          {
+            "statement": "[MOCK] No account changes on fin-app-01 after the login in the returned evidence.",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L6"
+            ]
+          },
+          {
+            "statement": "[MOCK] No outbound connection from fin-app-01 to an external address after the login in the returned evidence.",
+            "evidence_refs": [
+              "tshark_sessions.csv#row6",
+              "tshark_sessions.csv#row7"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What severity is justified by evidence?",
+        "claims": [
+          {
+            "statement": "[MOCK] The evidence supports severity low (L2: benign explanation supported - success from the account's usual source after few failures, no other accounts targeted, no suspicious activity after the login).",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L6",
+              "wazuh_alerts.jsonl#L5",
+              "inventory.json#accounts/j.mehta",
+              "wazuh_alerts.jsonl#L2",
+              "wazuh_alerts.jsonl#L3",
+              "inventory.json#hosts/fin-app-01"
+            ]
+          }
+        ]
+      },
+      {
+        "question": "What containment or remediation should a human analyst consider?",
+        "claims": [
+          {
+            "statement": "[MOCK] No containment is indicated by the evidence; confirm with j.mehta that the failed attempts were theirs.",
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L6",
+              "inventory.json#accounts/j.mehta",
+              "wazuh_alerts.jsonl#L2",
+              "wazuh_alerts.jsonl#L3"
+            ]
+          }
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "H1",
+        "description": "[MOCK] An attacker at 10.20.1.45 brute-forced or guessed the password of j.mehta.",
+        "benign": false,
+        "status": "refuted",
+        "reasoning": "[MOCK] The login came from the account's usual source after few failures.",
+        "evidence_refs": [
+          "inventory.json#accounts/j.mehta",
+          "wazuh_alerts.jsonl#L2",
+          "wazuh_alerts.jsonl#L3",
+          "wazuh_alerts.jsonl#L6"
+        ]
+      },
+      {
+        "id": "H2",
+        "description": "[MOCK] Credential stuffing or password spraying, of which j.mehta was one target.",
+        "benign": false,
+        "status": "refuted",
+        "reasoning": "[MOCK] All failures from the source targeted the one account.",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L5"
+        ]
+      },
+      {
+        "id": "H3",
+        "description": "[MOCK] The real user j.mehta, or a script with a stale password, failed and then logged in normally.",
+        "benign": true,
+        "status": "supported",
+        "reasoning": "[MOCK] Success from the account's usual source after few failures, nothing suspicious afterwards.",
+        "evidence_refs": [
+          "inventory.json#accounts/j.mehta",
+          "wazuh_alerts.jsonl#L2",
+          "wazuh_alerts.jsonl#L3",
+          "wazuh_alerts.jsonl#L6"
+        ]
+      }
+    ],
+    "recommended_next_steps": [
+      {
+        "action": "[MOCK] Confirm with j.mehta whether they attempted these logins.",
+        "type": "investigative",
+        "rationale": "[MOCK] Separates user error from account misuse.",
+        "requires_approval": false
+      }
+    ]
+  },
+  "alternative_explanations": [
+    "[MOCK] Someone with access to the office network guessed the password (not supported: few failures from the user's usual workstation IP, nothing suspicious after)."
+  ],
+  "gaps_unknowns": {
+    "gaps": [],
+    "conflicts": [],
+    "unknowns": [
+      "[MOCK] Whether j.mehta themselves made the login has not been confirmed with the user."
+    ]
+  },
+  "mitre": [],
+  "recommendations": [
+    {
+      "priority": 1,
+      "action": "[MOCK] Confirm with j.mehta whether they attempted these logins.",
+      "type": "investigative",
+      "rationale": "[MOCK] Separates user error from account misuse.",
+      "expected_impact": "[MOCK] No change to any system.",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L6",
+        "wazuh_alerts.jsonl#L5",
+        "inventory.json#accounts/j.mehta",
+        "wazuh_alerts.jsonl#L2"
+      ],
+      "requires_approval": false,
+      "pending_action_id": null,
+      "linked_by": null,
+      "approval_status": "not_required"
+    }
+  ],
+  "recommendations_source": "agent (submit_report_content, validated)",
+  "pending_actions": [],
+  "rubric_agreement": {
+    "agent_severity": "low",
+    "rubric_severity": "low",
+    "agrees": true,
+    "rubric_rule": "L2: benign explanation supported - success from the account's usual source after few failures, no other accounts targeted, no suspicious activity after the login",
+    "rubric_score": 4,
+    "agent_confidence": "high",
+    "rubric_confidence": "high",
+    "confidence_agrees": true
+  },
+  "provenance": {
+    "runtime": "hermes-agent",
+    "provider": "mock",
+    "model": "mock-soc-planner",
+    "mock": true,
+    "app_version": "1.0.0",
+    "plan_id": "PLAN-INV-20261121-C6946B36",
+    "assembled_by": "code (soc_agent/report.py) from the stored assessment, evidence index and approval records",
+    "agent_contributed": [
+      "executive_summary",
+      "recommendations",
+      "findings (assessment phase, validated by submit_findings)"
+    ]
+  },
+  "data_labels": {
+    "synthetic_data": true,
+    "alert_synthetic": true,
+    "intel": "MOCK (live: false)",
+    "mock_llm": true,
+    "fault_injection": {},
+    "labels": [
+      "SYNTHETIC lab data (logs, assets)",
+      "MOCK intelligence feed / MOCK CVE database (live: false)",
+      "MOCK LLM: deterministic script, not an AI model"
+    ]
+  },
+  "evidence_appendix": [
+    {
+      "ref": "wazuh_alerts.jsonl#L6",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5715 (level 3) sshd: authentication success. | Nov 18 08:30:14 fin-app-01 sshd[21881]: Accepted publickey for j.mehta from 10.20.1.45 port 50634 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L5",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 08:30:05 fin-app-01 sshd[21877]: Failed password for j.mehta from 10.20.1.45 port 50620 ssh2"
+    },
+    {
+      "ref": "inventory.json#accounts/j.mehta",
+      "tool": "get_asset_context",
+      "excerpt": "name=j.mehta; display_name=J. Mehta (fictitious); role=Finance analyst; department=Finance; privileged=False; usual_login_method=publickey; notes=Not expected to use sudo on fin-app-01."
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L2",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5715 (level 3) sshd: authentication success. | Nov 16 08:12:44 fin-app-01 sshd[18211]: Accepted publickey for j.mehta from 10.20.1.45 port 50112 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L3",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5715 (level 3) sshd: authentication success. | Nov 17 08:05:10 fin-app-01 sshd[19022]: Accepted publickey for j.mehta from 10.20.1.45 port 50348 ssh2"
+    },
+    {
+      "ref": "tshark_sessions.csv#row1",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50112 -> 10.20.5.17:22 (tcp.stream 0), duration 3605.2 s, 1184220 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row2",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50348 -> 10.20.5.17:22 (tcp.stream 1), duration 2950.8 s, 948113 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row3",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50401 -> 10.20.5.17:443 (tcp.stream 2), duration 1210.4 s, 5320771 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row4",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50620 -> 10.20.5.17:22 (tcp.stream 3), duration 6.1 s, 3890 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row5",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50634 -> 10.20.5.17:22 (tcp.stream 4), duration 3310.4 s, 1022870 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row6",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50701 -> 10.20.5.17:443 (tcp.stream 5), duration 1504 s, 5120330 bytes"
+    },
+    {
+      "ref": "inventory.json#hosts/fin-app-01",
+      "tool": "get_asset_context",
+      "excerpt": "name=fin-app-01; ip=10.20.5.17; role=Finance application server (accounts payable and invoicing); criticality=high; owner=Finance IT (fin-it@cehpoint.example); os=Ubuntu 22.04 LTS; internet_exposed=True; notes=SSH is reachable from the inte"
+    },
+    {
+      "ref": "tshark_sessions.csv#row7",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.5.17:39210 -> 10.20.5.30:5432 (tcp.stream 6), duration 30.1 s, 81233 bytes"
+    }
+  ],
+  "generated_at": "2026-11-21T11:16:58.147+00:00"
+}

@@ -1,0 +1,509 @@
+{
+  "incident_id": "INV-20261121-F90C1380",
+  "alert_id": "ALERT-2026-0102",
+  "version": 1,
+  "title": "Authentication success after failed attempts (lab low-threshold rule). - j.mehta on fin-app-01",
+  "status": "Under Investigation",
+  "resolution": null,
+  "severity": "low",
+  "severity_rationale": "Rubric check: low holds because success came from account's usual source IP (fact source_ip_baseline: IS in baseline) after fewer than 10 failures (4), no other accounts were targeted, and nothing suspicious followed. This holds even on a high-criticality host. The rubric was checked in order: critical requires >=10 failures AND sudo/new account/outbound – not met; high requires external IP not in baseline or sudo/account change/suspicious outbound – not met; low is met with the stated conditions.",
+  "severity_evidence_refs": [
+    "wazuh_alerts.jsonl#L6",
+    "wazuh_alerts.jsonl#L9",
+    "inventory.json#accounts/j.mehta",
+    "wazuh_alerts.jsonl#L10"
+  ],
+  "confidence": "medium",
+  "confidence_rationale": "Evidence is complete and consistent: Wazuh logs show 4 failures + 1 success from same IP, tshark shows prior sessions, asset inventory confirms IP in user's baseline. No gaps or conflicts in the evidence chain. However, confidence is medium because tshark cannot confirm login outcome (SSH encrypted), and the assessment relies on the account's baseline assertion from inventory.",
+  "executive_summary": {
+    "text": "On 2026-11-18 at 08:58:52 UTC, Finance analyst j.mehta successfully authenticated via SSH to fin-app-01 (a criticality-high, internet-exposed Finance application server) from internal source IP 10.20.1.45, following 4 failed authentication attempts from the same IP between 08:58:12 and 08:58:44 UTC. The low severity rating is justified because the login originated from the account's usual source IP after fewer than 10 failures, no other accounts were targeted, and no suspicious activity followed the successful login. Post-login analysis revealed no sudo commands, account changes, or outbound connections. Confidence is medium; the evidence supports a benign explanation (repeated password entry or network reconnection). Key unknowns are the inability to determine SSH session outcome from encrypted traffic and the lack of baseline IP data prior to this session.",
+    "evidence_refs": [
+      "wazuh_alerts.jsonl#L6",
+      "wazuh_alerts.jsonl#L9",
+      "wazuh_alerts.jsonl#L10",
+      "inventory.json#accounts/j.mehta",
+      "inventory.json#hosts/fin-app-01"
+    ],
+    "source": "agent"
+  },
+  "affected_entities": {
+    "accounts": [
+      {
+        "name": "j.mehta",
+        "roles": [
+          "named in the alert",
+          "failed logins (attack)",
+          "successful login / session (compromise)"
+        ],
+        "inventory_role": "name=j.mehta; display_name=J. Mehta (fictitious); role=Finance analyst; department=Finance; privileged=False; usual_login_method=publickey; notes=Not expected to use sudo on fin-app-01.",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L6",
+          "wazuh_alerts.jsonl#L7",
+          "wazuh_alerts.jsonl#L8",
+          "wazuh_alerts.jsonl#L9",
+          "wazuh_alerts.jsonl#L10",
+          "inventory.json#accounts/j.mehta"
+        ]
+      },
+      {
+        "name": "root",
+        "roles": [
+          "successful login / session (post_compromise)"
+        ],
+        "inventory_role": null,
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L11"
+        ]
+      }
+    ],
+    "hosts": [
+      {
+        "name": "fin-app-01",
+        "ip": "10.20.5.17",
+        "criticality": "high",
+        "roles": [
+          "named in the alert",
+          "network session (baseline)",
+          "network session (attack)",
+          "failed logins (attack)",
+          "network session (compromise)",
+          "successful login / session (compromise)",
+          "network session (post_compromise)",
+          "successful login / session (post_compromise)"
+        ],
+        "evidence_refs": [
+          "tshark_sessions.csv#row1",
+          "tshark_sessions.csv#row2",
+          "tshark_sessions.csv#row3",
+          "tshark_sessions.csv#row4",
+          "wazuh_alerts.jsonl#L6",
+          "wazuh_alerts.jsonl#L7",
+          "wazuh_alerts.jsonl#L8",
+          "tshark_sessions.csv#row5",
+          "wazuh_alerts.jsonl#L9",
+          "wazuh_alerts.jsonl#L10",
+          "tshark_sessions.csv#row7",
+          "wazuh_alerts.jsonl#L11",
+          "inventory.json#hosts/fin-app-01"
+        ]
+      }
+    ],
+    "ips": [
+      {
+        "ip": "10.20.1.45",
+        "roles": [
+          "source in the alert",
+          "source of the successful login",
+          "source of failed logins"
+        ],
+        "internal": true,
+        "reputation": "MOCK intel: 10.20.1.45 is classified internal (internal address, not looked up in the feed).",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L10",
+          "wazuh_alerts.jsonl#L6",
+          "wazuh_alerts.jsonl#L9"
+        ]
+      },
+      {
+        "ip": "10.20.5.17",
+        "roles": [
+          "alert host fin-app-01"
+        ],
+        "internal": true,
+        "reputation": null,
+        "evidence_refs": []
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "time": "2026-11-16T08:12:43.774Z",
+      "last_time": "2026-11-17T08:20:11.250Z",
+      "count": 3,
+      "phase": "baseline",
+      "event": "network_session 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row1",
+        "tshark_sessions.csv#row3"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:58:08.512Z",
+      "last_time": "2026-11-18T08:58:08.512Z",
+      "count": 1,
+      "phase": "attack",
+      "event": "network_session 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row4"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:58:12.120Z",
+      "last_time": "2026-11-18T08:58:44.310Z",
+      "count": 4,
+      "phase": "attack",
+      "event": "auth_failure j.mehta 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L6",
+        "wazuh_alerts.jsonl#L9"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:58:40.204Z",
+      "last_time": "2026-11-18T08:58:40.204Z",
+      "count": 1,
+      "phase": "compromise",
+      "event": "network_session 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row5"
+      ]
+    },
+    {
+      "time": "2026-11-18T08:58:52.300Z",
+      "last_time": "2026-11-18T08:58:52.300Z",
+      "count": 1,
+      "phase": "compromise",
+      "event": "auth_success j.mehta 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L10"
+      ]
+    },
+    {
+      "time": "2026-11-18T09:05:11.250Z",
+      "last_time": "2026-11-18T09:05:11.250Z",
+      "count": 1,
+      "phase": "post_compromise",
+      "event": "network_session 10.20.1.45 -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "tshark_sessions.csv#row7"
+      ]
+    },
+    {
+      "time": "2026-11-18T10:00:01.004Z",
+      "last_time": "2026-11-18T10:00:01.004Z",
+      "count": 1,
+      "phase": "post_compromise",
+      "event": "auth_success root ? -> 10.20.5.17 on fin-app-01",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L11"
+      ]
+    }
+  ],
+  "assessment_summary": {
+    "answers": [
+      {
+        "question": "Which account and asset are involved?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L10",
+              "inventory.json#hosts/fin-app-01",
+              "inventory.json#accounts/j.mehta"
+            ],
+            "statement": "Account j.mehta (Finance analyst) logged into fin-app-01 (Finance application server, criticality high, internet-exposed) from source IP 10.20.1.45."
+          },
+          {
+            "evidence_refs": [
+              "inventory.json#hosts/fin-app-01"
+            ],
+            "statement": "The involved asset is fin-app-01, a high-criticality internet-exposed Finance application server running Ubuntu 22.04 with sshd (openssh 8.9p1) and nginx."
+          }
+        ]
+      },
+      {
+        "question": "What is the timeline, and which events support the alert?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L6",
+              "wazuh_alerts.jsonl#L9"
+            ],
+            "statement": "08:58:12-08:58:44 UTC: 4 auth_failure events for j.mehta from 10.20.1.45 on fin-app-01 (wazuh_alerts.jsonl#L6-L9)."
+          },
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L10"
+            ],
+            "statement": "08:58:52 UTC: auth_success for j.mehta from 10.20.1.45 on fin-app-01 (wazuh_alerts.jsonl#L10)."
+          },
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L10",
+              "tshark_sessions.csv#row7",
+              "wazuh_alerts.jsonl#L11"
+            ],
+            "statement": "Post-login: No sudo, no account changes, no outbound external connections observed (wazuh_alerts.jsonl#L10, tshark_sessions.csv#row7, wazuh_alerts.jsonl#L11)."
+          }
+        ]
+      },
+      {
+        "question": "What does approved intelligence say about the source IP?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L10"
+            ],
+            "statement": "MOCK intel: 10.20.1.45 is classified as internal (RFC 1918) address; not looked up in the feed."
+          }
+        ]
+      },
+      {
+        "question": "Are there related events before or after the successful login?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "tshark_sessions.csv#row1",
+              "tshark_sessions.csv#row5"
+            ],
+            "statement": "Prior tshark network sessions from 10.20.1.45 to fin-app-01 existed on 2026-11-16 and 2026-11-17 (tshark_sessions.csv#row1-row5), showing consistent SSH connectivity pattern."
+          },
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L11"
+            ],
+            "statement": "Post-login auth_success for root via cron at 10:00:01 UTC (wazuh_alerts.jsonl#L11) unrelated to j.mehta session."
+          }
+        ]
+      },
+      {
+        "question": "What severity is justified by evidence?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "wazuh_alerts.jsonl#L6",
+              "wazuh_alerts.jsonl#L9",
+              "inventory.json#accounts/j.mehta",
+              "wazuh_alerts.jsonl#L10"
+            ],
+            "statement": "Low severity: success after 4 failures (<10) from account's usual source IP (10.20.1.45 IS in baseline per inventory.json#accounts/j.mehta), no other accounts targeted (wazuh_alerts.jsonl#L6, wazuh_alerts.jsonl#L9), no suspicious post-login activity (wazuh_alerts.jsonl#L10). This is consistent with a user mistyping password, not brute force."
+          }
+        ]
+      },
+      {
+        "question": "What containment or remediation should a human analyst consider?",
+        "claims": [
+          {
+            "evidence_refs": [
+              "inventory.json#accounts/j.mehta",
+              "wazuh_alerts.jsonl#L6",
+              "wazuh_alerts.jsonl#L9"
+            ],
+            "statement": "No containment is indicated: the login was from the account's usual source IP after benign failures. Remediation would be unnecessary and could disrupt normal Finance operations."
+          }
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "H1",
+        "description": "Brute-force attack targeting j.mehta account via SSH; malicious actor attempting credential guessing.",
+        "benign": false,
+        "status": "refuted",
+        "reasoning": "Brute-force attack (>=10 failures) not supported: only 4 failures observed, and source IP is in the account's baseline per inventory.json#accounts/j.mehta.",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L6",
+          "wazuh_alerts.jsonl#L9"
+        ]
+      },
+      {
+        "id": "H2",
+        "description": "Legitimate user j.mehta mistyped password multiple times before correctly entering it; benign occurrence.",
+        "benign": true,
+        "status": "supported",
+        "reasoning": "Legitimate user mistyped password multiple times before correctly entering it: 4 failures (<10) from usual source IP, then success from baseline IP. Benign occurrence supported by baseline fact and no other accounts targeted.",
+        "evidence_refs": [
+          "wazuh_alerts.jsonl#L6",
+          "wazuh_alerts.jsonl#L9",
+          "wazuh_alerts.jsonl#L10"
+        ]
+      },
+      {
+        "id": "H3",
+        "description": "Automated internal service or cron job with a stale password that eventually succeeded; may be benign if expected.",
+        "benign": true,
+        "status": "refuted",
+        "reasoning": "Automated internal service with stale password unlikely: j.mehta is a human Finance analyst with usual_login_method publickey per inventory.json#accounts/j.mehta, not expected to have stale credentials. Evidence shows source IP is in baseline with only 4 failures.",
+        "evidence_refs": [
+          "inventory.json#accounts/j.mehta"
+        ]
+      }
+    ],
+    "recommended_next_steps": [
+      {
+        "action": "Monitor for repeated authentication patterns from 10.20.1.45 or against j.mehta on other hosts.",
+        "rationale": "If failure threshold increases or source IP changes, severity may rise; informal monitoring ensures early detection of shift in pattern.",
+        "requires_approval": false,
+        "type": "investigative"
+      },
+      {
+        "action": "No containment action required at this time.",
+        "rationale": "Evidence supports benign occurrence; user j.mehta authenticating from usual internal IP with no suspicious post-login activity. Containment would disrupt normal Finance operations.",
+        "requires_approval": true,
+        "type": "containment"
+      }
+    ]
+  },
+  "alternative_explanations": [
+    "The 4 failures could represent a user repeatedly mistyping a password, or a client reconnecting after network interruption",
+    "While the source IP is in the user's baseline, the 4 failures just above typical threshold could still warrant informal monitoring, though evidence supports benign explanation"
+  ],
+  "gaps_unknowns": {
+    "gaps": [
+      {
+        "id": "post_login_not_covered",
+        "statement": "Activity on fin-app-01 in the 30 minutes after the login (2026-11-18T08:58:52.300Z) was not fully searched in tshark (outbound sessions): post-login actions may be missing."
+      }
+    ],
+    "conflicts": [],
+    "unknowns": [
+      "tshark cannot determine whether the SSH login outcome succeeded or failed (encrypted session) – login outcome comes only from Wazuh",
+      "No baseline IPs logged prior to this session for comparative purposes beyond the inventory assertion"
+    ]
+  },
+  "mitre": [],
+  "recommendations": [
+    {
+      "priority": 1,
+      "action": "Monitor for repeated authentication patterns from 10.20.1.45 or against j.mehta on other hosts.",
+      "type": "investigative",
+      "rationale": "If failure threshold increases or source IP changes, severity may rise; informal monitoring ensures early detection of shift in pattern.",
+      "expected_impact": "Minimal; periodic review of authentication logs without system disruption.",
+      "evidence_refs": [
+        "wazuh_alerts.jsonl#L6",
+        "wazuh_alerts.jsonl#L9",
+        "wazuh_alerts.jsonl#L10"
+      ],
+      "requires_approval": false,
+      "pending_action_id": null,
+      "linked_by": null,
+      "approval_status": "not_required"
+    },
+    {
+      "priority": 2,
+      "action": "No containment action required at this time.",
+      "type": "containment",
+      "rationale": "Evidence supports benign occurrence; user j.mehta authenticating from usual internal IP with no suspicious post-login activity. Containment would disrupt normal Finance operations.",
+      "expected_impact": "No operational impact; systems continue normal operation.",
+      "evidence_refs": [
+        "inventory.json#accounts/j.mehta",
+        "wazuh_alerts.jsonl#L6",
+        "wazuh_alerts.jsonl#L9",
+        "wazuh_alerts.jsonl#L10"
+      ],
+      "requires_approval": true,
+      "pending_action_id": null,
+      "linked_by": null,
+      "approval_status": "analyst_decision_required"
+    }
+  ],
+  "recommendations_source": "agent (submit_report_content, validated)",
+  "pending_actions": [],
+  "rubric_agreement": {
+    "agent_severity": "low",
+    "rubric_severity": "low",
+    "agrees": true,
+    "rubric_rule": "L2: benign explanation supported - success from the account's usual source after few failures, no other accounts targeted, no suspicious activity after the login",
+    "rubric_score": 4,
+    "agent_confidence": "medium",
+    "rubric_confidence": "medium",
+    "confidence_agrees": true
+  },
+  "provenance": {
+    "runtime": "hermes-agent",
+    "provider": "nvidia",
+    "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "mock": false,
+    "app_version": "1.0.0",
+    "plan_id": "PLAN-INV-20261121-F90C1380",
+    "assembled_by": "code (soc_agent/report.py) from the stored assessment, evidence index and approval records",
+    "agent_contributed": [
+      "executive_summary",
+      "recommendations",
+      "findings (assessment phase, validated by submit_findings)"
+    ]
+  },
+  "data_labels": {
+    "synthetic_data": true,
+    "alert_synthetic": true,
+    "intel": "MOCK (live: false)",
+    "mock_llm": false,
+    "fault_injection": {},
+    "labels": [
+      "SYNTHETIC lab data (logs, assets)",
+      "MOCK intelligence feed / MOCK CVE database (live: false)"
+    ]
+  },
+  "evidence_appendix": [
+    {
+      "ref": "wazuh_alerts.jsonl#L6",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 08:58:12 fin-app-01 sshd[22401]: Failed password for j.mehta from 10.20.1.45 port 50901 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L9",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 08:58:44 fin-app-01 sshd[22410]: Failed password for j.mehta from 10.20.1.45 port 50918 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L10",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5715 (level 3) sshd: authentication success. | Nov 18 08:58:52 fin-app-01 sshd[22410]: Accepted password for j.mehta from 10.20.1.45 port 50918 ssh2"
+    },
+    {
+      "ref": "inventory.json#accounts/j.mehta",
+      "tool": "get_asset_context",
+      "excerpt": "name=j.mehta; display_name=J. Mehta (fictitious); role=Finance analyst; department=Finance; privileged=False; usual_login_method=publickey; notes=Not expected to use sudo on fin-app-01."
+    },
+    {
+      "ref": "inventory.json#hosts/fin-app-01",
+      "tool": "get_asset_context",
+      "excerpt": "name=fin-app-01; ip=10.20.5.17; role=Finance application server (accounts payable and invoicing); criticality=high; owner=Finance IT (fin-it@cehpoint.example); os=Ubuntu 22.04 LTS; internet_exposed=True; notes=SSH is reachable from the inte"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L7",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 08:58:20 fin-app-01 sshd[22401]: Failed password for j.mehta from 10.20.1.45 port 50901 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L8",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5760 (level 5) sshd: authentication failed. | Nov 18 08:58:29 fin-app-01 sshd[22401]: Failed password for j.mehta from 10.20.1.45 port 50901 ssh2"
+    },
+    {
+      "ref": "wazuh_alerts.jsonl#L11",
+      "tool": "search_logs",
+      "excerpt": "Wazuh rule 5501 (level 3) PAM: Login session opened. | Nov 18 10:00:01 fin-app-01 CRON[23602]: pam_unix(cron:session): session opened for user root(uid=0) by (uid=0)"
+    },
+    {
+      "ref": "tshark_sessions.csv#row1",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50112 -> 10.20.5.17:22 (tcp.stream 0), duration 3605.2 s, 1184220 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row2",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50348 -> 10.20.5.17:22 (tcp.stream 1), duration 2950.8 s, 948113 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row3",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50401 -> 10.20.5.17:443 (tcp.stream 2), duration 1210.4 s, 5320771 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row4",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50901 -> 10.20.5.17:22 (tcp.stream 3), duration 25 s, 9120 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row5",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50918 -> 10.20.5.17:22 (tcp.stream 4), duration 1820.6 s, 1033200 bytes"
+    },
+    {
+      "ref": "tshark_sessions.csv#row7",
+      "tool": "search_logs",
+      "excerpt": "TCP session 10.20.1.45:50944 -> 10.20.5.17:443 (tcp.stream 6), duration 980.2 s, 4410771 bytes"
+    }
+  ],
+  "generated_at": "2026-11-21T10:13:06.002+00:00"
+}

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cehpoint-soc-agent"
-version = "0.1.0"
+version = "1.0.0"
 description = "Hermes-powered AI SOC analyst prototype (Cehpoint assessment)"
 requires-python = ">=3.11,<3.14"
 dependencies = [
