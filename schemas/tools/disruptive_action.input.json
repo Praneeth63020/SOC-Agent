@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/disruptive_action.input.json",
+  "title": "disruptive action (block_ip / disable_account / isolate_host) arguments",
+  "description": "Defined for completeness only: these actions are NEVER registered in the agent's toolset. They run only through the analyst approval path (soc_agent actions ...), and then only as a SIMULATION.",
+  "type": "object",
+  "required": [
+    "target"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "target": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    }
+  }
+}

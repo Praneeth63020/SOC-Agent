@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/submit_report_content.input.json",
+  "title": "submit_report_content arguments",
+  "description": "The agent's only contribution to the incident report: an executive summary and prioritized recommendations. Everything else in the report is assembled by code from the stored assessment.",
+  "type": "object",
+  "required": [
+    "executive_summary",
+    "summary_evidence_refs",
+    "recommendations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "executive_summary": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 1200,
+      "description": "at most 150 words, for a non-technical reader"
+    },
+    "summary_evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+        "description": "an evidence_ref exactly as a tool returned it in this investigation, e.g. wazuh_alerts.jsonl#L64"
+      },
+      "description": "the refs the executive summary rests on"
+    },
+    "recommendations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": [
+          "priority",
+          "action",
+          "type",
+          "rationale",
+          "expected_impact",
+          "evidence_refs",
+          "requires_approval"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "1 = most urgent; each priority used once"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "investigative",
+              "containment",
+              "remediation"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 400
+          },
+          "expected_impact": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this investigation, e.g. wazuh_alerts.jsonl#L64"
+            }
+          },
+          "requires_approval": {
+            "type": "boolean",
+            "description": "must be true for containment and remediation"
+          },
+          "pending_action_id": {
+            "type": "string",
+            "pattern": "^ACT-[0-9A-F]{10}$",
+            "description": "the action_id request_action returned for this recommendation, if any"
+          }
+        }
+      }
+    }
+  }
+}

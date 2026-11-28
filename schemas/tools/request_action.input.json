@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/request_action.input.json",
+  "title": "request_action arguments",
+  "description": "A REQUEST for a disruptive containment action. It only creates a pending request for a human analyst; the agent can never approve or execute anything. Exactly these five fields: anything else (approved, analyst, status, ...) is rejected.",
+  "type": "object",
+  "required": [
+    "action_type",
+    "target",
+    "reason",
+    "evidence_refs",
+    "expected_impact"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "block_ip",
+        "disable_account",
+        "isolate_host"
+      ],
+      "description": "block_ip (target: an IPv4 address), disable_account (target: an account name), isolate_host (target: a host name)"
+    },
+    "target": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "exactly as it appears in the alert entities or in this investigation's tool results"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 600,
+      "description": "why, based on the cited evidence"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+        "description": "an evidence_ref exactly as a tool returned it in this investigation, e.g. wazuh_alerts.jsonl#L64"
+      },
+      "description": "refs returned by tools in this investigation that justify the action"
+    },
+    "expected_impact": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 400,
+      "description": "what the action would change for users and systems (business impact)"
+    }
+  }
+}

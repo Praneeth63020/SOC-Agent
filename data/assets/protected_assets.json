@@ -1,0 +1,8 @@
+{
+  "_comment": "SYNTHETIC LAB DATA - SOC / security infrastructure that containment must never target (Day 4 approval workflow). request_action rejects any block_ip / disable_account / isolate_host aimed at these. Read from the project's data/assets/ only (never from a scenario or --data-dir), so a data set cannot weaken it.",
+  "_synthetic": true,
+  "hosts": ["wazuh-manager", "soc-siem-01", "soc-jump-01", "dc-01"],
+  "ips": ["10.20.0.10", "10.20.0.11", "10.20.0.1"],
+  "networks": ["10.20.0.0/24"],
+  "accounts": ["root", "wazuh", "soc-svc", "administrator"]
+}

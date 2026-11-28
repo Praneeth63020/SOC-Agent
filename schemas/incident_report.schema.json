@@ -1,0 +1,910 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/incident_report.schema.json",
+  "title": "Incident report (Day 4)",
+  "description": "Assembled by code (report.py) from the stored assessment, the analyst workflow and the evidence index. The agent contributes only executive_summary and recommendations (submit_report_content, validated). Every evidence_ref is one a tool returned in this investigation.",
+  "type": "object",
+  "required": [
+    "incident_id",
+    "alert_id",
+    "version",
+    "title",
+    "status",
+    "severity",
+    "severity_rationale",
+    "severity_evidence_refs",
+    "confidence",
+    "confidence_rationale",
+    "executive_summary",
+    "affected_entities",
+    "timeline",
+    "assessment_summary",
+    "alternative_explanations",
+    "gaps_unknowns",
+    "mitre",
+    "recommendations",
+    "recommendations_source",
+    "pending_actions",
+    "rubric_agreement",
+    "provenance",
+    "data_labels",
+    "evidence_appendix",
+    "generated_at"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$"
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "statement",
+        "evidence_refs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "statement": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        }
+      }
+    },
+    "action_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "executed",
+        "expired"
+      ]
+    }
+  },
+  "properties": {
+    "incident_id": {
+      "type": "string",
+      "pattern": "^INV-\\d{8}-[0-9A-F]{8}$"
+    },
+    "alert_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Open",
+        "Under Investigation",
+        "Awaiting Approval",
+        "Closed"
+      ]
+    },
+    "resolution": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "note",
+        "closed_by",
+        "closed_at"
+      ],
+      "properties": {
+        "note": {
+          "type": "string"
+        },
+        "closed_by": {
+          "type": "string"
+        },
+        "closed_at": {
+          "type": "string"
+        }
+      }
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "severity_rationale": {
+      "type": "string"
+    },
+    "severity_evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "confidence_rationale": {
+      "type": "string"
+    },
+    "executive_summary": {
+      "type": "object",
+      "required": [
+        "text",
+        "evidence_refs",
+        "source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "agent",
+            "none"
+          ]
+        }
+      }
+    },
+    "affected_entities": {
+      "type": "object",
+      "required": [
+        "accounts",
+        "hosts",
+        "ips"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "roles",
+              "evidence_refs"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "inventory_role": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/ref"
+                }
+              }
+            }
+          }
+        },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "roles",
+              "evidence_refs"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "ip": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "criticality": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/ref"
+                }
+              }
+            }
+          }
+        },
+        "ips": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "ip",
+              "roles",
+              "internal",
+              "evidence_refs"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ip": {
+                "type": "string"
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "internal": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "reputation": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/ref"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "time",
+          "last_time",
+          "count",
+          "phase",
+          "event",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "time": {
+            "type": "string"
+          },
+          "last_time": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "phase": {
+            "type": "string",
+            "enum": [
+              "baseline",
+              "attack",
+              "compromise",
+              "post_compromise",
+              "post_attack"
+            ]
+          },
+          "event": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/ref"
+            }
+          }
+        }
+      }
+    },
+    "assessment_summary": {
+      "type": "object",
+      "required": [
+        "answers",
+        "hypotheses",
+        "recommended_next_steps"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "claims"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "question": {
+                "type": "string"
+              },
+              "claims": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/claim"
+                }
+              }
+            }
+          }
+        },
+        "hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "description",
+              "benign",
+              "status",
+              "reasoning",
+              "evidence_refs"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "benign": {
+                "type": "boolean"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "supported",
+                  "refuted",
+                  "undetermined"
+                ]
+              },
+              "reasoning": {
+                "type": "string"
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/ref"
+                }
+              }
+            }
+          }
+        },
+        "recommended_next_steps": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "description": "the assessment's own next steps (Day 3 findings), for reference"
+        }
+      }
+    },
+    "alternative_explanations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gaps_unknowns": {
+      "type": "object",
+      "required": [
+        "gaps",
+        "conflicts",
+        "unknowns"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "statement"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "statement": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "statement"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "statement": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "unknowns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mitre": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "technique_id",
+          "name",
+          "justification",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "technique_id": {
+            "type": "string",
+            "pattern": "^T\\d{4}(\\.\\d{3})?$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "justification": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/ref"
+            }
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "priority",
+          "action",
+          "type",
+          "rationale",
+          "expected_impact",
+          "evidence_refs",
+          "requires_approval",
+          "pending_action_id",
+          "approval_status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "action": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "investigative",
+              "containment",
+              "remediation"
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "expected_impact": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/ref"
+            }
+          },
+          "requires_approval": {
+            "type": "boolean"
+          },
+          "pending_action_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^ACT-[0-9A-F]{10}$"
+          },
+          "linked_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "agent",
+              "code",
+              null
+            ]
+          },
+          "approval_status": {
+            "type": "string",
+            "enum": [
+              "not_required",
+              "analyst_decision_required",
+              "pending",
+              "approved",
+              "rejected",
+              "executed",
+              "expired"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "containment",
+                    "remediation"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "requires_approval": {
+                  "const": true
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "requires_approval": {
+                  "const": false
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "approval_status": {
+                  "const": "not_required"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "recommendations_source": {
+      "type": "string"
+    },
+    "pending_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "action_id",
+          "action_type",
+          "target",
+          "status",
+          "requested_by",
+          "reason",
+          "evidence_refs",
+          "expected_impact",
+          "created_at",
+          "expires_at",
+          "decision",
+          "simulated_execution"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "type": "string"
+          },
+          "action_type": {
+            "type": "string",
+            "enum": [
+              "block_ip",
+              "disable_account",
+              "isolate_host"
+            ]
+          },
+          "target": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/$defs/action_status"
+          },
+          "requested_by": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/ref"
+            }
+          },
+          "expected_impact": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string"
+          },
+          "decision": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "decision",
+              "analyst",
+              "reason",
+              "decided_at"
+            ],
+            "properties": {
+              "decision": {
+                "enum": [
+                  "approved",
+                  "rejected"
+                ]
+              },
+              "analyst": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "decided_at": {
+                "type": "string"
+              }
+            }
+          },
+          "simulated_execution": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "required": [
+              "executed_by",
+              "executed_at",
+              "simulated_effect"
+            ],
+            "properties": {
+              "executed_by": {
+                "type": "string"
+              },
+              "executed_at": {
+                "type": "string"
+              },
+              "simulated_effect": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "rubric_agreement": {
+      "type": "object",
+      "required": [
+        "agent_severity",
+        "rubric_severity",
+        "agrees",
+        "rubric_rule",
+        "agent_confidence",
+        "rubric_confidence",
+        "confidence_agrees"
+      ],
+      "properties": {
+        "agent_severity": {
+          "type": "string"
+        },
+        "rubric_severity": {
+          "type": "string"
+        },
+        "agrees": {
+          "type": "boolean"
+        },
+        "rubric_rule": {
+          "type": "string"
+        },
+        "rubric_score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "agent_confidence": {
+          "type": "string"
+        },
+        "rubric_confidence": {
+          "type": "string"
+        },
+        "confidence_agrees": {
+          "type": "boolean"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "runtime",
+        "provider",
+        "model",
+        "mock",
+        "assembled_by",
+        "agent_contributed"
+      ],
+      "properties": {
+        "runtime": {
+          "const": "hermes-agent"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "mock": {
+          "type": "boolean"
+        },
+        "app_version": {
+          "type": "string"
+        },
+        "plan_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "assembled_by": {
+          "type": "string"
+        },
+        "agent_contributed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "data_labels": {
+      "type": "object",
+      "required": [
+        "synthetic_data",
+        "intel",
+        "labels"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "synthetic_data": {
+          "type": "boolean"
+        },
+        "intel": {
+          "type": "string"
+        },
+        "mock_llm": {
+          "type": "boolean"
+        },
+        "alert_synthetic": {
+          "type": "boolean",
+          "description": "the alert's own synthetic marker (the evidence label is synthetic_data)"
+        },
+        "fault_injection": {
+          "type": "object",
+          "description": "tool -> injected fault kind (tests and demos only); empty in normal use",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence_appendix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ref",
+          "tool",
+          "excerpt"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "#/$defs/ref"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "excerpt": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "generated_at": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/request_action.output.json",
+  "title": "request_action result",
+  "type": "object",
+  "required": [
+    "accepted",
+    "action_id",
+    "status",
+    "message"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "accepted": {
+      "const": true
+    },
+    "action_id": {
+      "type": "string",
+      "pattern": "^ACT-[0-9A-F]{10}$"
+    },
+    "status": {
+      "const": "pending"
+    },
+    "expires_at": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    }
+  }
+}
