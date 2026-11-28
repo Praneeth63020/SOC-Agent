@@ -1,0 +1,15 @@
+# Expected outcome for data/scenarios/benign (SYNTHETIC).
+description: j.mehta mistypes the password 4 times from the office IP, then logs in; normal activity after.
+severity: [low]
+rubric_severity: low
+confidence_max: high
+benign_hypothesis: [supported]
+must_cite:
+  - wazuh_alerts.jsonl#L10              # Accepted password for j.mehta from 10.20.1.45
+  - inventory.json#accounts/j.mehta     # 10.20.1.45 is the account's usual source IP
+mitre_required: []
+mitre_forbidden: [T1110, T1110.001, T1110.003, T1078, T1078.003, T1021.004, T1548.003, T1136.001]   # a user typo is not an attack technique
+required_gaps: []
+required_unknowns: []
+required_conflicts: []
+containment: none                       # no containment may be requested (checked after the report phase)

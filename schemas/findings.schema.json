@@ -1,0 +1,397 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/findings.schema.json",
+  "title": "Findings (content submitted by the agent via submit_findings)",
+  "description": "The agent's initial assessment of one alert: answers to the six brief questions as evidence-backed claims, hypothesis status, severity and confidence with separate rationales, justified MITRE techniques, unknowns, alternative explanations and recommended next steps. Containment is only ever a recommendation for analyst consideration (requires_approval: true); nothing is executed. Validated in code against THIS run's evidence (see tools/assessment.py).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "account_and_asset",
+    "timeline",
+    "source_ip_intelligence",
+    "related_events",
+    "severity_justification",
+    "containment",
+    "hypotheses",
+    "severity",
+    "severity_rationale",
+    "severity_evidence_refs",
+    "confidence",
+    "confidence_rationale",
+    "mitre",
+    "unknowns",
+    "alternative_explanations",
+    "recommended_next_steps"
+  ],
+  "properties": {
+    "account_and_asset": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Answer to: a. Which account and asset are involved? One object per claim. Every claim cites at least one evidence_ref; anything you cannot cite goes into unknowns instead.",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 600
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+            },
+            "description": "refs that support this claim (at least one)"
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Answer to: b. What is the timeline, and which events support the alert? One object per claim. Every claim cites at least one evidence_ref; anything you cannot cite goes into unknowns instead.",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 600
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+            },
+            "description": "refs that support this claim (at least one)"
+          }
+        }
+      }
+    },
+    "source_ip_intelligence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Answer to: c. What does approved intelligence say about the source IP? (cite the lookup_ip ref and say it is MOCK intel) One object per claim. Every claim cites at least one evidence_ref; anything you cannot cite goes into unknowns instead.",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 600
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+            },
+            "description": "refs that support this claim (at least one)"
+          }
+        }
+      }
+    },
+    "related_events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Answer to: d. Are there related events before or after the successful login / key event? One object per claim. Every claim cites at least one evidence_ref; anything you cannot cite goes into unknowns instead.",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 600
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+            },
+            "description": "refs that support this claim (at least one)"
+          }
+        }
+      }
+    },
+    "severity_justification": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Answer to: e. What severity is justified by evidence? One object per claim, each citing at least one evidence_ref. The second half of question e - what is still unknown - is answered by the top-level unknowns list, never here (a claim without refs is rejected).",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 600
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+            },
+            "description": "refs that support this claim (at least one)"
+          }
+        }
+      }
+    },
+    "containment": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Answer to: f. What containment or remediation should a human analyst consider? (for analyst consideration only) One object per claim. Every claim cites at least one evidence_ref; anything you cannot cite goes into unknowns instead.",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 600
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+            },
+            "description": "refs that support this claim (at least one)"
+          }
+        }
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "description": "One entry per hypothesis of the accepted plan (same ids).",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "reasoning",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^H[0-9]{1,2}$",
+            "description": "the plan's hypothesis id, e.g. H1"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "supported",
+              "refuted",
+              "undetermined"
+            ]
+          },
+          "reasoning": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 600
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+            },
+            "description": "refs for supported/refuted (at least one); may be [] for undetermined"
+          }
+        }
+      }
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "severity_rationale": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 1200,
+      "description": "Why this severity, from the evidence. If it differs from the rubric (docs/severity.md), say so explicitly (mention the rubric) and explain why."
+    },
+    "severity_evidence_refs": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+        "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+      },
+      "description": "refs that justify the severity (at least one)"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "description": "How complete and consistent the evidence is (separate from severity). Never high if a key source failed, timed out or is missing, or sources conflict."
+    },
+    "confidence_rationale": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 1200
+    },
+    "mitre": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "Only techniques the cited evidence justifies; ids from the local catalog.",
+      "items": {
+        "type": "object",
+        "required": [
+          "technique_id",
+          "name",
+          "justification",
+          "evidence_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "technique_id": {
+            "type": "string",
+            "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 120
+          },
+          "justification": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 600
+          },
+          "evidence_refs": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_]+\\.(jsonl|csv|json)#[A-Za-z0-9._/@:-]+$",
+              "description": "an evidence_ref exactly as a tool returned it in this run, e.g. wazuh_alerts.jsonl#L64"
+            },
+            "description": "refs of the events that justify the technique (at least one)"
+          }
+        }
+      }
+    },
+    "unknowns": {
+      "type": "array",
+      "maxItems": 15,
+      "items": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 400
+      },
+      "description": "Answers 'what is still unknown' (question e): missing, failed or timed-out sources, open questions. Plain strings without refs. Must not be empty when correlate_evidence reports gaps."
+    },
+    "alternative_explanations": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 400
+      }
+    },
+    "recommended_next_steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "type",
+          "rationale",
+          "requires_approval"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "investigative",
+              "containment"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 400
+          },
+          "requires_approval": {
+            "type": "boolean",
+            "description": "must be true for containment (for analyst consideration; nothing is executed)"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "alert_id": "ALERT-2026-0103",
+  "timestamp": "2026-11-18T09:41:55.000000+00:00",
+  "source": {
+    "type": "wazuh",
+    "rule_id": "5763",
+    "rule_description": "sshd: brute force trying to get access to the system. Authentication failed.",
+    "rule_level": 10,
+    "mitre_hint": [
+      "T1110"
+    ]
+  },
+  "category": "authentication",
+  "title": "sshd: brute force trying to get access to the system. Authentication failed.",
+  "description": "SYNTHETIC LAB DATA. 50 failed SSH password attempts for j.mehta on fin-app-01 from 203.0.113.77 (09:31:02-09:41:55 UTC). No successful login is reported.",
+  "severity_hint": "high",
+  "entities": {
+    "account": "j.mehta",
+    "host": "fin-app-01",
+    "src_ip": "203.0.113.77",
+    "dst_ip": "10.20.5.17",
+    "dst_port": 22,
+    "service": "sshd"
+  },
+  "observations": {
+    "failed_attempts": 50,
+    "failure_window_start": "2026-11-18T09:31:02+00:00",
+    "failure_window_end": "2026-11-18T09:41:55+00:00",
+    "log_location": "/var/log/auth.log"
+  },
+  "synthetic": true
+}

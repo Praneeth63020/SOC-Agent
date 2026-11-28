@@ -1,0 +1,45 @@
+{
+  "_comment": "MOCK intel feed - fabricated IP reputation records for the Cehpoint assessment. Not real threat intelligence. RFC 5737 documentation addresses stand in for internet addresses; RFC 1918 addresses are internal. lookup_ip never queries a live service.",
+  "_synthetic": true,
+  "feed": "MOCK intel feed",
+  "generated_at": "2026-11-19T00:00:00Z",
+  "records": {
+    "203.0.113.77": {
+      "classification": "malicious",
+      "reputation_score": 92,
+      "categories": ["ssh-bruteforce", "password-spraying", "scanner"],
+      "report_count": 148,
+      "first_seen": "2026-09-02T11:20:00Z",
+      "last_seen": "2026-11-18T09:45:00Z",
+      "asn": 64500,
+      "as_org": "Example Hosting Ltd (MOCK)",
+      "country": "ZZ"
+    },
+    "198.51.100.23": {
+      "classification": "suspicious",
+      "reputation_score": 61,
+      "categories": ["hosting", "file-sharing", "recently-registered-service"],
+      "report_count": 7,
+      "first_seen": "2026-10-28T06:10:00Z",
+      "last_seen": "2026-11-17T22:05:00Z",
+      "asn": 64501,
+      "as_org": "Example Cloud VPS (MOCK)",
+      "country": "ZZ"
+    },
+    "192.0.2.44": {
+      "classification": "suspicious",
+      "reputation_score": 55,
+      "categories": ["scanner"],
+      "report_count": 31,
+      "first_seen": "2026-06-14T00:00:00Z",
+      "last_seen": "2026-11-18T03:20:00Z",
+      "asn": 64502,
+      "as_org": "Example Broadband (MOCK)",
+      "country": "ZZ"
+    },
+    "10.20.1.45": {
+      "classification": "internal",
+      "_note": "Included for completeness: lookup_ip classifies RFC 1918 addresses as internal without consulting this feed."
+    }
+  }
+}

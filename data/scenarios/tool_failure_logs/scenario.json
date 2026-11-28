@@ -1,0 +1,12 @@
+{
+  "name": "tool_failure_logs",
+  "category": "tool_failure",
+  "title": "Log data file unreadable",
+  "description": "SYNTHETIC LAB DATA. The main data set, but the Wazuh export wazuh_alerts.jsonl is damaged (bytes that are not UTF-8), so search_logs cannot read it; tshark, MOCK intel and the inventory still answer.",
+  "synthetic": true,
+  "labels": "SYNTHETIC logs and assets, MOCK intel (live: false)",
+  "mock_scenario": "analyze",
+  "faults": {},
+  "tool_timeout_s": null,
+  "expected": "tests/scenarios/tool_failure_logs/expected.yaml"
+}

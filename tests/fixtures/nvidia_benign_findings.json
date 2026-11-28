@@ -1,0 +1,319 @@
+{
+ "_comment": "Recorded NVIDIA model output (nvidia/nemotron-3.5-lightning-30b-a3b) on the SYNTHETIC benign scenario, run INV-20261121-3D499B5C: the plan, the evidence calls it made and the findings it got accepted before the MITRE / hypothesis checks existed. Replayed by tests/test_review_regressions.py.",
+ "source_run": "INV-20261121-3D499B5C",
+ "scenario": "benign",
+ "plan": {
+  "plan_id": "PLAN-INV-20261121-3D499B5C",
+  "investigation_id": "INV-20261121-3D499B5C",
+  "alert_id": "ALERT-2026-0102",
+  "created_at": "2026-11-21T04:22:37.147+00:00",
+  "generated_by": {
+   "runtime": "hermes-agent",
+   "provider": "nvidia",
+   "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+   "mock": false
+  },
+  "synthetic_data": true,
+  "summary": "Authentication success after failed attempts for account j.mehta on host fin-app-01 from IP 10.20.1.45. Four failed SSH password attempts (08:58:12-08:58:44 UTC) followed by accepted password login at 08:58:52 UTC. Rule severity hint: medium, MITRE T1110 brute-force hint.",
+  "hypotheses": [
+   {
+    "id": "H1",
+    "description": "An adversary performed brute force attacks against the SSH service, attempting 4 passwords before achieving success.",
+    "benign": false,
+    "would_be_supported_by": "auth.log entries show 4 failed SSH password attempts from 10.20.1.45 followed by a successful login from the same IP",
+    "would_be_refuted_by": "failed attempts originate from multiple source IPs or success occurs from a different IP than the failures"
+   },
+   {
+    "id": "H2",
+    "description": "The real user j.mehta mistyped their password multiple times before successfully logging in.",
+    "benign": true,
+    "would_be_supported_by": "user j.mehta confirms password entry or typographical error reported",
+    "would_be_refuted_by": "IP 10.20.1.45 has known malicious intelligence indicators"
+   },
+   {
+    "id": "H3",
+    "description": "An automated process or script using stale credentials for j.mehta triggered repeated login attempts.",
+    "benign": false,
+    "would_be_supported_by": "log patterns indicate script-like timing or known internal CI/CD process associated with fin-app-01",
+    "would_be_refuted_by": "IP 10.20.1.45 not associated with internal automation"
+   }
+  ],
+  "key_questions": [
+   "Which account and asset are involved in this alert?",
+   "What is the timeline of events and which log entries support the alert?",
+   "What does approved intelligence say about the source IP 10.20.1.45?",
+   "Are there related events before or after the successful login on fin-app-01?",
+   "What severity is justified by the evidence, and what remains unknown?",
+   "What containment or remediation should a human analyst consider?"
+  ],
+  "steps": [
+   {
+    "step": 1,
+    "objective": "Retrieve auth.log entries to verify the 4 failed SSH attempts and subsequent successful login for account j.mehta from 10.20.1.45 on fin-app-01, establishing the event timeline.",
+    "tool": "search_logs",
+    "parameters": {
+     "account": "j.mehta",
+     "host": "fin-app-01",
+     "start": "2026-11-18T08:58:12+00:00",
+     "end": "2026-11-18T08:58:52+00:00"
+    },
+    "rationale": "Confirm the alert's core observations: 4 failed attempts window and 1 successful login at 08:58:52 UTC from the same source IP.",
+    "expected_evidence": "auth.log lines showing 4 failed SSH password attempts for j.mehta from 10.20.1.45 between 08:58:12-08:58:44 UTC, followed by a successful SSH password login at 08:58:52 UTC from the same IP"
+   },
+   {
+    "step": 2,
+    "objective": "Check approved IP intelligence for 10.20.1.45 to determine if this source is associated with known malicious activity, spam, or legitimate infrastructure.",
+    "tool": "lookup_ip",
+    "parameters": {
+     "ip": "10.20.1.45"
+    },
+    "rationale": "Correlate the source IP with threat intelligence to assess whether this is a known attacker, proxy, or trusted internal host.",
+    "expected_evidence": "IP intelligence report for 10.20.1.45 including reputation score, geolocation, ASN, and any known threat actor associations"
+   },
+   {
+    "step": 3,
+    "objective": "Obtain asset context for fin-app-01 to understand the host's criticality, ownership, and service configuration, which informs severity assessment.",
+    "tool": "get_asset_context",
+    "parameters": {
+     "host": "fin-app-01"
+    },
+    "rationale": "Determine if fin-app-01 is a high-value financial asset, what services run, and who owns it \u2014 this directly impacts severity and containment priority.",
+    "expected_evidence": "asset context for fin-app-01 including owner team, criticality classification, running services (sshd confirmed), and any compliance or sensitivity labels"
+   },
+   {
+    "step": 4,
+    "objective": "Human analyst reviews containment options and records approval/rejection decisions for each action.",
+    "tool": "analyst_review",
+    "parameters": {},
+    "rationale": "Containment (block IP, disable account, isolate host) requires explicit human approval; this step documents the analyst's decision on each option.",
+    "expected_evidence": "analyst records approve or reject for each containment option: block IP 10.20.1.45, disable account j.mehta on fin-app-01, isolate host fin-app-01"
+   }
+  ],
+  "safety_notes": [
+   "Containment actions (block IP, disable account, isolate host) require explicit human analyst approval",
+   "Do not take autonomous action on any system entity; all remediation requires analyst sign-off",
+   "Alert involves synthetic lab data; findings may not reflect production environment behavior"
+  ],
+  "data_gaps": [
+   "Full source attribution for IP 10.20.1.45 beyond the alert's synthetic data",
+   "Whether the failed attempts are part of a broader campaign targeting other accounts or hosts",
+   "Exact nature of the user's credentials and whether they may have been compromised",
+   "Absence of additional context such as geo-IP data, ASN, or known threat actor associations"
+  ]
+ },
+ "calls": [
+  {
+   "tool": "search_logs",
+   "arguments": {
+    "account": "j.mehta",
+    "host": "fin-app-01",
+    "src_ip": "10.20.1.45",
+    "start": "2026-11-18T08:58:12+00:00",
+    "end": "2026-11-18T08:58:52+00:00",
+    "source": "wazuh"
+   }
+  },
+  {
+   "tool": "lookup_ip",
+   "arguments": {
+    "ip": "10.20.1.45"
+   }
+  },
+  {
+   "tool": "get_asset_context",
+   "arguments": {
+    "host": "fin-app-01"
+   }
+  },
+  {
+   "tool": "search_logs",
+   "arguments": {
+    "host": "fin-app-01",
+    "source": "wazuh",
+    "start": "2026-11-18T08:58:52Z",
+    "limit": 200
+   }
+  },
+  {
+   "tool": "search_logs",
+   "arguments": {
+    "limit": 200,
+    "src_ip": "10.20.1.45",
+    "source": "tshark"
+   }
+  },
+  {
+   "tool": "get_asset_context",
+   "arguments": {
+    "account": "j.mehta"
+   }
+  }
+ ],
+ "findings": {
+  "account_and_asset": [
+   {
+    "evidence_refs": [
+     "inventory.json#accounts/j.mehta",
+     "inventory.json#hosts/fin-app-01",
+     "wazuh_alerts.jsonl#L10"
+    ],
+    "statement": "Account j.mehta and host fin-app-01 are involved in the authentication event."
+   }
+  ],
+  "alternative_explanations": [
+   "The real user j.mehta attempted to log in with a password, failed 4 times due to mistyping or key issues, then succeeded successfully.",
+   "An automated process or script using the user's credentials triggered the repeated login attempts.",
+   "The source IP 10.20.1.45, while in the user's baseline, may have been compromised and used for the login attempts."
+  ],
+  "confidence": "medium",
+  "confidence_rationale": "The evidence is consistent across Wazuh auth logs and asset inventory, confirming 4 failed logins and 1 success from 10.20.1.45 on fin-app-01 for j.mehta. The source IP is internal and in the user's baseline, which reduces attack likelihood. However, post-login activity beyond the successful login was not fully investigated (no confirmed sudo, new accounts, or outbound sessions). The exact nature of the 4 failed attempts (mistyped password vs. automated process) remains uncertain. Confidence is medium: core facts are established but some post-login context is missing.",
+  "containment": [
+   {
+    "evidence_refs": [
+     "inventory.json#accounts/j.mehta",
+     "inventory.json#hosts/fin-app-01",
+     "wazuh_alerts.jsonl#L6",
+     "wazuh_alerts.jsonl#L9",
+     "wazuh_alerts.jsonl#L10"
+    ],
+    "statement": "Analyst should consider reviewing and rotating credentials for j.mehta on fin-app-01, and monitoring for repeated login patterns from 10.20.1.45; temporary SSH access restriction for the account may be warranted."
+   }
+  ],
+  "hypotheses": [
+   {
+    "evidence_refs": [
+     "wazuh_alerts.jsonl#L6",
+     "wazuh_alerts.jsonl#L9",
+     "wazuh_alerts.jsonl#L10"
+    ],
+    "id": "H1",
+    "reasoning": "4 failed SSH login attempts for j.mehta from 10.20.1.45 followed by successful authentication is consistent with a brute force pattern",
+    "status": "supported"
+   },
+   {
+    "evidence_refs": [
+     "wazuh_alerts.jsonl#L6",
+     "wazuh_alerts.jsonl#L9",
+     "wazuh_alerts.jsonl#L10"
+    ],
+    "id": "H2",
+    "reasoning": "The pattern of exactly 4 failed password attempts before success is more characteristic of brute force than accidental password mistyping by the legitimate user",
+    "status": "refuted"
+   },
+   {
+    "evidence_refs": [],
+    "id": "H3",
+    "reasoning": "No direct evidence found confirming or refuting an automated process using stale credentials; the source IP is in the user's baseline which could indicate legitimate activity",
+    "status": "undetermined"
+   }
+  ],
+  "mitre": [
+   {
+    "evidence_refs": [
+     "wazuh_alerts.jsonl#L6",
+     "wazuh_alerts.jsonl#L9"
+    ],
+    "justification": "Four authentication failures (auth_failure) for j.mehta from 10.20.1.45 before the successful login indicate brute force password guessing activity.",
+    "name": "Brute Force",
+    "technique_id": "T1110"
+   },
+   {
+    "evidence_refs": [
+     "wazuh_alerts.jsonl#L6",
+     "wazuh_alerts.jsonl#L9"
+    ],
+    "justification": "Four consecutive failed password attempts for the same account (j.mehta) from the same source IP indicate password guessing against a single target.",
+    "name": "Brute Force: Password Guessing",
+    "technique_id": "T1110.001"
+   },
+   {
+    "evidence_refs": [
+     "wazuh_alerts.jsonl#L10"
+    ],
+    "justification": "The successful login for j.mehta on fin-app-01 was via SSH (dst_port 22), consistent with remote service access through SSH.",
+    "name": "Remote Services: SSH",
+    "technique_id": "T1021.004"
+   }
+  ],
+  "recommended_next_steps": [
+   {
+    "action": "Review j.mehta's recent credential usage and login patterns to determine if the 4 failed attempts were due to user error or potential compromise",
+    "rationale": "Understanding the root cause of the failed attempts will inform appropriate containment and remediation actions.",
+    "requires_approval": false,
+    "type": "investigative"
+   },
+   {
+    "action": "Consider temporarily restricting SSH access for j.mehta on fin-app-01 until the login pattern is understood",
+    "rationale": "Limiting access reduces potential risk while the investigation is ongoing.",
+    "requires_approval": true,
+    "type": "containment"
+   },
+   {
+    "action": "Analyze tshark network sessions from 10.20.1.45 to fin-app-01 to identify any unusual volume or timing patterns around the alert window",
+    "rationale": "Network session analysis may reveal additional context about the login activity.",
+    "requires_approval": false,
+    "type": "investigative"
+   },
+   {
+    "action": "Monitor for repeated login patterns from 10.20.1.45 and trigger alert if threshold is exceeded again",
+    "rationale": "Ongoing monitoring helps detect recurrence of the pattern.",
+    "requires_approval": true,
+    "type": "containment"
+   }
+  ],
+  "related_events": [
+   {
+    "evidence_refs": [
+     "wazuh_alerts.jsonl#L6",
+     "wazuh_alerts.jsonl#L9",
+     "wazuh_alerts.jsonl#L10",
+     "wazuh_alerts.jsonl#L11"
+    ],
+    "statement": "Four Wazuh auth_failure events occurred for j.mehta from 10.20.1.45 between 08:58:12 and 08:58:44 UTC, followed by auth_success at 08:58:52 UTC on fin-app-01; additionally, a root auth_success via cron was observed at 10:00:01 UTC on fin-app-01."
+   }
+  ],
+  "severity": "medium",
+  "severity_evidence_refs": [
+   "inventory.json#accounts/j.mehta",
+   "inventory.json#hosts/fin-app-01",
+   "wazuh_alerts.jsonl#L6",
+   "wazuh_alerts.jsonl#L9",
+   "wazuh_alerts.jsonl#L10"
+  ],
+  "severity_rationale": "4 failed SSH login attempts for j.mehta from 10.20.1.45 followed by success; source IP internal and in user's baseline; host fin-app-01 high-criticality and internet-exposed; no post-login privileged activity; 4 failures below critical >=10 threshold; rubric level low (benign: usual source, few failures, no suspicious after-login) but host criticality and brute-force pattern elevate to medium.",
+  "source_ip_intelligence": [
+   {
+    "evidence_refs": [
+     "wazuh_alerts.jsonl#L10",
+     "inventory.json#accounts/j.mehta"
+    ],
+    "statement": "10.20.1.45 is classified as an internal (RFC 1918) address per the MOCK intel feed; internal addresses are not looked up in the intel feed."
+   }
+  ],
+  "timeline": [
+   {
+    "evidence_refs": [
+     "wazuh_alerts.jsonl#L6",
+     "wazuh_alerts.jsonl#L9",
+     "wazuh_alerts.jsonl#L10"
+    ],
+    "statement": "Four auth_failure events for j.mehta from 10.20.1.45 between 08:58:12 and 08:58:44 UTC on 2026-11-18, followed by auth_success at 08:58:52 UTC from the same IP."
+   }
+  ],
+  "unknowns": [
+   "Exact nature of the 4 failed SSH attempts (whether due to user error, automated process, or credential compromise)"
+  ],
+  "severity_justification": [
+   {
+    "statement": "The source IP 10.20.1.45 is internal and part of j.mehta's usual source IPs baseline; the host fin-app-01 is high-criticality and internet-exposed; 4 failures followed by success on a high-criticality host with no post-login privileged activity justify medium severity per the rubric.",
+    "evidence_refs": [
+     "inventory.json#accounts/j.mehta",
+     "inventory.json#hosts/fin-app-01",
+     "wazuh_alerts.jsonl#L6",
+     "wazuh_alerts.jsonl#L9",
+     "wazuh_alerts.jsonl#L10"
+    ]
+   }
+  ]
+ }
+}

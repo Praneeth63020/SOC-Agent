@@ -1,0 +1,34 @@
+{
+  "alert_id": "ALERT-2026-0106",
+  "timestamp": "2026-11-18T09:42:17.512000+00:00",
+  "source": {
+    "type": "wazuh",
+    "rule_id": "40112",
+    "rule_description": "Multiple authentication failures followed by a success.",
+    "rule_level": 12,
+    "mitre_hint": [
+      "T1110",
+      "T1078"
+    ]
+  },
+  "category": "authentication",
+  "title": "Multiple authentication failures followed by a success.",
+  "description": "SYNTHETIC LAB DATA. 50 failed SSH password attempts for j.mehta on fin-app-01 from 203.0.113.77 (09:31:02-09:41:55 UTC), then an accepted password login from the same IP at 09:42:17 UTC.",
+  "severity_hint": "high",
+  "entities": {
+    "account": "j.mehta",
+    "host": "fin-app-01",
+    "src_ip": "203.0.113.77",
+    "dst_ip": "10.20.5.17",
+    "dst_port": 22,
+    "service": "sshd"
+  },
+  "observations": {
+    "failed_attempts": 50,
+    "failure_window_start": "2026-11-18T09:31:02+00:00",
+    "failure_window_end": "2026-11-18T09:41:55+00:00",
+    "success_time": "2026-11-18T09:42:17+00:00",
+    "log_location": "/var/log/auth.log"
+  },
+  "synthetic": true
+}

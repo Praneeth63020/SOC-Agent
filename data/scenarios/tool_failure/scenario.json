@@ -1,0 +1,14 @@
+{
+  "name": "tool_failure",
+  "category": "tool_failure",
+  "title": "Intel lookup times out",
+  "description": "SYNTHETIC LAB DATA. The main data set, with lookup_ip timing out (fault injection, testing only).",
+  "synthetic": true,
+  "labels": "SYNTHETIC logs and assets, MOCK intel (live: false)",
+  "mock_scenario": "analyze",
+  "faults": {
+    "lookup_ip": "timeout"
+  },
+  "tool_timeout_s": 1.0,
+  "expected": "tests/scenarios/tool_failure/expected.yaml"
+}

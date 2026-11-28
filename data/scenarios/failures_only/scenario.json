@@ -1,0 +1,12 @@
+{
+  "name": "failures_only",
+  "category": "additional",
+  "title": "Failures only",
+  "description": "SYNTHETIC LAB DATA. 50 failures from the external 203.0.113.77 against j.mehta; no successful login.",
+  "synthetic": true,
+  "labels": "SYNTHETIC logs and assets, MOCK intel (live: false)",
+  "mock_scenario": "analyze",
+  "faults": {},
+  "tool_timeout_s": null,
+  "expected": "tests/scenarios/failures_only/expected.yaml"
+}

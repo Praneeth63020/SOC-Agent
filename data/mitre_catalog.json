@@ -1,0 +1,98 @@
+{
+  "_comment": "Local subset of MITRE ATT&CK Enterprise (technique ids and names as published by MITRE). submit_findings only accepts these ids. requires_event_types: a technique is only accepted if at least one cited ref is a search_logs event of one of these types (evidence-grounded mapping). brute_force: also needs at least BRUTE_FORCE_MIN (10) failed logins for the account or from the source in this run's correlation. adversary_login: a cited successful login must come from a source outside the account's baseline (usual IPs + earlier logins). requires_internal_source: T1021.004 is lateral movement (host to host inside the network); a login from an external address with valid credentials is T1078 (and T1133 for an internet-facing service).",
+  "source": "MITRE ATT&CK Enterprise (subset, names as published)",
+  "techniques": {
+    "T1110": {
+      "name": "Brute Force",
+      "tactic": "Credential Access",
+      "requires_event_types": [
+        "auth_failure"
+      ],
+      "brute_force": true
+    },
+    "T1110.001": {
+      "name": "Brute Force: Password Guessing",
+      "tactic": "Credential Access",
+      "requires_event_types": [
+        "auth_failure"
+      ],
+      "brute_force": true
+    },
+    "T1110.003": {
+      "name": "Brute Force: Password Spraying",
+      "tactic": "Credential Access",
+      "requires_event_types": [
+        "auth_failure"
+      ],
+      "requires_distinct_accounts": 2
+    },
+    "T1078": {
+      "name": "Valid Accounts",
+      "tactic": "Initial Access, Persistence, Privilege Escalation, Defense Evasion",
+      "requires_event_types": [
+        "auth_success"
+      ],
+      "adversary_login": true
+    },
+    "T1078.003": {
+      "name": "Valid Accounts: Local Accounts",
+      "tactic": "Initial Access, Persistence, Privilege Escalation, Defense Evasion",
+      "requires_event_types": [
+        "auth_success"
+      ],
+      "adversary_login": true
+    },
+    "T1133": {
+      "name": "External Remote Services",
+      "tactic": "Initial Access, Persistence",
+      "requires_event_types": [
+        "auth_success"
+      ],
+      "adversary_login": true
+    },
+    "T1021.004": {
+      "name": "Remote Services: SSH",
+      "tactic": "Lateral Movement",
+      "requires_event_types": [
+        "auth_success"
+      ],
+      "adversary_login": true,
+      "requires_internal_source": true
+    },
+    "T1136.001": {
+      "name": "Create Account: Local Account",
+      "tactic": "Persistence",
+      "requires_event_types": [
+        "account_change"
+      ]
+    },
+    "T1548.003": {
+      "name": "Abuse Elevation Control Mechanism: Sudo and Sudo Caching",
+      "tactic": "Privilege Escalation, Defense Evasion",
+      "requires_event_types": [
+        "privilege"
+      ]
+    },
+    "T1071.001": {
+      "name": "Application Layer Protocol: Web Protocols",
+      "tactic": "Command and Control",
+      "requires_event_types": [
+        "network_session"
+      ]
+    },
+    "T1041": {
+      "name": "Exfiltration Over C2 Channel",
+      "tactic": "Exfiltration",
+      "requires_event_types": [
+        "network_session"
+      ]
+    },
+    "T1048": {
+      "name": "Exfiltration Over Alternative Protocol",
+      "tactic": "Exfiltration",
+      "requires_event_types": [
+        "network_session"
+      ]
+    }
+  }
+}

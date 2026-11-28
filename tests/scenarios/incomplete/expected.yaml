@@ -1,0 +1,14 @@
+# Expected outcome for data/scenarios/incomplete (SYNTHETIC; no tshark export, host not in the inventory).
+description: Success after 30 failures and sudo on fin-app-02 (not in the inventory); tshark export missing.
+severity: [high, critical]
+rubric_severity: high                   # criticality unknown caps the level at high
+confidence_max: medium
+benign_hypothesis: [refuted, undetermined]
+must_cite:
+  - wazuh_alerts.jsonl#L36              # Accepted password on fin-app-02
+mitre_required: []
+mitre_forbidden: []
+required_gaps: [tshark, fin-app-02]     # each keyword must appear in some correlation gap
+required_unknowns: [tshark, fin-app-02] # ... and in the agent's unknowns
+required_conflicts: []
+containment: any

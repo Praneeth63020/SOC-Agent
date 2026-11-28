@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/tools/correlate_evidence.output.json",
+  "title": "correlate_evidence result (model view: condensed timeline)",
+  "type": "object",
+  "required": [
+    "next_step",
+    "subject",
+    "phase_definitions",
+    "timeline",
+    "timeline_note",
+    "facts",
+    "gaps",
+    "conflicts",
+    "sources",
+    "signals",
+    "notes",
+    "suggested_follow_ups",
+    "evidence_basis",
+    "method",
+    "data_label"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "subject": {
+      "type": "object"
+    },
+    "phase_definitions": {
+      "type": "object"
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "time",
+          "phase",
+          "source",
+          "event_type",
+          "evidence_refs",
+          "count"
+        ],
+        "properties": {
+          "time": {
+            "type": "string"
+          },
+          "last_time": {
+            "type": "string"
+          },
+          "phase": {
+            "enum": [
+              "baseline",
+              "attack",
+              "compromise",
+              "post_compromise",
+              "post_attack"
+            ]
+          },
+          "source": {
+            "enum": [
+              "wazuh",
+              "tshark"
+            ]
+          },
+          "event_type": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "timeline_note": {
+      "type": "string"
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "statement",
+          "evidence_refs",
+          "data"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "key_source",
+          "statement"
+        ]
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "statement",
+          "evidence_refs"
+        ]
+      }
+    },
+    "sources": {
+      "type": "object",
+      "required": [
+        "auth_logs",
+        "network_sessions",
+        "ip_intel",
+        "host_context",
+        "account_context"
+      ]
+    },
+    "signals": {
+      "type": "object"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_basis": {
+      "type": "object"
+    },
+    "method": {
+      "type": "string"
+    },
+    "data_label": {
+      "type": "string"
+    },
+    "suggested_follow_ups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "deterministic coverage checks: calls that would cover evidence the run has not searched yet"
+    },
+    "next_step": {
+      "type": "string"
+    }
+  }
+}

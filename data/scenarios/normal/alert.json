@@ -1,0 +1,30 @@
+{
+  "alert_id": "ALERT-2026-0101",
+  "timestamp": "2026-11-18T08:30:05.410000+00:00",
+  "source": {
+    "type": "wazuh",
+    "rule_id": "5760",
+    "rule_description": "sshd: authentication failed.",
+    "rule_level": 5,
+    "mitre_hint": []
+  },
+  "category": "authentication",
+  "title": "sshd: authentication failed.",
+  "description": "SYNTHETIC LAB DATA. 1 failed SSH password attempt for j.mehta on fin-app-01 from 10.20.1.45 at 08:30:05 UTC (low-level rule; routine).",
+  "severity_hint": "low",
+  "entities": {
+    "account": "j.mehta",
+    "host": "fin-app-01",
+    "src_ip": "10.20.1.45",
+    "dst_ip": "10.20.5.17",
+    "dst_port": 22,
+    "service": "sshd"
+  },
+  "observations": {
+    "failed_attempts": 1,
+    "failure_window_start": "2026-11-18T08:30:05+00:00",
+    "failure_window_end": "2026-11-18T08:30:05+00:00",
+    "log_location": "/var/log/auth.log"
+  },
+  "synthetic": true
+}

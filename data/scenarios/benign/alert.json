@@ -1,0 +1,33 @@
+{
+  "alert_id": "ALERT-2026-0102",
+  "timestamp": "2026-11-18T08:58:52.300000+00:00",
+  "source": {
+    "type": "wazuh",
+    "rule_id": "100201",
+    "rule_description": "Authentication success after failed attempts (lab low-threshold rule).",
+    "rule_level": 6,
+    "mitre_hint": [
+      "T1110"
+    ]
+  },
+  "category": "authentication",
+  "title": "Authentication success after failed attempts (lab low-threshold rule).",
+  "description": "SYNTHETIC LAB DATA. 4 failed SSH password attempts for j.mehta on fin-app-01 from 10.20.1.45 (08:58:12-08:58:44 UTC), then an accepted password login from the same IP at 08:58:52 UTC.",
+  "severity_hint": "medium",
+  "entities": {
+    "account": "j.mehta",
+    "host": "fin-app-01",
+    "src_ip": "10.20.1.45",
+    "dst_ip": "10.20.5.17",
+    "dst_port": 22,
+    "service": "sshd"
+  },
+  "observations": {
+    "failed_attempts": 4,
+    "failure_window_start": "2026-11-18T08:58:12+00:00",
+    "failure_window_end": "2026-11-18T08:58:44+00:00",
+    "success_time": "2026-11-18T08:58:52+00:00",
+    "log_location": "/var/log/auth.log"
+  },
+  "synthetic": true
+}

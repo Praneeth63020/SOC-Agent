@@ -1,0 +1,12 @@
+{
+  "name": "conflicting",
+  "category": "additional",
+  "title": "Conflicting sources",
+  "description": "SYNTHETIC LAB DATA. Success after 50 failures, but tshark holds only 6 of the failed SSH sessions.",
+  "synthetic": true,
+  "labels": "SYNTHETIC logs and assets, MOCK intel (live: false)",
+  "mock_scenario": "analyze",
+  "faults": {},
+  "tool_timeout_s": null,
+  "expected": "tests/scenarios/conflicting/expected.yaml"
+}

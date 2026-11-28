@@ -1,0 +1,77 @@
+{
+  "_comment": "SYNTHETIC LAB DATA - fabricated asset and account inventory for the Cehpoint assessment. Invented hosts, people and RFC 1918 / RFC 5737 addresses.",
+  "_synthetic": true,
+  "hosts": {
+    "fin-app-01": {
+      "ip": "10.20.5.17",
+      "role": "Finance application server (accounts payable and invoicing)",
+      "criticality": "high",
+      "owner": "Finance IT (fin-it@cehpoint.example)",
+      "os": "Ubuntu 22.04 LTS",
+      "internet_exposed": true,
+      "services": [
+        {"name": "sshd", "product": "openssh", "version": "8.9p1", "port": 22,
+         "package": "openssh-server 1:8.9p1-3ubuntu0.6"},
+        {"name": "nginx", "product": "nginx", "version": "1.18.0", "port": 443}
+      ],
+      "notes": "SSH is reachable from the internet through a legacy NAT rule (exception FIN-EXC-114, review overdue)."
+    },
+    "db-fin-01": {
+      "ip": "10.20.5.30",
+      "role": "Finance PostgreSQL database",
+      "criticality": "high",
+      "owner": "Database team (dba@cehpoint.example)",
+      "os": "Ubuntu 22.04 LTS",
+      "internet_exposed": false,
+      "services": [
+        {"name": "sshd", "product": "openssh", "version": "8.9p1", "port": 22},
+        {"name": "postgresql", "product": "postgresql", "version": "14.13", "port": 5432}
+      ]
+    },
+    "web-portal-01": {
+      "ip": "10.20.8.21",
+      "role": "Public customer web portal",
+      "criticality": "medium",
+      "owner": "Web team (web@cehpoint.example)",
+      "os": "Debian 12",
+      "internet_exposed": true,
+      "services": [
+        {"name": "sshd", "product": "openssh", "version": "9.2p1", "port": 22},
+        {"name": "nginx", "product": "nginx", "version": "1.22.1", "port": 443}
+      ]
+    }
+  },
+  "accounts": {
+    "j.mehta": {
+      "display_name": "J. Mehta (fictitious)",
+      "role": "Finance analyst",
+      "department": "Finance",
+      "privileged": false,
+      "usual_locations": ["Pune office (on-site)"],
+      "usual_source_ips": ["10.20.1.45"],
+      "usual_login_method": "publickey",
+      "hosts": ["fin-app-01"],
+      "notes": "Not expected to use sudo on fin-app-01."
+    },
+    "a.rao": {
+      "display_name": "A. Rao (fictitious)",
+      "role": "Accounts payable clerk",
+      "department": "Finance",
+      "privileged": false,
+      "usual_locations": ["Pune office (on-site)"],
+      "usual_source_ips": ["10.20.1.48"],
+      "usual_login_method": "publickey",
+      "hosts": ["fin-app-01"]
+    },
+    "p.nair": {
+      "display_name": "P. Nair (fictitious)",
+      "role": "Database administrator",
+      "department": "IT",
+      "privileged": true,
+      "usual_locations": ["Pune office (on-site)", "Corporate VPN"],
+      "usual_source_ips": ["10.20.1.52"],
+      "usual_login_method": "publickey",
+      "hosts": ["db-fin-01"]
+    }
+  }
+}

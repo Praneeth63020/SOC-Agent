@@ -1,0 +1,12 @@
+{
+  "name": "incomplete",
+  "category": "incomplete",
+  "title": "Incomplete evidence",
+  "description": "SYNTHETIC LAB DATA. Success after 30 failures and sudo on fin-app-02, which is not in the asset inventory; the tshark export is missing.",
+  "synthetic": true,
+  "labels": "SYNTHETIC logs and assets, MOCK intel (live: false)",
+  "mock_scenario": "analyze",
+  "faults": {},
+  "tool_timeout_s": null,
+  "expected": "tests/scenarios/incomplete/expected.yaml"
+}

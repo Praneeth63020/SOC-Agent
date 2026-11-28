@@ -1,0 +1,12 @@
+{
+  "name": "compromise",
+  "category": "suspicious",
+  "title": "Account compromise (main case)",
+  "description": "SYNTHETIC LAB DATA. 50 failures from 203.0.113.77, success, sudo, new local user backup_svc, 48 MB outbound to 198.51.100.23 (the main data set under data/logs).",
+  "synthetic": true,
+  "labels": "SYNTHETIC logs and assets, MOCK intel (live: false)",
+  "mock_scenario": "analyze",
+  "faults": {},
+  "tool_timeout_s": null,
+  "expected": "tests/scenarios/compromise/expected.yaml"
+}

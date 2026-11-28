@@ -1,0 +1,12 @@
+{
+  "name": "benign",
+  "category": "benign",
+  "title": "Benign user error",
+  "description": "SYNTHETIC LAB DATA. j.mehta mistypes the password 4 times from the office IP 10.20.1.45, then logs in; normal activity.",
+  "synthetic": true,
+  "labels": "SYNTHETIC logs and assets, MOCK intel (live: false)",
+  "mock_scenario": "analyze",
+  "faults": {},
+  "tool_timeout_s": null,
+  "expected": "tests/scenarios/benign/expected.yaml"
+}

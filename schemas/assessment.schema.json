@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cehpoint.example/soc/assessment.schema.json",
+  "title": "Assessment (Day 3 output, stored in runs/<id>.assessment.json under 'assessment')",
+  "description": "The agent's accepted findings next to what the code computed deterministically from the same run: timeline, facts, gaps, conflicts, rubric severity/confidence and the severity check. findings and severity_check are null when no findings were accepted (status failed).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "investigation_id",
+    "alert_id",
+    "plan_id",
+    "status",
+    "provenance",
+    "findings",
+    "severity_check",
+    "rubric",
+    "timeline",
+    "facts",
+    "gaps",
+    "conflicts",
+    "sources",
+    "notes",
+    "tool_calls"
+  ],
+  "properties": {
+    "investigation_id": {
+      "type": "string",
+      "pattern": "^INV-[0-9]{8}-[0-9A-F]{8}$"
+    },
+    "alert_id": {
+      "type": "string"
+    },
+    "plan_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "runtime",
+        "provider",
+        "model",
+        "mock",
+        "synthetic_data",
+        "intel",
+        "data_dir",
+        "fault_injection",
+        "generated_at"
+      ],
+      "properties": {
+        "mock": {
+          "type": "boolean"
+        },
+        "synthetic_data": {
+          "type": "boolean"
+        },
+        "provider": {
+          "enum": [
+            "nvidia",
+            "mock"
+          ]
+        }
+      }
+    },
+    "findings": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "findings.schema.json"
+        }
+      ],
+      "description": "exactly the arguments accepted by submit_findings (schemas/findings.schema.json)"
+    },
+    "severity_check": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "agent_severity",
+            "rubric_severity",
+            "agrees",
+            "rubric_rule",
+            "agent_confidence",
+            "rubric_confidence",
+            "confidence_agrees"
+          ],
+          "properties": {
+            "agent_severity": {
+              "enum": [
+                "low",
+                "medium",
+                "high",
+                "critical"
+              ]
+            },
+            "rubric_severity": {
+              "enum": [
+                "low",
+                "medium",
+                "high",
+                "critical"
+              ]
+            },
+            "agrees": {
+              "type": "boolean"
+            },
+            "agent_confidence": {
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "rubric_confidence": {
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "confidence_agrees": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "rubric": {
+      "type": "object",
+      "required": [
+        "severity",
+        "confidence"
+      ],
+      "properties": {
+        "severity": {
+          "type": "object",
+          "required": [
+            "severity",
+            "score",
+            "rule",
+            "factors"
+          ],
+          "properties": {
+            "severity": {
+              "enum": [
+                "low",
+                "medium",
+                "high",
+                "critical"
+              ]
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "factors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "factor",
+                  "effect",
+                  "evidence_refs"
+                ],
+                "properties": {
+                  "evidence_refs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "confidence": {
+          "type": "object",
+          "required": [
+            "confidence",
+            "reasons"
+          ],
+          "properties": {
+            "confidence": {
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "time",
+          "phase",
+          "source",
+          "event_type",
+          "account",
+          "host",
+          "src_ip",
+          "dst_ip",
+          "summary",
+          "evidence_ref"
+        ],
+        "properties": {
+          "time": {
+            "type": "string"
+          },
+          "phase": {
+            "enum": [
+              "baseline",
+              "attack",
+              "compromise",
+              "post_compromise",
+              "post_attack"
+            ]
+          },
+          "source": {
+            "enum": [
+              "wazuh",
+              "tshark"
+            ]
+          },
+          "event_type": {
+            "type": "string"
+          },
+          "account": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "host": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "src_ip": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dst_ip": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "summary": {
+            "type": "string"
+          },
+          "evidence_ref": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "statement",
+          "evidence_refs"
+        ]
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "key_source",
+          "statement"
+        ]
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "statement",
+          "evidence_refs"
+        ]
+      }
+    },
+    "sources": {
+      "type": "object"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tool_calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "seq",
+          "tool",
+          "status",
+          "arguments"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "_comment": "MOCK CVE database for the Cehpoint assessment. A few OpenSSH entries modelled on public advisories, abbreviated and simplified (upstream version ranges only; distribution backports are not modelled). Verify against NVD / the vendor before relying on any entry. search_cve never queries a live service.",
+  "_synthetic": true,
+  "database": "MOCK CVE database",
+  "generated_at": "2026-11-19T00:00:00Z",
+  "products": {
+    "openssh": {"aliases": ["openssh", "openssh-server", "sshd", "ssh"]}
+  },
+  "cves": [
+    {
+      "cve_id": "CVE-2024-6387",
+      "product": "openssh",
+      "affected": [{"introduced": "8.5p1", "fixed": "9.8p1"}, {"introduced": "0", "fixed": "4.4p1"}],
+      "cvss": 8.1,
+      "severity": "high",
+      "summary": "Signal handler race condition in sshd (\"regreSSHion\"): an unauthenticated remote attacker may achieve code execution as root on glibc-based Linux systems."
+    },
+    {
+      "cve_id": "CVE-2023-38408",
+      "product": "openssh",
+      "affected": [{"introduced": "0", "fixed": "9.3p2"}],
+      "cvss": 9.8,
+      "severity": "critical",
+      "summary": "PKCS#11 feature in ssh-agent has an insufficiently trustworthy search path; remote code execution if an agent is forwarded to an attacker-controlled system."
+    },
+    {
+      "cve_id": "CVE-2023-48795",
+      "product": "openssh",
+      "affected": [{"introduced": "0", "fixed": "9.6"}],
+      "cvss": 5.9,
+      "severity": "medium",
+      "summary": "SSH transport protocol prefix truncation (\"Terrapin\"): a man-in-the-middle can drop messages at the start of the secure channel and downgrade connection security."
+    },
+    {
+      "cve_id": "CVE-2023-51385",
+      "product": "openssh",
+      "affected": [{"introduced": "0", "fixed": "9.6"}],
+      "cvss": 6.5,
+      "severity": "medium",
+      "summary": "ssh client: OS command injection may occur if a user or host name contains shell metacharacters and is referenced by an expansion token in certain situations."
+    },
+    {
+      "cve_id": "CVE-2021-41617",
+      "product": "openssh",
+      "affected": [{"introduced": "6.2", "fixed": "8.8"}],
+      "cvss": 7.0,
+      "severity": "high",
+      "summary": "sshd fails to initialize supplemental groups when running AuthorizedKeysCommand / AuthorizedPrincipalsCommand as a different user (non-default configuration), allowing privilege escalation."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+# Expected outcome for data/scenarios/normal (SYNTHETIC). Brief category: normal (routine, no attack).
+description: One mistyped password (low-level Wazuh alert), then j.mehta's usual publickey login from the office IP.
+severity: [low]
+rubric_severity: low
+confidence_max: high
+benign_hypothesis: [supported]
+must_cite:
+  - wazuh_alerts.jsonl#L6               # Accepted publickey for j.mehta from 10.20.1.45 (the usual login)
+  - inventory.json#accounts/j.mehta     # 10.20.1.45 is the account's usual source IP
+mitre_required: []
+mitre_forbidden: [T1110, T1110.001, T1110.003, T1078, T1078.003, T1021.004, T1548.003, T1136.001]   # routine activity
+required_gaps: []
+required_unknowns: []
+required_conflicts: []
+containment: none                       # no containment may be requested (checked after the report phase)

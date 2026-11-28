@@ -1,0 +1,14 @@
+# Expected outcome for data/scenarios/conflicting (SYNTHETIC; tshark holds only 6 of the failed sessions).
+description: tshark shows far fewer SSH sessions than Wazuh shows attempts; the conflict must be reported.
+severity: [high, critical]
+rubric_severity: high
+confidence_max: medium
+benign_hypothesis: [refuted, undetermined]
+must_cite:
+  - wazuh_alerts.jsonl#L56              # Accepted password
+mitre_required: []
+mitre_forbidden: []
+required_gaps: []
+required_unknowns: [tshark]
+required_conflicts: [tshark]
+containment: any

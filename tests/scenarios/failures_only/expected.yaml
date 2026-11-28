@@ -1,0 +1,14 @@
+# Expected outcome for data/scenarios/failures_only (SYNTHETIC logs/assets, MOCK intel).
+description: 50 failures from the external 203.0.113.77 against j.mehta; no successful login.
+severity: [low, medium]
+rubric_severity: low
+confidence_max: high
+benign_hypothesis: [refuted, undetermined]
+must_cite:
+  - wazuh_alerts.jsonl#L55              # the last failed login
+mitre_required: []
+mitre_forbidden: [T1078, T1078.003, T1548.003, T1136.001]   # nothing succeeded
+required_gaps: []
+required_unknowns: []
+required_conflicts: []
+containment: any

@@ -1,0 +1,15 @@
+# Expected outcome for data/scenarios/tool_failure_logs (the main data, but wazuh_alerts.jsonl is damaged: not UTF-8).
+# Brief category: tool failure (second variant: search_logs cannot read its data file).
+description: search_logs cannot read the Wazuh export; the failure must be stated, confidence lowered, nothing invented.
+severity: [medium, high]                # without login outcomes neither critical nor "nothing happened" can be justified
+rubric_severity: medium                 # M2: login outcome unknown - authentication logs unavailable
+confidence_max: medium
+benign_hypothesis: [undetermined, refuted]
+must_cite: []
+must_not_cite_prefix: [wazuh_alerts.jsonl#]   # the file could not be read, so no Wazuh event can be cited
+mitre_required: []
+mitre_forbidden: [T1078, T1078.003, T1548.003, T1136.001]   # login success / sudo / useradd are not visible
+required_gaps: [wazuh]
+required_unknowns: [wazuh]
+required_conflicts: []
+containment: any

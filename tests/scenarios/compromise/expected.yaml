@@ -1,0 +1,17 @@
+# Expected outcome for data/scenarios/compromise (SYNTHETIC logs/assets, MOCK intel).
+# Checked by soc_agent.scenarios.check_expected (tests and scripts/run_scenarios.py).
+description: Brute force, success, sudo, new local user, outbound to a suspicious host (the main case).
+severity: [high, critical]              # agent severities that pass
+rubric_severity: critical               # deterministic rubric on the mock's evidence (checked for the mock only)
+confidence_max: high
+benign_hypothesis: [refuted]            # status of every plan hypothesis with benign: true
+must_cite:                              # refs that must appear somewhere in the findings
+  - wazuh_alerts.jsonl#L64              # Accepted password for j.mehta from 203.0.113.77
+  - wazuh_alerts.jsonl#L65              # sudo to root
+  - wazuh_alerts.jsonl#L66              # useradd backup_svc
+mitre_required: [T1078]
+mitre_forbidden: []
+required_gaps: []
+required_unknowns: []
+required_conflicts: []
+containment: requested                  # at least one containment request, pending for an analyst

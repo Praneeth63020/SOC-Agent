@@ -1,0 +1,12 @@
+{
+  "name": "normal",
+  "category": "normal",
+  "title": "Routine login (no attack)",
+  "description": "SYNTHETIC LAB DATA. One mistyped password for j.mehta from the office IP 10.20.1.45 (low-level Wazuh alert), then the usual publickey login from the same IP; ordinary work after.",
+  "synthetic": true,
+  "labels": "SYNTHETIC logs and assets, MOCK intel (live: false)",
+  "mock_scenario": "analyze",
+  "faults": {},
+  "tool_timeout_s": null,
+  "expected": "tests/scenarios/normal/expected.yaml"
+}

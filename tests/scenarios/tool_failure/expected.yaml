@@ -1,0 +1,15 @@
+# Expected outcome for data/scenarios/tool_failure (the main data; lookup_ip times out - fault injection).
+description: lookup_ip times out; the reputation must be stated as unknown and confidence must not be high.
+severity: [high, critical]
+rubric_severity: critical               # still critical: it rests on the logs, not on intel
+confidence_max: medium
+benign_hypothesis: [refuted, undetermined]
+must_cite:
+  - wazuh_alerts.jsonl#L64
+must_not_cite_prefix: [ip_reputation.json#]   # no intel was returned, so none can be cited
+mitre_required: []
+mitre_forbidden: []
+required_gaps: [lookup_ip]
+required_unknowns: [reputation]
+required_conflicts: []
+containment: any
